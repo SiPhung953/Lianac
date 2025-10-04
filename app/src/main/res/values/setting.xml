@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text density options -->
+    <string-array name="text_density_options">
+        <item>Comfortable</item>
+        <item>Compact</item>
+    </string-array>
+
+    <!-- Language options -->
+    <string-array name="language_options">
+        <item>System locale</item>
+        <item>English</item>
+        <item>Vietnamese</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- PDF Viewer options -->
+    <string-array name="pdf_viewer_options">
+        <item>In-app</item>
+        <item>External PDF app</item>
+    </string-array>
+
+    <!-- Page fit options -->
+    <string-array name="page_fit_options">
+        <item>Fit width</item>
+        <item>Fit page</item>
+    </string-array>
+
+    <!-- Read mode options -->
+    <string-array name="read_mode_options">
+        <item>PDF</item>
+        <item>Text-only</item>
+        <item>Structured (abstract + figures)</item>
+    </string-array>
+</resources>
