@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -9,50 +8,39 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle"
-        android:dividerPadding="8dp">
+        android:layout_height="wrap_content">
 
-        <!-- ===================== Appearance ===================== -->
+        <!-- Appearance -->
         <TextView
-            android:text="8. Appearance (Giao diện)"
+            android:text="Appearance"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:paddingBottom="4dp"
+            android:paddingBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Theme (segmented) -->
         <TextView
-            android:text="Theme (Chủ đề)"
+            android:text="Light/Dark mode"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <RadioGroup
-            android:id="@+id/rg_theme"
+            android:id="@+id/rg_theme_mode"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="8dp">
+            android:layout_height="wrap_content">
 
             <RadioButton
                 android:id="@+id/rb_light"
                 android:text="Light"
+                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rb_dark"
                 android:text="Dark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <RadioButton
-                android:id="@+id/rb_system"
-                android:text="System"
-                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RadioGroup>
@@ -72,10 +60,9 @@
                 android:layout_weight="1" />
 
             <Switch
-                android:id="@+id/switch_compact_list"
+                android:id="@+id/switch_compact"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <!-- Text density -->
@@ -88,13 +75,11 @@
         <Spinner
             android:id="@+id/spinner_text_density"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/text_density_options"
-            android:prompt="@string/text_density_prompt" />
+            android:layout_height="wrap_content" />
 
         <!-- Language -->
         <TextView
-            android:text="Language (Ngôn ngữ)"
+            android:text="Language"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -102,28 +87,23 @@
         <Spinner
             android:id="@+id/spinner_language"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/language_options"
-            android:prompt="@string/language_prompt" />
+            android:layout_height="wrap_content" />
 
-        <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginVertical="12dp"
             android:background="@android:color/darker_gray" />
 
-
-        <!-- ===================== Reading / PDF Viewer ===================== -->
+        <!-- Reading / Viewer -->
         <TextView
-            android:text="4. Reading / PDF Viewer (Trình đọc)"
+            android:text="Reading / Viewer"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:paddingBottom="4dp"
+            android:paddingBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Default viewer -->
         <TextView
             android:text="Default viewer"
             android:textStyle="bold"
@@ -133,119 +113,18 @@
         <Spinner
             android:id="@+id/spinner_viewer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/pdf_viewer_options" />
+            android:layout_height="wrap_content" />
 
-        <!-- Text reflow -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Text reflow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Switch
-                android:id="@+id/switch_reflow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
-        </LinearLayout>
-
-        <!-- Continuous scroll -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Continuous scroll"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Switch
-                android:id="@+id/switch_continuous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-        </LinearLayout>
-
-        <!-- Read mode -->
         <TextView
-            android:text="Read mode"
+            android:text="Scroll direction"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <RadioGroup
-            android:id="@+id/rg_read_mode"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="8dp">
-
-            <RadioButton
-                android:id="@+id/rb_pdf"
-                android:text="PDF"
-                android:checked="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <RadioButton
-                android:id="@+id/rb_text_only"
-                android:text="Text-only"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <RadioButton
-                android:id="@+id/rb_structured"
-                android:text="Structured"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RadioGroup>
-
-        <!-- Font size -->
-        <TextView
-            android:text="Font size"
-            android:textStyle="bold"
+        <Spinner
+            android:id="@+id/spinner_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <SeekBar
-            android:id="@+id/seekbar_font_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="32"
-            android:progress="16" />
-
-        <!-- Night mode -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Night mode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Switch
-                android:id="@+id/switch_nightmode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
-        </LinearLayout>
 
         <!-- Annotations -->
         <LinearLayout
@@ -256,19 +135,18 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Annotations (Highlight, notes)"
+                android:text="Annotations (highlight, notes)"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Switch
                 android:id="@+id/switch_annotations"
+                android:checked="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Auto-save annotations -->
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center_vertical"
@@ -284,70 +162,9 @@
 
             <Switch
                 android:id="@+id/switch_autosave"
+                android:checked="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-        </LinearLayout>
-
-        <!-- Page fit -->
-        <TextView
-            android:text="Page fit"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Spinner
-            android:id="@+id/spinner_page_fit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/page_fit_options" />
-
-        <!-- Accessibility -->
-        <TextView
-            android:text="Accessibility"
-            android:textStyle="bold"
-            android:paddingTop="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Text-to-Speech (TTS)"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Switch
-                android:id="@+id/switch_tts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="High-contrast mode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Switch
-                android:id="@+id/switch_high_contrast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>

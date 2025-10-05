@@ -1,20 +1,25 @@
 <resources>
-    <string name="text_density_prompt">Select text density</string>
-    <string name="language_prompt">Select language</string>
-    <string name="default_viewer_prompt">Select default viewer</string>
-    <string name="page_fit_prompt">Select page fit mode</string>
     <string name="app_name">Lianac</string>
-    <string name="appearance">Appearance</string>
-    <string name="reading_viewer">Reading / PDF Viewer</string>
-    <string name="theme">Theme</string>
-    <string name="compact_list">Compact list view</string>
-    <string name="text_reflow">Text reflow</string>
-    <string name="continuous_scroll">Continuous scroll</string>
-    <string name="night_mode">Night mode</string>
-    <string name="annotations">Annotations</string>
-    <string name="auto_save_annotations">Auto-save annotations</string>
-    <string name="page_fit">Page fit</string>
-    <string name="font_size">Font size</string>
-    <string name="language">Language</string>
-    <string name="default_viewer">Default viewer</string>
+
+    <string-array name="text_density_options">
+        <item>Compact</item>
+        <item>Comfortable</item>
+        <item>Expanded</item>
+    </string-array>
+
+    <string-array name="language_options">
+        <item>English</item>
+        <item>Vietnamese</item>
+        <item>French</item>
+    </string-array>
+
+    <string-array name="viewer_options">
+        <item>In-app viewer</item>
+        <item>External viewer</item>
+    </string-array>
+
+    <string-array name="scroll_options">
+        <item>Horizontal</item>
+        <item>Vertical</item>
+    </string-array>
 </resources>
