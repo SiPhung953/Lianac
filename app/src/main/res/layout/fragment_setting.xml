@@ -2,11 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="?android:attr/windowBackground">
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -36,28 +34,31 @@
                 android:text="Light"
                 android:checked="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Light"
+                android:layout_marginEnd="16dp"/>
 
             <RadioButton
                 android:id="@+id/rb_dark"
-                android:text="Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RadioGroup>
 
-        <!-- Compact list view -->
+        <!-- Compact List View -->
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingVertical="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp">
 
             <TextView
-                android:text="Compact list view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Compact list view"
+                android:textSize="16sp"/>
 
             <Switch
                 android:id="@+id/switch_compact"
@@ -65,12 +66,14 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Text density -->
+        <!-- Text Density -->
         <TextView
-            android:text="Text density"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Text Density"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"/>
 
         <Spinner
             android:id="@+id/spinner_text_density"
@@ -92,8 +95,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="@android:color/darker_gray" />
+            android:background="#E0E0E0"
+            android:layout_marginBottom="24dp"/>
 
         <!-- Reading / Viewer -->
         <TextView
@@ -105,10 +108,12 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:text="Default viewer"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default Viewer"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"/>
 
         <Spinner
             android:id="@+id/spinner_viewer"
@@ -158,7 +163,10 @@
                 android:text="Auto-save annotations"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp">
 
             <Switch
                 android:id="@+id/switch_autosave"
