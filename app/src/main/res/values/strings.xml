@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Application</string>
-
-    <!-- Settings -->
-    <string name="settings">Settings</string>
-
     <!-- Appearance -->
     <string name="appearance">Appearance</string>
     <string name="light_dark_mode">Light/Dark mode</string>
