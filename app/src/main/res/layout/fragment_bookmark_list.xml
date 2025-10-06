@@ -4,23 +4,11 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Heading -->
-    <TextView
-        android:id="@+id/tv_heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bookmarked"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:padding="16dp" />
-
     <!-- RecyclerView for bookmarks -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bookmarks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tv_heading"
         android:padding="8dp"
         android:clipToPadding="false" />
 
