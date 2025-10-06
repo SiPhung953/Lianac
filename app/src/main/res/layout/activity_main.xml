@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vn.edu.lianac.MainActivity">
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
 
-</FrameLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:navigationIcon="@drawable/ic_menu"
+        app:title="Home" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Content -->
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+        <!-- Navigation drawer -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/drawer_menu" />
+        <!--            app:headerLayout="@layout/nav_header" -->
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</LinearLayout>
