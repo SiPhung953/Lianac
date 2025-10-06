@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:navigationIcon="@drawable/ic_menu"
+        app:title="Home" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-            app:navigationIcon="@drawable/ic_menu"
-            app:title="Home" />
 
         <!-- Content -->
         <FrameLayout
@@ -27,49 +29,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#000000" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:background="?android:attr/windowBackground">
-
-        <TextView
-            android:id="@+id/header_title"
-            android:text="Lianac!"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:background="?attr/colorPrimary"
-            />  <!-- magic values do not touch -->
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#CCC" />
-
+        <!-- Navigation drawer -->
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:menu="@menu/drawer_menu"/>
-        <!--            app:headerLayout="@layout/nav_header" />-->
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/drawer_menu" />
+        <!--            app:headerLayout="@layout/nav_header" -->
 
+    </androidx.drawerlayout.widget.DrawerLayout>
 
-    </LinearLayout>
-    <!-- Navigation drawer -->
-    <!--    <com.google.android.material.navigation.NavigationView-->
-    <!--        android:id="@+id/navigation_view"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="start"-->
-    <!--        android:fitsSystemWindows="true"-->
-    <!--        app:menu="@menu/drawer_menu"-->
-    <!--        app:headerLayout="@layout/nav_header" />-->
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

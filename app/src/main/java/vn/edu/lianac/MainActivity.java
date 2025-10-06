@@ -4,18 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import vn.edu.lianac.R;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
-
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -33,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            return insets;
+        });
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        // Configure the behavior of the hidden system bars.
+        windowInsetsController.setSystemBarsBehavior(
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        );
+        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
 //        Fragment pager = new CollectionFragment();
 //        getSupportFragmentManager().beginTransaction()
 //                .add(R.id.pager, pager)
@@ -59,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
         replaceFragment(new SubjectFragment());
         getSupportActionBar().setTitle("Subjects");
-
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
