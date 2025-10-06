@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.DownloadViewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,7 +8,7 @@ import android.os.Looper;
 
 // Corrected import paths
 import vn.edu.lianac.DownloadItem;
-import vn.edu.lianac.DownloadState;
+import vn.edu.lianac.DownloadState.DownloadState;
 
 import java.util.ArrayList;
 import java.util.List;

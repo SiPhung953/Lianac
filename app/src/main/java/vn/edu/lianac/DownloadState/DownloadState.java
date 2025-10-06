@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.DownloadState;
 
 public enum DownloadState {
     QUEUED,     // Waiting to start (Grey Progress)

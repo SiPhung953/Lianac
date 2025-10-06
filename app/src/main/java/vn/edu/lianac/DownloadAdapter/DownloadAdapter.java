@@ -1,6 +1,5 @@
-package vn.edu.lianac;
+package vn.edu.lianac.DownloadAdapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 // Imports are now self-referencing or standard Android
 import vn.edu.lianac.R;
 import vn.edu.lianac.DownloadItem;
-import vn.edu.lianac.DownloadState;
+import vn.edu.lianac.DownloadState.DownloadState;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
     public void onBindViewHolder(@NonNull DownloadViewHolder holder, int position) {
         DownloadItem item = mDownloads.get(position);
 
-        holder.tvTitle.setText(item.getResearchName());
+        holder.tvTitle.setText(item.getPaperName());
         holder.tvFileSize.setText(item.getFileSize());
         holder.progressBar.setProgress(item.getProgressPercentage());
         holder.tvPercentage.setText(item.getProgressPercentage() + "%");

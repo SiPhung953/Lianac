@@ -1,24 +1,24 @@
 package vn.edu.lianac;
 
 // Corrected import path
-import vn.edu.lianac.DownloadState;
+import vn.edu.lianac.DownloadState.DownloadState;
 
 public class DownloadItem {
-    private String researchName;
+    private String paperName;
     private String fileSize; // e.g., "1.2 MB"
     private int progressPercentage; // 0 to 100
     private DownloadState state;
 
-    public DownloadItem(String researchName, String fileSize, DownloadState state) {
-        this.researchName = researchName;
+    public DownloadItem(String paperName, String fileSize, DownloadState state) {
+        this.paperName = paperName;
         this.fileSize = fileSize;
         this.state = state;
         this.progressPercentage = 0;
     }
 
     // --- Getters ---
-    public String getResearchName() {
-        return researchName;
+    public String getPaperName() {
+        return paperName;
     }
 
     public String getFileSize() {

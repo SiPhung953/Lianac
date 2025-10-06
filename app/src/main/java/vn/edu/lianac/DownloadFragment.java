@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 // Corrected imports (all classes are now in the same package)
-import vn.edu.lianac.R;
-import vn.edu.lianac.DownloadViewModel;
-import vn.edu.lianac.DownloadAdapter;
-import vn.edu.lianac.DownloadItemDecoration;
+import vn.edu.lianac.DownloadAdapter.DownloadAdapter;
+import vn.edu.lianac.DownloadItemDocoration.DownloadItemDecoration;
+import vn.edu.lianac.DownloadState.DownloadState;
+import vn.edu.lianac.DownloadViewModel.DownloadViewModel;
 
 import java.util.ArrayList;
 

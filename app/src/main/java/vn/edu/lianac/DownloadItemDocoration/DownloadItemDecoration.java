@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.DownloadItemDocoration;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadItemDecoration extends RecyclerView.ItemDecoration {
 
-    private Drawable mDivider;
+    private final Drawable mDivider;
 
     /**
      * @param context The context to fetch the divider Drawable from.
