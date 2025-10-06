@@ -12,13 +12,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
+import vn.edu.lianac.bookmark.BookmarkItem;
+import vn.edu.lianac.bookmark.BookmarkManager;
 
 public class DetailFragment extends Fragment {
 
     private ImageView downloadIcon, bookmarkIcon, menuIcon;
+    private BookmarkManager bookmarkManager;
     private TextView readButton, textSubject, textSubclass;
-    private boolean isBookmarked = false;
+
+    // You will need to get these values from the fragment's arguments
+    private String articleId = "default_article_id"; // Placeholder
+    private String subjectTitle = "Default Subject Title"; // Placeholder
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,11 +39,17 @@ public class DetailFragment extends Fragment {
         textSubject = view.findViewById(R.id.text_subject);
         textSubclass = view.findViewById(R.id.text_subclass);
 
+        // Initialize BookmarkManager
+        bookmarkManager = new BookmarkManager(requireContext());
+
         // --- Lấy dữ liệu từ arguments (nếu có) ---
         Bundle args = getArguments();
         String subjectName = args != null ? args.getString("subject_name", "Subject Name") : "Subject Name";
         String subclassName = args != null ? args.getString("subclass_name", "Subclass") : "Subclass";
         String pdfUrl = args != null ? args.getString("pdf_url", "") : "";
+        // Example of how you might get articleId and subjectTitle from the bundle
+        // articleId = args != null ? args.getString("article_id", articleId) : articleId;
+        // subjectTitle = subjectName;
 
         textSubject.setText(subjectName);
         textSubclass.setText(subclassName);
@@ -56,16 +68,11 @@ public class DetailFragment extends Fragment {
         }
 
         // --- BOOKMARK ---
+        updateBookmarkIcon(); // Set the initial icon state
         if (bookmarkIcon != null) {
             bookmarkIcon.setOnClickListener(v -> {
-                isBookmarked = !isBookmarked;
-                if (isBookmarked) {
-                    bookmarkIcon.setImageResource(R.drawable.bookmark_done);
-                    Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
-                } else {
-                    bookmarkIcon.setImageResource(R.drawable.bookmark);
-                    Toast.makeText(getContext(), "Unsaved", Toast.LENGTH_SHORT).show();
-                }
+                toggleBookmark();
+                updateBookmarkIcon(); // Update the icon after toggling
             });
         }
 
@@ -112,24 +119,49 @@ public class DetailFragment extends Fragment {
         return view;
     }
 
-    // --- Mở SubjectFragment (hiển thị danh sách subject) ---
-    private void openSubjectFragment(String subjectName) {
-        Fragment fragment = new SubjectFragment();
-        Bundle args = new Bundle();
-        args.putString("subject_name", subjectName);
-        fragment.setArguments(args);
-
-        ((MainActivity) getActivity()).replaceFragment(fragment);
+    private void toggleBookmark() {
+        if (bookmarkManager.isBookmarked(articleId)) {
+            bookmarkManager.removeBookmark(articleId);
+            Toast.makeText(requireContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
+        } else {
+            BookmarkItem item = new BookmarkItem(
+                    articleId,
+                    subjectTitle,
+                    System.currentTimeMillis()
+            );
+            bookmarkManager.addBookmark(item);
+            Toast.makeText(requireContext(), "Bookmarked!", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // --- Mở SubclassFragment (hiển thị danh sách bài viết trong subclass) ---
-    private void openSubclassFragment(String subjectName, String subclassName) {
-        Fragment fragment = new SubclassFragment();
-        Bundle args = new Bundle();
-        args.putString("subject_name", subjectName);
-        args.putString("subclass_name", subclassName);
-        fragment.setArguments(args);
+    private void updateBookmarkIcon() {
+        if (bookmarkManager != null && bookmarkManager.isBookmarked(articleId)) {
+            bookmarkIcon.setImageResource(R.drawable.bookmark_done);
+        } else if (bookmarkIcon != null) {
+            bookmarkIcon.setImageResource(R.drawable.bookmark);
+        }
+    }
 
-        ((MainActivity) getActivity()).replaceFragment(fragment);
+    // --- Mở SubjectFragment (hiển thị danh sách subject) ---
+    private void openSubjectFragment(String subjectName) {
+        if (getActivity() instanceof MainActivity) {
+            Fragment fragment = new SubjectFragment();
+            Bundle args = new Bundle();
+            args.putString("subject_name", subjectName);
+            fragment.setArguments(args);
+            ((MainActivity) getActivity()).replaceFragment(fragment);
+        }
+    }
+
+    // --- SubclassFragment ---
+    private void openSubclassFragment(String subjectName, String subclassName) {
+        if (getActivity() instanceof MainActivity) {
+            Fragment fragment = new SubclassFragment();
+            Bundle args = new Bundle();
+            args.putString("subject_name", subjectName);
+            args.putString("subclass_name", subclassName);
+            fragment.setArguments(args);
+            ((MainActivity) getActivity()).replaceFragment(fragment);
+        }
     }
 }
