@@ -1,25 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lianac</string>
 
-    <string-array name="text_density_options">
-        <item>Compact</item>
-        <item>Comfortable</item>
-        <item>Expanded</item>
-    </string-array>
+    <string name="download_title">Downloads</string>
+    <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
 
-    <string-array name="language_options">
-        <item>English</item>
-        <item>Vietnamese</item>
-        <item>French</item>
-    </string-array>
+    <string name="state_queued">Queued</string>
+    <string name="state_downloading">Downloading</string>
+    <string name="state_completed">Completed</string>
+    <string name="state_failed">Failed</string>
+    <string name="state_cancelled">Cancelled</string>
 
-    <string-array name="viewer_options">
-        <item>In-app viewer</item>
-        <item>External viewer</item>
-    </string-array>
+    <string name="download_start_error">Could not start download.</string>
+    <string name="download_removed">Download removed.</string>
 
-    <string-array name="scroll_options">
-        <item>Horizontal</item>
-        <item>Vertical</item>
-    </string-array>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_light_mode">Light</string>
+    <string name="settings_dark_mode">Dark</string>
+    <string name="settings_text_density">Text Density</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_reading_viewer">Reading/Viewer</string>
+    <string name="settings_default_viewer">Default Viewer</string>
+    <string name="settings_scroll">Scroll</string>
+    <string name="settings_horizontal">Horizontal</string>
+    <string name="settings_vertical">Vertical</string>
+
 </resources>

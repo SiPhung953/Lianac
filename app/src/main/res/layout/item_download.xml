@@ -1,43 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
 
     <TextView
-        android:id="@+id/text_file_name"
+        android:id="@+id/tv_research_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:textSize="16sp"
+        android:layout_marginEnd="48dp"
         android:textStyle="bold"
-        android:text="Explainable Al-Enhanced Supervisory Control..." />
+        tools:text="Explainable AI-Enhanced Supervisory Control for High-Precision Spacecraft Formation" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="4dp">
 
         <ProgressBar
-            android:id="@+id/progress_download_bar"
+            android:id="@+id/progress_bar_download"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:max="100"
-            android:progress="75"
-            android:layout_marginEnd="8dp" />
+            android:progress="50" />
 
         <TextView
-            android:id="@+id/text_percentage"
+            android:id="@+id/tv_download_percentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="100%"
-            android:textColor="@color/design_default_color_primary" />
+            android:textSize="12sp"
+            android:layout_marginStart="8dp"
+            tools:text="50%" />
+
+        <TextView
+            android:id="@+id/tv_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_marginStart="8dp"
+            tools:text="2.1 MB" />
+
+        <ImageButton
+            android:id="@+id/btn_action"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Action button for download item"
+            android:layout_marginStart="8dp"
+            tools:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     </LinearLayout>
 
