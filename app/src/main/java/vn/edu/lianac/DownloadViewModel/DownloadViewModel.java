@@ -1,130 +1,164 @@
 package vn.edu.lianac.DownloadViewModel;
 
+import android.app.Application;
+import android.app.DownloadManager;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import android.os.Handler;
-import android.os.Looper;
-
-// Corrected import paths
-import vn.edu.lianac.DownloadItem.DownloadItem;
-import vn.edu.lianac.DownloadState.DownloadState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Objects;
 
-public class DownloadViewModel extends ViewModel {
+import vn.edu.lianac.DownloadItem.DownloadItem;
+import vn.edu.lianac.DownloadState.DownloadState;
 
-    private final MutableLiveData<List<DownloadItem>> _downloadList = new MutableLiveData<>();
-    public LiveData<List<DownloadItem>> downloadList = _downloadList;
+public class DownloadViewModel extends AndroidViewModel {
 
-    private final ExecutorService downloadExecutor = Executors.newFixedThreadPool(2);
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final MutableLiveData<List<DownloadItem>> _downloadList = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<DownloadItem>> downloadList = _downloadList;
 
-    public DownloadViewModel() {
+    private final MutableLiveData<DownloadItem> _startDownloadEvent = new MutableLiveData<>();
+    public final LiveData<DownloadItem> startDownloadEvent = _startDownloadEvent;
+
+    private final DownloadManager downloadManager;
+
+    public DownloadViewModel(Application application) {
+        super(application);
         _downloadList.setValue(new ArrayList<>());
+        downloadManager = application.getSystemService(DownloadManager.class);
     }
 
-    // For testing purposes, remove later
-    public void addDownloadItem(DownloadItem item) {
+    public void addNewDownload(String url) {
+        DownloadItem newItem = new DownloadItem(url, "New PDF", DownloadState.NOT_DOWNLOADED);
         List<DownloadItem> currentList = _downloadList.getValue();
         if (currentList != null) {
             ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
-            newList.add(item);
-            _downloadList.postValue(newList);
-        }
-    }
-    // End of testing section
-
-    public void handleDownloadAction(DownloadItem item, DownloadState currentState) {
-        if (currentState == DownloadState.COMPLETED) {
-            removeDownload(item);
-        } else if (currentState == DownloadState.FAILED || currentState == DownloadState.QUEUED || currentState == DownloadState.NOT_DOWNLOADED) {
-            startDownload(item);
-        } else if (currentState == DownloadState.DOWNLOADING) {
-            cancelDownload(item);
+            newList.add(newItem);
+            _downloadList.setValue(newList);
         }
     }
 
-    private void removeDownload(DownloadItem item) {
+    public void handleDownloadAction(DownloadItem item) {
+        switch (item.getState()) {
+            case NOT_DOWNLOADED:
+            case FAILED:
+            case CANCELLED: // Add CANCELLED state to allow retrying
+                item.setState(DownloadState.QUEUED);
+                item.setProgressPercentage(0);
+                updateItemInList(item);
+                _startDownloadEvent.setValue(item);
+                break;
+            case DOWNLOADING:
+            case QUEUED: // Also allow cancellation from QUEUED state
+                if (item.getDownloadId() != 0) {
+                    downloadManager.remove(item.getDownloadId());
+                }
+                item.setState(DownloadState.CANCELLED);
+                updateItemInList(item); // Update the item instead of removing it
+                break;
+            case COMPLETED:
+                // The delete button is now separate, so this action does nothing.
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void onDownloadStarted() {
+        _startDownloadEvent.setValue(null);
+    }
+
+    public void updateDownloadProgress(long downloadId, int progress, int status, String url) {
         List<DownloadItem> currentList = _downloadList.getValue();
-        if (currentList != null) {
-            currentList.remove(item);
-            _downloadList.setValue(new ArrayList<>(currentList));
-        }
-    }
+        if (currentList == null || url == null) return;
 
-    private void startDownload(DownloadItem item) {
-        item.setState(DownloadState.QUEUED);
-        item.setProgressPercentage(0);
-        updateItemInList(item);
+        DownloadItem itemToUpdate = findItemByUrl(currentList, url);
 
-        downloadExecutor.execute(() -> {
-            item.setState(DownloadState.DOWNLOADING);
-            updateItemInList(item);
-
-            // Simulation loop
-            for (int progress = 1; progress <= 100; progress += 5) {
-                if (item.getState() != DownloadState.DOWNLOADING) {
-                    return; // Stop if cancelled
-                }
-
-                int finalProgress = progress;
-                // Update progress on the main thread
-                mainHandler.post(() -> {
-                    item.setProgressPercentage(finalProgress);
-                    updateItemInList(item);
-                });
-
-                try {
-                    Thread.sleep(200); // Simulate network delay
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    // 5% chance of failure during the download process
-                    if (Math.random() < 0.05 && progress < 90) {
-                        item.setState(DownloadState.FAILED);
-                    } else {
-                        // If interrupted (e.g., during cancellation)
-                        item.setState(DownloadState.CANCELLED);
-                    }
-                    updateItemInList(item);
-                    return;
-                }
+        if (itemToUpdate != null) {
+            // Do not update items that have been cancelled by the user
+            if (itemToUpdate.getState() == DownloadState.CANCELLED) {
+                return;
+            }
+            
+            // Associate downloadId if it's the first update for this item
+            if (itemToUpdate.getDownloadId() == 0) {
+                itemToUpdate.setDownloadId(downloadId);
             }
 
-            // After loop, set to COMPLETED
-            mainHandler.post(() -> {
-                item.setState(DownloadState.COMPLETED);
-                item.setProgressPercentage(100);
-                updateItemInList(item);
-            });
-        });
-    }
-
-    private void cancelDownload(DownloadItem item) {
-        item.setState(DownloadState.CANCELLED);
-        removeDownload(item); // Remove the item immediately upon cancellation
+            DownloadState newState = itemToUpdate.getState();
+            switch (status) {
+                case DownloadManager.STATUS_RUNNING:
+                    newState = DownloadState.DOWNLOADING;
+                    break;
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    newState = DownloadState.COMPLETED;
+                    progress = 100;
+                    break;
+                case DownloadManager.STATUS_FAILED:
+                    newState = DownloadState.FAILED;
+                    break;
+                case DownloadManager.STATUS_PAUSED:
+                case DownloadManager.STATUS_PENDING:
+                    newState = DownloadState.QUEUED;
+                    break;
+            }
+            itemToUpdate.setProgressPercentage(progress);
+            itemToUpdate.setState(newState);
+            updateItemInList(itemToUpdate);
+        }
     }
 
     private void updateItemInList(DownloadItem itemToUpdate) {
         List<DownloadItem> currentList = _downloadList.getValue();
         if (currentList != null) {
-            // Find and update the item
-            int index = currentList.indexOf(itemToUpdate);
+            ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
+            int index = -1;
+            for (int i = 0; i < newList.size(); i++) {
+                if (Objects.equals(newList.get(i).getUrl(), itemToUpdate.getUrl())) {
+                    index = i;
+                    break;
+                }
+            }
             if (index != -1) {
-                currentList.set(index, itemToUpdate);
-                _downloadList.postValue(new ArrayList<>(currentList));
-            } else {
-                 addDownloadItem(itemToUpdate);
+                newList.set(index, itemToUpdate);
+                _downloadList.postValue(newList);
             }
         }
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        downloadExecutor.shutdownNow();
+    public void deleteDownload(DownloadItem item) {
+        // If the download is in progress, cancel it first.
+        if (item.getDownloadId() != 0 && (item.getState() == DownloadState.DOWNLOADING || item.getState() == DownloadState.QUEUED)) {
+            downloadManager.remove(item.getDownloadId());
+        }
+        removeItemFromList(item);
+    }
+
+    private void removeItemFromList(DownloadItem itemToRemove) {
+        List<DownloadItem> currentList = _downloadList.getValue();
+        if (currentList != null) {
+            ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
+            newList.removeIf(item -> Objects.equals(item.getUrl(), itemToRemove.getUrl()));
+            _downloadList.postValue(newList);
+        }
+    }
+
+    private DownloadItem findItemByUrl(List<DownloadItem> list, String url) {
+        for (DownloadItem item : list) {
+            if (url.equals(item.getUrl())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void addDownloadItem(DownloadItem newItem) {
+        List<DownloadItem> currentList = _downloadList.getValue();
+        if (currentList != null) {
+            ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
+            newList.add(newItem);
+            _downloadList.postValue(newList);
+        }
     }
 }

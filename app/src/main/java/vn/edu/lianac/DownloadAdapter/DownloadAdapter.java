@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-// Imports are now self-referencing or standard Android
 import vn.edu.lianac.R;
 import vn.edu.lianac.DownloadItem.DownloadItem;
 import vn.edu.lianac.DownloadState.DownloadState;
@@ -24,6 +23,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
 
     public interface DownloadInteractionListener {
         void onActionButtonClick(DownloadItem item, DownloadState currentState);
+        void onDeleteButtonClick(DownloadItem item);
     }
 
     public DownloadAdapter(List<DownloadItem> downloads, DownloadInteractionListener listener) {
@@ -48,47 +48,40 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         holder.progressBar.setProgress(item.getProgressPercentage());
         holder.tvPercentage.setText(item.getProgressPercentage() + "%");
 
-        // 1. Progress Bar Color & Visibility Logic
         int progressColor;
         int actionIconId;
+        boolean deleteButtonVisible = false;
 
         switch (item.getState()) {
             case QUEUED:
-                progressColor = Color.GRAY;
-                actionIconId = R.drawable.cancel; // Cancel icon
-                break;
             case DOWNLOADING:
                 progressColor = Color.BLACK;
-                actionIconId = R.drawable.cancel; // Cancel icon
+                actionIconId = R.drawable.cancel;
+                deleteButtonVisible = false;
                 break;
             case FAILED:
-                progressColor = Color.RED;
-                actionIconId = R.drawable.retry; // Retry icon
-                break;
-            case COMPLETED:
-                progressColor = Color.GREEN;
-                actionIconId = R.drawable.delete; // Remove (Recycle bin) icon
-                break;
             case CANCELLED:
                 progressColor = Color.RED;
                 actionIconId = R.drawable.retry;
+                deleteButtonVisible = true;
                 break;
-            default:
+            case COMPLETED:
+                progressColor = Color.GREEN;
+                actionIconId = R.drawable.download_done; 
+                deleteButtonVisible = true;
+                break;
+            default: // NOT_DOWNLOADED
                 progressColor = Color.GRAY;
-                actionIconId = R.drawable.cancel;
+                actionIconId = R.drawable.download;
+                deleteButtonVisible = false;
         }
 
-        // Apply color tint
-        holder.progressBar.getProgressDrawable().setColorFilter(
-                progressColor, android.graphics.PorterDuff.Mode.SRC_IN);
-
-        // 2. Action Button Icon
+        holder.progressBar.getProgressDrawable().setColorFilter(progressColor, android.graphics.PorterDuff.Mode.SRC_IN);
         holder.btnAction.setImageResource(actionIconId);
+        holder.btnDelete.setVisibility(deleteButtonVisible ? View.VISIBLE : View.GONE);
 
-        // 3. Action Button Click Listener
-        holder.btnAction.setOnClickListener(v ->
-                mListener.onActionButtonClick(item, item.getState())
-        );
+        holder.btnAction.setOnClickListener(v -> mListener.onActionButtonClick(item, item.getState()));
+        holder.btnDelete.setOnClickListener(v -> mListener.onDeleteButtonClick(item));
     }
 
     @Override
@@ -107,6 +100,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         final ProgressBar progressBar;
         final TextView tvPercentage;
         final ImageButton btnAction;
+        final ImageButton btnDelete;
 
         public DownloadViewHolder(View view) {
             super(view);
@@ -115,6 +109,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
             progressBar = view.findViewById(R.id.progress_bar_download);
             tvPercentage = view.findViewById(R.id.tv_download_percentage);
             btnAction = view.findViewById(R.id.btn_action);
+            btnDelete = view.findViewById(R.id.btn_delete);
         }
     }
 }

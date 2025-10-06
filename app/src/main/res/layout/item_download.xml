@@ -48,16 +48,34 @@
             android:textSize="12sp"
             android:layout_marginStart="8dp"
             tools:text="2.1 MB" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_action"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Action button for download item"
-            android:layout_marginStart="8dp"
-            tools:src="@android:drawable/ic_menu_close_clear_cancel" />
+            tools:src="@drawable/cancel" />
 
+        <ImageButton
+            android:id="@+id/btn_delete"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/delete"
+            android:contentDescription="Delete button for download item"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
 </LinearLayout>
