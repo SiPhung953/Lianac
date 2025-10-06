@@ -1,13 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lianac</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="subject">Subject: ...</string>
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">My Application</string>
-
-    <!-- Settings -->
+    <string name="subject">Skjnlasdasjnkdasnjk</string>
     <string name="settings">Settings</string>
 
     <!-- Appearance -->
@@ -37,3 +33,4 @@
     <!-- Messages -->
     <string name="language_changed">Language changed to English</string>
 </resources>
+
