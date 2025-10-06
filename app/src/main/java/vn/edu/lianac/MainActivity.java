@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import android.content.SharedPreferences;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
+        int themeMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(themeMode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -68,8 +73,15 @@ public class MainActivity extends AppCompatActivity {
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        replaceFragment(new SubjectFragment());
-        getSupportActionBar().setTitle("Subjects");
+
+        if (savedInstanceState == null) {
+            replaceFragment(new SubjectFragment());
+            getSupportActionBar().setTitle("Subjects");
+            navigationView.setCheckedItem(R.id.nav_subjects);
+        } else {
+            getSupportActionBar().setTitle(savedInstanceState.getCharSequence("title"));
+        }
+
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(item -> {
             Fragment fragment = null;
@@ -106,11 +118,18 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence("title", getSupportActionBar().getTitle());
     }
 }
 //        // TODO: Someone should fix this
