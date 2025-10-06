@@ -3,4 +3,37 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="subject">Subject: ...</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+
+    <!-- Appearance -->
+    <string name="appearance">Appearance</string>
+    <string name="light_dark_mode">Light/Dark mode</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+    <string name="compact_list_view">Compact list view</string>
+    <string name="text_density">Text Density</string>
+    <string name="comfortable">Comfortable</string>
+    <string name="compact">Compact</string>
+    <string name="language">Language</string>
+
+    <!-- Reading/Viewer -->
+    <string name="reading_viewer">Reading/Viewer</string>
+    <string name="default_viewer">Default Viewer</string>
+    <string name="in_app">In-app</string>
+    <string name="external_pdf_app">External PDF app</string>
+    <string name="scroll">Scroll</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
+    <string name="annotations">Annotations</string>
+    <string name="annotations_desc">Highlight, notes, exportable</string>
+    <string name="auto_save_annotations">Auto-save annotations</string>
+
+    <!-- Messages -->
+    <string name="language_changed">Language changed to English</string>
 </resources>

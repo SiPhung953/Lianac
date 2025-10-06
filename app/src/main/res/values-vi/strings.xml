@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ứng Dụng Của Tôi</string>
+
+    <!-- Settings -->
+    <string name="settings">Cài Đặt</string>
+
+    <!-- Appearance -->
+    <string name="appearance">Giao Diện</string>
+    <string name="light_dark_mode">Chế độ Sáng/Tối</string>
+    <string name="light">Sáng</string>
+    <string name="dark">Tối</string>
+    <string name="system">Hệ Thống</string>
+    <string name="compact_list_view">Chế độ xem danh sách thu gọn</string>
+    <string name="text_density">Mật độ văn bản</string>
+    <string name="comfortable">Thoải mái</string>
+    <string name="compact">Thu gọn</string>
+    <string name="language">Ngôn ngữ</string>
+
+    <!-- Reading/Viewer -->
+    <string name="reading_viewer">Đọc/Xem</string>
+    <string name="default_viewer">Trình xem mặc định</string>
+    <string name="in_app">Trong ứng dụng</string>
+    <string name="external_pdf_app">Ứng dụng PDF bên ngoài</string>
+    <string name="scroll">Cuộn</string>
+    <string name="horizontal">Ngang</string>
+    <string name="vertical">Dọc</string>
+    <string name="annotations">Chú thích</string>
+    <string name="annotations_desc">Đánh dấu, ghi chú, xuất được</string>
+    <string name="auto_save_annotations">Tự động lưu chú thích</string>
+
+    <!-- Messages -->
+    <string name="language_changed">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+</resources>

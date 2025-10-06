@@ -52,6 +52,18 @@
           <option name="screenY" value="2412" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+          <option name="api" value="35" />
+          <option name="brand" value="OnePlus" />
+          <option name="codename" value="OP5552L1" />
+          <option name="id" value="OP5552L1" />
+          <option name="labId" value="google" />
+          <option name="manufacturer" value="OnePlus" />
+          <option name="name" value="CPH2415" />
+          <option name="screenDensity" value="480" />
+          <option name="screenX" value="1080" />
+          <option name="screenY" value="2412" />
+        </PersistentDeviceSelectionData>
+        <PersistentDeviceSelectionData>
           <option name="api" value="34" />
           <option name="brand" value="OPPO" />
           <option name="codename" value="OP573DL1" />
@@ -656,74 +668,6 @@
           <option name="screenDensity" value="421" />
           <option name="screenX" value="1080" />
           <option name="screenY" value="2400" />
-        </PersistentDeviceSelectionData>
-        <PersistentDeviceSelectionData>
-          <option name="accessStatus">
-            <list>
-              <option value="EULA_NOT_ACCEPTED" />
-            </list>
-          </option>
-          <option name="api" value="34" />
-          <option name="brand" value="OPPO" />
-          <option name="codename" value="oplus_lab_op574fl1" />
-          <option name="id" value="oplus_lab_op574fl1" />
-          <option name="labId" value="oppo" />
-          <option name="manufacturer" value="OPPO" />
-          <option name="name" value="A58" />
-          <option name="screenDensity" value="480" />
-          <option name="screenX" value="1080" />
-          <option name="screenY" value="2400" />
-        </PersistentDeviceSelectionData>
-        <PersistentDeviceSelectionData>
-          <option name="accessStatus">
-            <list>
-              <option value="EULA_NOT_ACCEPTED" />
-            </list>
-          </option>
-          <option name="api" value="35" />
-          <option name="brand" value="OnePlus" />
-          <option name="codename" value="oplus_lab_op5961l1" />
-          <option name="id" value="oplus_lab_op5961l1" />
-          <option name="labId" value="oneplus" />
-          <option name="manufacturer" value="OnePlus" />
-          <option name="name" value="11R 5G" />
-          <option name="screenDensity" value="560" />
-          <option name="screenX" value="1240" />
-          <option name="screenY" value="2772" />
-        </PersistentDeviceSelectionData>
-        <PersistentDeviceSelectionData>
-          <option name="accessStatus">
-            <list>
-              <option value="EULA_NOT_ACCEPTED" />
-            </list>
-          </option>
-          <option name="api" value="34" />
-          <option name="brand" value="OPPO" />
-          <option name="codename" value="oplus_lab_op5abfl1" />
-          <option name="id" value="oplus_lab_op5abfl1" />
-          <option name="labId" value="oppo" />
-          <option name="manufacturer" value="OPPO" />
-          <option name="name" value="Reno11 5G" />
-          <option name="screenDensity" value="480" />
-          <option name="screenX" value="1080" />
-          <option name="screenY" value="2412" />
-        </PersistentDeviceSelectionData>
-        <PersistentDeviceSelectionData>
-          <option name="accessStatus">
-            <list>
-              <option value="EULA_NOT_ACCEPTED" />
-            </list>
-          </option>
-          <option name="api" value="34" />
-          <option name="brand" value="OPPO" />
-          <option name="codename" value="oplus_lab_op5b05l1" />
-          <option name="id" value="oplus_lab_op5b05l1" />
-          <option name="labId" value="oppo" />
-          <option name="manufacturer" value="OPPO" />
-          <option name="name" value="A3 Pro 5G" />
-          <option name="screenDensity" value="320" />
-          <option name="screenX" value="720" />
-          <option name="screenY" value="1604" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
           <option name="api" value="31" />

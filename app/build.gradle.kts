@@ -33,6 +33,12 @@ android {
 
 dependencies {
 
+// Material Design
+    implementation("com.google.android.material:material:1.11.0")
+// AppCompat cho việc thay đổi theme
+    implementation("androidx.appcompat:appcompat:1.6.1")
+// Fragment
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
