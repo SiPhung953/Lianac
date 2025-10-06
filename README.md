@@ -1,1 +1,1 @@
-Lianac Is An ArXiv Client !
+Lianac is an ArXiv client 

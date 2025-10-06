@@ -32,7 +32,6 @@ android {
 }
 
 dependencies {
-
 // Material Design
     implementation("com.google.android.material:material:1.11.0")
 // AppCompat cho việc thay đổi theme
@@ -43,10 +42,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation("com.github.GrenderG:Toasty:1.5.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
-    implementation("androidx.cardview:cardview:1.0.0")
 }
