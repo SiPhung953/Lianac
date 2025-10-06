@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".DownloadService"
+            android:name=".Download.DownloadService"
             android:exported="false" />
     </application>
 

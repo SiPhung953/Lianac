@@ -1,6 +1,5 @@
-package vn.edu.lianac;
+package vn.edu.lianac.Download;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,11 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import vn.edu.lianac.DownloadAdapter.DownloadAdapter;
-import vn.edu.lianac.DownloadItem.DownloadItem;
-import vn.edu.lianac.DownloadItemDecoration.DownloadItemDecoration;
-import vn.edu.lianac.DownloadState.DownloadState;
-import vn.edu.lianac.DownloadViewModel.DownloadViewModel;
+import vn.edu.lianac.Download.DownloadAdapter.DownloadAdapter;
+import vn.edu.lianac.Download.DownloadItem.DownloadItem;
+import vn.edu.lianac.Download.DownloadItemDecoration.DownloadItemDecoration;
+import vn.edu.lianac.Download.DownloadState.DownloadState;
+import vn.edu.lianac.Download.DownloadViewModel.DownloadViewModel;
+import vn.edu.lianac.R;
 
 import java.util.ArrayList;
 
@@ -52,9 +52,10 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
                 long downloadId = resultData.getLong(DownloadService.EXTRA_DOWNLOAD_ID, -1);
                 int progress = resultData.getInt(DownloadService.EXTRA_PROGRESS, 0);
                 int status = resultData.getInt("status", -1);
+                String filePath = resultData.getString(DownloadService.EXTRA_FILE_PATH);
                 String url = resultData.getString(DownloadService.EXTRA_URL);
                 if (mViewModel != null && url != null) {
-                    mViewModel.updateDownloadProgress(downloadId, progress, status, url);
+                    mViewModel.updateDownloadProgress(downloadId, progress, status, url, filePath);
                 }
             }
         }
@@ -89,6 +90,14 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
             mAdapter.updateList(downloadItems);
         });
 
+        // Observe the start download event from the ViewModel
+        mViewModel.startDownloadEvent.observe(getViewLifecycleOwner(), item -> {
+            if (item != null) {
+                startDownload(item);
+                mViewModel.onDownloadStarted(); // Reset the event
+            }
+        });
+
         // For testing purposes, remove later
         etPdfUrl = view.findViewById(R.id.et_pdf_url);
         btnDownload = view.findViewById(R.id.btn_download);
@@ -96,10 +105,10 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
         btnDownload.setOnClickListener(v -> {
             String url = etPdfUrl.getText().toString();
             if (!url.isEmpty()) {
-                DownloadItem newItem = new DownloadItem(url, "New PDF", DownloadState.NOT_DOWNLOADED);
-                mViewModel.addDownloadItem(newItem);
+                // The ViewModel will now fetch the title and add the item to the list
+                mViewModel.fetchTitleAndAddDownload(url);
                 etPdfUrl.setText("");
-                startDownload(newItem);
+                // The download will be started by the user via the item's action button
             }
         });
         // End of testing section
@@ -111,16 +120,15 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
         intent.putExtra(DownloadService.EXTRA_URL, item.getUrl());
         intent.putExtra(DownloadService.EXTRA_FILE_NAME, item.getPaperName());
         intent.putExtra(DownloadService.EXTRA_RECEIVER, progressReceiver);
-        getActivity().startService(intent);
+        if (getActivity() != null) {
+            getActivity().startService(intent);
+        }
     }
 
     @Override
     public void onActionButtonClick(DownloadItem item, DownloadState currentState) {
-        if (currentState == DownloadState.NOT_DOWNLOADED || currentState == DownloadState.FAILED || currentState == DownloadState.CANCELLED) {
-            startDownload(item);
-        } else {
-            mViewModel.handleDownloadAction(item);
-        }
+        // The ViewModel will handle the state change and trigger the download event
+        mViewModel.handleDownloadAction(item);
     }
 
     @Override

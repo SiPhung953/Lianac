@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import vn.edu.lianac.DownloadFragment;
+import vn.edu.lianac.Download.DownloadFragment;
 
 public class MainActivity extends AppCompatActivity {
 

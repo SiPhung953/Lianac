@@ -1,4 +1,4 @@
-package vn.edu.lianac.DownloadState;
+package vn.edu.lianac.Download.DownloadState;
 
 public enum DownloadState {
     NOT_DOWNLOADED, // Not yet downloaded

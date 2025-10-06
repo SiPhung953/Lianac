@@ -1,17 +1,27 @@
-package vn.edu.lianac.DownloadViewModel;
+package vn.edu.lianac.Download.DownloadViewModel;
 
 import android.app.Application;
 import android.app.DownloadManager;
+import android.net.Uri;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import vn.edu.lianac.DownloadItem.DownloadItem;
-import vn.edu.lianac.DownloadState.DownloadState;
+import vn.edu.lianac.Download.DownloadItem.DownloadItem;
+import vn.edu.lianac.Download.DownloadState.DownloadState;
 
 public class DownloadViewModel extends AndroidViewModel {
 
@@ -22,6 +32,8 @@ public class DownloadViewModel extends AndroidViewModel {
     public final LiveData<DownloadItem> startDownloadEvent = _startDownloadEvent;
 
     private final DownloadManager downloadManager;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
 
     public DownloadViewModel(Application application) {
         super(application);
@@ -29,14 +41,42 @@ public class DownloadViewModel extends AndroidViewModel {
         downloadManager = application.getSystemService(DownloadManager.class);
     }
 
-    public void addNewDownload(String url) {
-        DownloadItem newItem = new DownloadItem(url, "New PDF", DownloadState.NOT_DOWNLOADED);
-        List<DownloadItem> currentList = _downloadList.getValue();
-        if (currentList != null) {
-            ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
-            newList.add(newItem);
-            _downloadList.setValue(newList);
-        }
+    public void fetchTitleAndAddDownload(String pdfUrl) {
+        executor.execute(() -> {
+            String paperName = "New PDF"; // Default name
+            try {
+                // 1. Convert PDF URL to Abstract URL
+                String abstractUrlString = pdfUrl.replace("/pdf/", "/abs/");
+
+                // 2. Fetch HTML content
+                URL url = new URL(abstractUrlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                StringBuilder content = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        content.append(line);
+                    }
+                }
+
+                // 3. Parse title from HTML using regex
+                Pattern pattern = Pattern.compile("<meta name=\"citation_title\" content=\"(.*?)\" />");
+                Matcher matcher = pattern.matcher(content.toString());
+                if (matcher.find()) {
+                    paperName = matcher.group(1);
+                }
+                connection.disconnect();
+
+            } catch (Exception e) {
+                e.printStackTrace(); // Keep default name on error
+            }
+
+            // 4. Add the new item to the list
+            DownloadItem newItem = new DownloadItem(pdfUrl, paperName, DownloadState.NOT_DOWNLOADED);
+            addDownloadItem(newItem);
+        });
     }
 
     public void handleDownloadAction(DownloadItem item) {
@@ -69,7 +109,7 @@ public class DownloadViewModel extends AndroidViewModel {
         _startDownloadEvent.setValue(null);
     }
 
-    public void updateDownloadProgress(long downloadId, int progress, int status, String url) {
+    public void updateDownloadProgress(long downloadId, int progress, int status, String url, String filePath) {
         List<DownloadItem> currentList = _downloadList.getValue();
         if (currentList == null || url == null) return;
 
@@ -94,6 +134,9 @@ public class DownloadViewModel extends AndroidViewModel {
                 case DownloadManager.STATUS_SUCCESSFUL:
                     newState = DownloadState.COMPLETED;
                     progress = 100;
+                    if (filePath != null) {
+                        itemToUpdate.setFilePath(filePath);
+                    }
                     break;
                 case DownloadManager.STATUS_FAILED:
                     newState = DownloadState.FAILED;
@@ -132,6 +175,21 @@ public class DownloadViewModel extends AndroidViewModel {
         if (item.getDownloadId() != 0 && (item.getState() == DownloadState.DOWNLOADING || item.getState() == DownloadState.QUEUED)) {
             downloadManager.remove(item.getDownloadId());
         }
+
+        // If the download is completed and we have a file path, delete the file.
+        if (item.getState() == DownloadState.COMPLETED && item.getFilePath() != null) {
+            try {
+                Uri fileUri = Uri.parse(item.getFilePath());
+                File file = new File(fileUri.getPath());
+                if (file.exists()) {
+                    file.delete();
+                }
+            } catch (Exception e) {
+                // Log or handle the exception if file deletion fails
+                e.printStackTrace();
+            }
+        }
+
         removeItemFromList(item);
     }
 

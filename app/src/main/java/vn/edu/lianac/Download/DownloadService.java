@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.Download;
 
 import android.app.DownloadManager;
 import android.app.IntentService;
@@ -20,6 +20,7 @@ public class DownloadService extends IntentService {
     public static final int UPDATE_CODE = 8344;
     public static final String EXTRA_DOWNLOAD_ID = "vn.edu.lianac.extra.DOWNLOAD_ID";
     public static final String EXTRA_PROGRESS = "vn.edu.lianac.extra.PROGRESS";
+    public static final String EXTRA_FILE_PATH = "vn.edu.lianac.extra.FILE_PATH";
 
 
     public DownloadService() {
@@ -45,7 +46,7 @@ public class DownloadService extends IntentService {
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName + ".pdf");
 
         long downloadId = downloadManager.enqueue(request);
-        sendProgressUpdate(receiver, downloadId, 0, DownloadManager.STATUS_PENDING, url);
+        sendProgressUpdate(receiver, downloadId, 0, DownloadManager.STATUS_PENDING, url, null);
 
         // Start monitoring thread
         monitorDownload(downloadManager, downloadId, receiver, url);
@@ -53,6 +54,8 @@ public class DownloadService extends IntentService {
 
     private void monitorDownload(DownloadManager downloadManager, long downloadId, ResultReceiver receiver, String url) {
         boolean downloading = true;
+        String localFilePath = null;
+
         while (downloading) {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
@@ -66,23 +69,28 @@ public class DownloadService extends IntentService {
                 int bytesDownloaded = (bytesDownloadedColumnIndex != -1) ? cursor.getInt(bytesDownloadedColumnIndex) : 0;
                 int bytesTotal = (bytesTotalColumnIndex != -1) ? cursor.getInt(bytesTotalColumnIndex) : 0;
 
-                if (status == DownloadManager.STATUS_SUCCESSFUL || status == DownloadManager.STATUS_FAILED) {
+                if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                    int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                    if (localUriIndex != -1) {
+                        localFilePath = cursor.getString(localUriIndex);
+                    }
+                    downloading = false;
+                } else if (status == DownloadManager.STATUS_FAILED) {
                     downloading = false;
                 }
 
                 int progress = (bytesTotal > 0) ? (int) ((bytesDownloaded * 100L) / bytesTotal) : 0;
-                sendProgressUpdate(receiver, downloadId, progress, status, url);
+                sendProgressUpdate(receiver, downloadId, progress, status, url, localFilePath);
 
             } else {
-                 sendProgressUpdate(receiver, downloadId, 0, DownloadManager.STATUS_FAILED, url);
+                 sendProgressUpdate(receiver, downloadId, 0, DownloadManager.STATUS_FAILED, url, null);
                  downloading = false;
             }
             cursor.close();
 
             if (!downloading) {
-                 return; 
+                 return;
             }
-
 
             try {
                 Thread.sleep(1000); // Update every second
@@ -93,13 +101,20 @@ public class DownloadService extends IntentService {
         }
     }
 
-    private void sendProgressUpdate(ResultReceiver receiver, long downloadId, int progress, int status, String url) {
+    private void sendProgressUpdate(ResultReceiver receiver, long downloadId, int progress, int status, String url, String filePath) {
         if (receiver != null) {
             Bundle resultData = new Bundle();
             resultData.putLong(EXTRA_DOWNLOAD_ID, downloadId);
             resultData.putInt(EXTRA_PROGRESS, progress);
             resultData.putInt("status", status);
             resultData.putString(EXTRA_URL, url);
+
+            resultData.putString(DownloadService.EXTRA_URL, url);
+            receiver.send(UPDATE_CODE, resultData);
+
+            if (filePath != null) {
+                resultData.putString(EXTRA_FILE_PATH, filePath);
+            }
             receiver.send(UPDATE_CODE, resultData);
         }
     }

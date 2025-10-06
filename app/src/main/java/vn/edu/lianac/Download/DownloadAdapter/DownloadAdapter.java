@@ -1,4 +1,4 @@
-package vn.edu.lianac.DownloadAdapter;
+package vn.edu.lianac.Download.DownloadAdapter;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import vn.edu.lianac.R;
-import vn.edu.lianac.DownloadItem.DownloadItem;
-import vn.edu.lianac.DownloadState.DownloadState;
+import vn.edu.lianac.Download.DownloadItem.DownloadItem;
+import vn.edu.lianac.Download.DownloadState.DownloadState;
 
 import java.util.List;
 

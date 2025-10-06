@@ -1,6 +1,6 @@
-package vn.edu.lianac.DownloadItem;
+package vn.edu.lianac.Download.DownloadItem;
 
-import vn.edu.lianac.DownloadState.DownloadState;
+import vn.edu.lianac.Download.DownloadState.DownloadState;
 
 public class DownloadItem {
     private long downloadId;
@@ -9,6 +9,7 @@ public class DownloadItem {
     private String fileSize; // e.g., "1.2 MB"
     private int progressPercentage; // 0 to 100
     private DownloadState state;
+    private String filePath; // To store the local URI of the downloaded file
 
     public DownloadItem(String url, String paperName, DownloadState state) {
         this.url = url;
@@ -16,6 +17,7 @@ public class DownloadItem {
         this.state = state;
         this.fileSize = "";
         this.progressPercentage = 0;
+        this.filePath = null; // Initialize as null
     }
 
     // --- Getters ---
@@ -43,6 +45,10 @@ public class DownloadItem {
         return state;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
     // --- Setters ---
     public void setDownloadId(long downloadId) {
         this.downloadId = downloadId;
@@ -58,5 +64,9 @@ public class DownloadItem {
 
     public void setState(DownloadState state) {
         this.state = state;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }
