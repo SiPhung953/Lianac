@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.bookmark;
 
 import android.content.Context;
 import android.content.SharedPreferences;

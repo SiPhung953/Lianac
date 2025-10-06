@@ -119,10 +119,7 @@ public class DetailFragment extends Fragment {
         args.putString("subject_name", subjectName);
         fragment.setArguments(args);
 
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        ((MainActivity) getActivity()).replaceFragment(fragment);
     }
 
     // --- Mở SubclassFragment (hiển thị danh sách bài viết trong subclass) ---
@@ -133,9 +130,6 @@ public class DetailFragment extends Fragment {
         args.putString("subclass_name", subclassName);
         fragment.setArguments(args);
 
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        ((MainActivity) getActivity()).replaceFragment(fragment);
     }
 }

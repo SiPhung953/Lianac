@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.bookmark;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 
+import vn.edu.lianac.R;
 
 
 public class DummyFragment extends Fragment {

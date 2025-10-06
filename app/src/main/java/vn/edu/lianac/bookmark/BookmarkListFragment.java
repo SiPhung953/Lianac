@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.bookmark;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+
+import vn.edu.lianac.R;
 
 public class BookmarkListFragment extends Fragment implements BookmarkAdapter.OnBookmarkClickListener {
     private RecyclerView recyclerView;

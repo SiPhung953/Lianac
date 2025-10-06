@@ -30,5 +30,7 @@
     <string name="auto_save_annotations">Tự động lưu chú thích</string>
 
     <!-- Messages -->
+    <string name="navigation_drawer_close">Đóng khay định hướng</string>
     <string name="language_changed">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+    <string name="navigation_drawer_open">Mở khay định hướng</string>
 </resources>

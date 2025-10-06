@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +19,10 @@ public class StartupFragment extends Fragment {
 
         // After 2s -> MainFragment
         new Handler().postDelayed(() -> {
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            transaction.replace(R.id.fragment_container, new MainFragment());
-            transaction.commit();
+            getActivity().setContentView(R.layout.activity_main);
+            Log.i("asdasd", "asdasdqweqwe");;
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Subjects");
+            ((MainActivity) getActivity()).replaceFragment(new SubjectFragment());
         }, 2000); // Delay 2s
 
         return view;

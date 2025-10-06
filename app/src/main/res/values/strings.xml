@@ -29,7 +29,8 @@
     <string name="annotations">Annotations</string>
     <string name="annotations_desc">Highlight, notes, exportable</string>
     <string name="auto_save_annotations">Auto-save annotations</string>
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- Messages -->
     <string name="language_changed">Language changed to English</string>
 </resources>

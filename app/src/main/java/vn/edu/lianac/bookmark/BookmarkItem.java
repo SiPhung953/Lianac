@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.bookmark;
 
 public class BookmarkItem {
     private String id;

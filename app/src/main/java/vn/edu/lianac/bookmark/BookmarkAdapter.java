@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.bookmark;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import vn.edu.lianac.R;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder> {
     private List<BookmarkItem> bookmarks;

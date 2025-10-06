@@ -114,11 +114,6 @@ public class SubjectFragment extends Fragment {
         args.putString("subclass_name", subclassName);
         fragment.setArguments(args);
 
-        FragmentTransaction transaction = requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        ((MainActivity) getActivity()).replaceFragment(fragment);
     }
 }
