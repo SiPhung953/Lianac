@@ -1,4 +1,4 @@
-package vn.edu.lianac;
+package vn.edu.lianac.DownloadItem;
 
 // Corrected import path
 import vn.edu.lianac.DownloadState.DownloadState;

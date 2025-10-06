@@ -1,4 +1,4 @@
-package vn.edu.lianac.DownloadItemDocoration;
+package vn.edu.lianac.DownloadItemDecoration;
 
 import android.content.Context;
 import android.graphics.Canvas;

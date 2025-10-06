@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 // Imports are now self-referencing or standard Android
 import vn.edu.lianac.R;
-import vn.edu.lianac.DownloadItem;
+import vn.edu.lianac.DownloadItem.DownloadItem;
 import vn.edu.lianac.DownloadState.DownloadState;
 
 import java.util.List;
@@ -55,27 +55,27 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         switch (item.getState()) {
             case QUEUED:
                 progressColor = Color.GRAY;
-                actionIconId = android.R.drawable.ic_menu_close_clear_cancel; // Cancel icon
+                actionIconId = R.drawable.cancel; // Cancel icon
                 break;
             case DOWNLOADING:
                 progressColor = Color.BLACK;
-                actionIconId = android.R.drawable.ic_menu_close_clear_cancel; // Cancel icon
+                actionIconId = R.drawable.cancel; // Cancel icon
                 break;
             case FAILED:
                 progressColor = Color.RED;
-                actionIconId = android.R.drawable.ic_menu_rotate; // Retry icon
+                actionIconId = R.drawable.retry; // Retry icon
                 break;
             case COMPLETED:
                 progressColor = Color.GREEN;
-                actionIconId = android.R.drawable.ic_menu_delete; // Remove (Recycle bin) icon
+                actionIconId = R.drawable.delete; // Remove (Recycle bin) icon
                 break;
             case CANCELLED:
                 progressColor = Color.RED;
-                actionIconId = android.R.drawable.ic_menu_rotate;
+                actionIconId = R.drawable.retry;
                 break;
             default:
                 progressColor = Color.GRAY;
-                actionIconId = android.R.drawable.ic_menu_close_clear_cancel;
+                actionIconId = R.drawable.cancel;
         }
 
         // Apply color tint

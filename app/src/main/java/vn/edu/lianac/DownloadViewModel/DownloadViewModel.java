@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 // Corrected import paths
-import vn.edu.lianac.DownloadItem;
+import vn.edu.lianac.DownloadItem.DownloadItem;
 import vn.edu.lianac.DownloadState.DownloadState;
 
 import java.util.ArrayList;
@@ -24,24 +24,24 @@ public class DownloadViewModel extends ViewModel {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public DownloadViewModel() {
-        // Initial data setup (mocking the entries from the PDF)
-        List<DownloadItem> initialList = new ArrayList<>();
-        initialList.add(new DownloadItem("Explainable AI-Enhanced Supervisory Control for High-Precision Spacecraft Formation", "2.1 MB", DownloadState.QUEUED));
-        initialList.add(new DownloadItem("Bayesian Anomaly Detection for Ia Cosmology: Automating SALT3 Data Curation", "1.5 MB", DownloadState.COMPLETED));
-        initialList.add(new DownloadItem("Random paper #3", "0.8 MB", DownloadState.QUEUED));
-        initialList.add(new DownloadItem("Random paper #4", "3.0 MB", DownloadState.FAILED));
-
-        // Start one download automatically for demonstration
-        DownloadItem startingItem = new DownloadItem("Starting item", "1.1 MB", DownloadState.QUEUED);
-        initialList.add(startingItem);
-        _downloadList.setValue(initialList);
-        startDownload(startingItem);
+        _downloadList.setValue(new ArrayList<>());
     }
+
+    // For testing purposes, remove later
+    public void addDownloadItem(DownloadItem item) {
+        List<DownloadItem> currentList = _downloadList.getValue();
+        if (currentList != null) {
+            ArrayList<DownloadItem> newList = new ArrayList<>(currentList);
+            newList.add(item);
+            _downloadList.postValue(newList);
+        }
+    }
+    // End of testing section
 
     public void handleDownloadAction(DownloadItem item, DownloadState currentState) {
         if (currentState == DownloadState.COMPLETED) {
             removeDownload(item);
-        } else if (currentState == DownloadState.FAILED || currentState == DownloadState.QUEUED) {
+        } else if (currentState == DownloadState.FAILED || currentState == DownloadState.QUEUED || currentState == DownloadState.NOT_DOWNLOADED) {
             startDownload(item);
         } else if (currentState == DownloadState.DOWNLOADING) {
             cancelDownload(item);
@@ -115,7 +115,9 @@ public class DownloadViewModel extends ViewModel {
             int index = currentList.indexOf(itemToUpdate);
             if (index != -1) {
                 currentList.set(index, itemToUpdate);
-                _downloadList.setValue(new ArrayList<>(currentList));
+                _downloadList.postValue(new ArrayList<>(currentList));
+            } else {
+                 addDownloadItem(itemToUpdate);
             }
         }
     }
