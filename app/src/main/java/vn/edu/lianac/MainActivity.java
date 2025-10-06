@@ -1,25 +1,7 @@
 package vn.edu.lianac;
 
 import androidx.fragment.app.FragmentManager;
-
 import vn.edu.lianac.Download.DownloadFragment;
-
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            DownloadFragment downloadFragment = new DownloadFragment();
-            ft.replace(R.id.fragment_container, downloadFragment);
-            ft.commit();
-        }
-    }
-}
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
 
     // TODO: fix janky startup animations
-    // TODO: Fix sidebar icons, change to smaller sidebar
+    // TODO: Fix sidebar icons
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new SubjectFragment();
                 getSupportActionBar().setTitle("Subjects");
             } else if (id == R.id.nav_downloads) {
-//                TODO: make this button work once downloads stuff is ready
-//                getSupportActionBar().setTitle("Downloacds");
-//                fragment = new DownloadsFragment();
+                getSupportActionBar().setTitle("Downloads");
+                fragment = new DownloadFragment();
             } else if (id == R.id.nav_bookmarks) {
                 getSupportActionBar().setTitle("Bookmarks");
                 fragment = new BookmarkListFragment();
@@ -135,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+     // magic, do not touch
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
