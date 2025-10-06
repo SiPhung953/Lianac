@@ -1,5 +1,25 @@
 package vn.edu.lianac;
 
+import androidx.fragment.app.FragmentManager;
+
+import vn.edu.lianac.Download.DownloadFragment;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            DownloadFragment downloadFragment = new DownloadFragment();
+            ft.replace(R.id.fragment_container, downloadFragment);
+            ft.commit();
+        }
+    }
+}
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,18 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         );
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
-//        Fragment pager = new CollectionFragment();
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.pager, pager)
-//                .commit();
-//        ViewPager2 pager = findViewById(R.id.pager);
-//        FragmentAdapter adapter = new FragmentAdapter(this);
-//        pager.setAdapter(adapter);
-//        TabLayout tabLayout = findViewById(R.id.tab_layout);
-//        new TabLayoutMediator(tabLayout, pager, (tab, position) -> tab.setText("Page " + (position + 1))).attach();
-//        for (StackTraceElement stelement : Thread.currentThread().getStackTrace()) {
-//            Log.i("STLog", stelement.toString());
-//        }
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         topAppBar = findViewById(R.id.topAppBar);
@@ -132,13 +141,3 @@ public class MainActivity extends AppCompatActivity {
         outState.putCharSequence("title", getSupportActionBar().getTitle());
     }
 }
-//        // TODO: Someone should fix this
-//        // Hiển thị SettingsFragment
-//        if (savedInstanceState == null) {
-//            SettingsFragment settingsFragment = new SettingsFragment();
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            transaction.replace(R.id.fragment_container, settingsFragment);
-//            transaction.commit();
-//        }
-//    }
-//}
