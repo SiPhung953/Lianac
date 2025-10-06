@@ -1,4 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Ứng Dụng Của Tôi</string>
+
+    <!-- Settings -->
+    <string name="settings">Cài Đặt</string>
+
     <!-- Appearance -->
     <string name="appearance">Giao Diện</string>
     <string name="light_dark_mode">Chế độ Sáng/Tối</string>
