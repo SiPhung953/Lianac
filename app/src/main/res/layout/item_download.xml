@@ -64,7 +64,7 @@
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Action button for download item"
-            tools:src="@drawable/cancel" />
+            tools:src="@drawable/cancel_download_fill" />
 
         <ImageButton
             android:id="@+id/btn_delete"
@@ -72,7 +72,7 @@
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/delete"
+            android:src="@drawable/delete_download_fill"
             android:contentDescription="Delete button for download item"
             android:visibility="gone"
             tools:visibility="visible" />
