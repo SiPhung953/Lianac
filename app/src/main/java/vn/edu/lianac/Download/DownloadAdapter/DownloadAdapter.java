@@ -56,23 +56,23 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
             case QUEUED:
             case DOWNLOADING:
                 progressColor = Color.BLACK;
-                actionIconId = R.drawable.cancel;
+                actionIconId = R.drawable.cancel_download_fill;
                 deleteButtonVisible = false;
                 break;
             case FAILED:
             case CANCELLED:
                 progressColor = Color.RED;
-                actionIconId = R.drawable.retry;
+                actionIconId = R.drawable.retry_download_fill;
                 deleteButtonVisible = true;
                 break;
             case COMPLETED:
                 progressColor = Color.GREEN;
-                actionIconId = R.drawable.download_done; 
+                actionIconId = R.drawable.downloaddone_download_fill;
                 deleteButtonVisible = true;
                 break;
             default: // NOT_DOWNLOADED
                 progressColor = Color.GRAY;
-                actionIconId = R.drawable.download;
+                actionIconId = R.drawable.downloadstart_download_fill;
                 deleteButtonVisible = false;
         }
 

@@ -6,15 +6,15 @@
     android:orientation="vertical"
     tools:context=".Download.DownloadFragment">
 
-    <TextView
-        android:id="@+id/tv_header_download"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/download_title"
-        android:textSize="24sp"
-        android:padding="16dp"
-        android:textStyle="bold"
-        android:background="?attr/colorSurface" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_header_download"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/download_title"-->
+<!--        android:textSize="24sp"-->
+<!--        android:padding="16dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:background="?attr/colorSurface" />-->
 
     <!-- For testing purposes, remove later -->
     <LinearLayout
