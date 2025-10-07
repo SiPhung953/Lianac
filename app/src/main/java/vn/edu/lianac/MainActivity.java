@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
+
+import android.util.Log;
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -82,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new SubjectFragment();
                 getSupportActionBar().setTitle("Subjects");
             } else if (id == R.id.nav_downloads) {
-                getSupportActionBar().setTitle("Downloads");
                 fragment = new DownloadFragment();
+                getSupportActionBar().setTitle("Downloads");
             } else if (id == R.id.nav_bookmarks) {
-                getSupportActionBar().setTitle("Bookmarks");
                 fragment = new BookmarkListFragment();
+                getSupportActionBar().setTitle("Bookmarks");
             } else if (id == R.id.nav_settings) {
-                getSupportActionBar().setTitle("Settings");
                 fragment = new SettingsFragment();
+                getSupportActionBar().setTitle("Settings");
             }
 
             if (fragment != null) {
