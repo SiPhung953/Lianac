@@ -5,6 +5,9 @@ import vn.edu.lianac.Download.DownloadFragment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 
@@ -21,9 +24,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import android.content.SharedPreferences;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDelegate;
-//import MathFragment
-import vn.edu.lianac.MathFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,9 +51,25 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
             return insets;
         });
+
+        // Dirty trick for clean status bar + sidebar, avoids 1 overdraw compared to setting bg
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.lor), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, systemBars.top));
+            return insets;
+        });
+
+        try {
+            PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
+            ((TextView) findViewById(R.id.version)).setText(" v" + pInfo.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // This hides only the nav bar
         WindowInsetsControllerCompat windowInsetsController =
                 WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         // Configure the behavior of the hidden system bars.
@@ -63,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Set toolbar as ActionBar
         setSupportActionBar(topAppBar);
+        int verticalPadding = getResources().getDimensionPixelSize(
+                com.google.android.material.R.dimen.mtrl_navigation_item_shape_vertical_margin);
 
         // Setup drawer toggle (hamburger icon)
         toggle = new ActionBarDrawerToggle(this, drawerLayout, topAppBar,

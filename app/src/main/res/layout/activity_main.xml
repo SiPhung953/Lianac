@@ -6,13 +6,19 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="#FFFFFF"
     tools:context=".MainActivity">
+
+    <View
+        android:id="@+id/lor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary" />
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:navigationIcon="@drawable/ic_menu"
@@ -28,17 +34,59 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000000" />
+            />
 
         <!-- Navigation drawer -->
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:menu="@menu/drawer_menu" />
-        <!--            app:headerLayout="@layout/nav_header" -->
+            app:menu="@menu/drawer_menu">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lianac"
+                    android:textStyle="normal"
+                    android:textColor="@android:color/white"
+                    android:textSize="27sp"
+                    android:layout_marginBottom="7dp"
+                    android:id="@+id/sidebar_name"
+                    android:layout_marginLeft="@dimen/mtrl_navigation_item_horizontal_padding"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/version"
+                    android:layout_toRightOf="@id/sidebar_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:layout_marginBottom="6dp" />
+
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    app:srcCompat="@drawable/ic_info"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="#FFFFFF"
+                    android:layout_alignBottom="@id/sidebar_name"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginRight="@dimen/mtrl_navigation_item_horizontal_padding">
+
+                </ImageButton>
+            </RelativeLayout>
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

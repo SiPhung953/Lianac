@@ -3,15 +3,15 @@
         <item
             android:id="@+id/nav_subjects"
             android:title="Subjects"
-            android:icon="@drawable/ic_home" />
+            android:icon="@drawable/book" />
         <item
             android:id="@+id/nav_downloads"
             android:title="Downloads"
-            android:icon="@drawable/ic_settings" />
+            android:icon="@drawable/download" />
         <item
             android:id="@+id/nav_bookmarks"
             android:title="Bookmarks"
-            android:icon="@drawable/ic_info" />
+            android:icon="@drawable/bookmark" />
         <item
             android:id="@+id/nav_math"
             android:title="Math Demo"
