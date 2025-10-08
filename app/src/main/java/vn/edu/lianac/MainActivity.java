@@ -22,6 +22,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
+//import MathFragment
+import vn.edu.lianac.MathFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(themeMode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Window setup
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -89,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_bookmarks) {
                 fragment = new BookmarkListFragment();
                 getSupportActionBar().setTitle("Bookmarks");
+            } else if (id == R.id.nav_math) { // Xử lý sự kiện click cho item mới (Math)
+                fragment = new MathFragment();
+                getSupportActionBar().setTitle("Math");
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle("Settings");
@@ -106,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // Giúp animation tốt hơn
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.content_frame, fragment);
         transaction.commit();
     }

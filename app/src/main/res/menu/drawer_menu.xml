@@ -13,6 +13,10 @@
             android:title="Bookmarks"
             android:icon="@drawable/ic_info" />
         <item
+            android:id="@+id/nav_math"
+            android:title="Math Demo"
+            android:icon="@drawable/ic_math" />
+        <item
             android:id="@+id/nav_settings"
             android:title="Settings"
             android:icon="@drawable/ic_settings" />
