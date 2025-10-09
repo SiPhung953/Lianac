@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 
-import android.util.Log;
+import vn.edu.lianac.R;
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set toolbar as ActionBar
         setSupportActionBar(topAppBar);
+        // Development purposes, ignore the cannot resolve symbol R warning its wrong
         int verticalPadding = getResources().getDimensionPixelSize(
                 com.google.android.material.R.dimen.mtrl_navigation_item_shape_vertical_margin);
 
