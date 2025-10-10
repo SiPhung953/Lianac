@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_subjects"
+            android:title="Subjects"
+            android:icon="@drawable/book" />
+        <item
+            android:id="@+id/nav_downloads"
+            android:title="Downloads"
+            android:icon="@drawable/download" />
+        <item
+            android:id="@+id/nav_bookmarks"
+            android:title="Bookmarks"
+            android:icon="@drawable/bookmark" />
+        <item
+            android:id="@+id/nav_math"
+            android:title="Math Demo"
+            android:icon="@drawable/ic_math" />
+        <item
+            android:id="@+id/nav_settings"
+            android:title="Settings"
+            android:icon="@drawable/ic_settings" />
+    </group>
+</menu>
