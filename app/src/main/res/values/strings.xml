@@ -1,0 +1,246 @@
+<resources>
+    <string name="app_name" translatable="false">Lianac</string>
+
+    <!-- Display names for search fields -->
+    <string-array name="search_fields">
+        <item>All Fields</item>
+        <item>Title</item>
+        <item>Author</item>
+        <item>Abstract</item>
+        <item>Comment</item>
+        <item>Journal Reference</item>
+        <item>Category</item>
+        <item>Report Number</item>
+        <item>ID</item>
+    </string-array>
+
+    <!-- Field codes for search fields (ADD THIS) -->
+    <string-array name="search_field_values">
+        <item>all</item>
+        <item>ti</item>
+        <item>au</item>
+        <item>abs</item>
+        <item>co</item>
+        <item>jr</item>
+        <item>cat</item>
+        <item>rn</item>
+        <item>id</item>
+    </string-array>
+
+    <string-array name="boolean_operators">
+        <item>AND</item>
+        <item>OR</item>
+        <item>NOT</item>
+    </string-array>
+
+    <string-array name="sort_options">
+        <item>Submitted Date (Newest)</item>
+        <item>Last Updated</item>
+        <item>Relevance</item>
+    </string-array>
+
+    <string-array name="page_sizes">
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+    </string-array>
+
+    <string name="search">Search</string>
+    <string name="advanced_search">Advanced Search</string>
+    <string name="basic_search">Basic Search</string>
+    <string name="placeholder_search">Search...</string>
+    <string name="placehold_advanced_search">Search term...</string>
+
+    <string name="select_category_placeholder">Select a category</string>
+    <string name="select_valid_category_toast">Please select a valid category</string>
+    <string name="invalid_category_toast">Invalid category selected</string>
+    <string name="category_already_added_toast">Category already added</string>
+    <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
+
+    <!-- Main Categories -->
+    <string name="category_physics">Physics</string>
+    <string name="category_math">Mathematics</string>
+    <string name="category_cs">Computer Science</string>
+    <string name="category_q_bio">Quantitative Biology</string>
+    <string name="category_q_fin">Quantitative Finance</string>
+    <string name="category_stat">Statistics</string>
+    <string name="category_eess">Electrical Engineering and Systems Science</string>
+    <string name="category_econ">Economics</string>
+
+    <!-- Sub-Categories for Physics -->
+    <string name="category_astro_ph">Astrophysics</string>
+    <string name="category_astro_ph_co">Cosmology and Nongalactic Astrophysics</string>
+    <string name="category_astro_ph_ep">Earth and Planetary Astrophysics</string>
+    <string name="category_astro_ph_ga">Astrophysics of Galaxies</string>
+    <string name="category_astro_ph_he">High Energy Astrophysical Phenomena</string>
+    <string name="category_astro_ph_im">Instrumentation and Methods</string>
+    <string name="category_astro_ph_sr">Solar and Stellar Astrophysics</string>
+    <string name="category_cond_mat">Condensed Matter</string>
+    <string name="category_cond_mat_dis_nn">Disordered Systems and Neural Networks</string>
+    <string name="category_cond_mat_mes_hall">Mesoscale and Nanoscale Physics</string>
+    <string name="category_cond_mat_mtrl_sci">Materials Science</string>
+    <string name="category_cond_mat_other">Other Condensed Matter</string>
+    <string name="category_cond_mat_quant_gas">Quantum Gases</string>
+    <string name="category_cond_mat_soft">Soft Condensed Matter</string>
+    <string name="category_cond_mat_stat_mech">Statistical Mechanics</string>
+    <string name="category_cond_mat_str_el">Strongly Correlated Electrons</string>
+    <string name="category_cond_mat_supr_con">Superconductivity</string>
+    <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
+    <string name="category_hep">High Energy Physics</string>
+    <string name="category_hep_ex">Experiment</string>
+    <string name="category_hep_lat">Lattice</string>
+    <string name="category_hep_ph">Phenomenology</string>
+    <string name="category_hep_th">Theory</string>
+    <string name="category_math_ph">Mathematical Physics</string>
+    <string name="category_nlin">Nonlinear Sciences</string>
+    <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
+    <string name="category_nlin_cd">Chaotic Dynamics</string>
+    <string name="category_nlin_cg">Cellular Automata and Lattice Gases</string>
+    <string name="category_nlin_ps">Pattern Formation and Solitons</string>
+    <string name="category_nlin_si">Exactly Solvable and Integrable Systems</string>
+    <string name="category_nucl">Nuclear</string>
+    <string name="category_nucl_ex">Nuclear Experiment</string>
+    <string name="category_nucl_th">Nuclear Theory</string>
+    <string name="category_physics_other">Physics (Other)</string>
+    <string name="category_physics_acc_ph">Accelerator Physics</string>
+    <string name="category_physics_ao_ph">Atmospheric and Oceanic Physics</string>
+    <string name="category_physics_app_ph">Applied Physics</string>
+    <string name="category_physics_atm_clus">Atomic and Molecular Clusters</string>
+    <string name="category_physics_atom_ph">Atomic Physics</string>
+    <string name="category_physics_bio_ph">Biological Physics</string>
+    <string name="category_physics_chem_ph">Chemical Physics</string>
+    <string name="category_physics_class_ph">Classical Physics</string>
+    <string name="category_physics_comp_ph">Computational Physics</string>
+    <string name="category_physics_data_an">Data Analysis, Statistics and Probability</string>
+    <string name="category_physics_ed_ph">Physics Education</string>
+    <string name="category_physics_flu_dyn">Fluid Dynamics</string>
+    <string name="category_physics_gen_ph">General Physics</string>
+    <string name="category_physics_geo_ph">Geophysics</string>
+    <string name="category_physics_hist_ph">History and Philosophy of Physics</string>
+    <string name="category_physics_ins_det">Instrumentation and Detectors</string>
+    <string name="category_physics_med_ph">Medical Physics</string>
+    <string name="category_physics_optics">Optics</string>
+    <string name="category_physics_plasm_ph">Plasma Physics</string>
+    <string name="category_physics_pop_ph">Popular Physics</string>
+    <string name="category_physics_soc_ph">Physics and Society</string>
+    <string name="category_physics_space_ph">Space Physics</string>
+    <string name="category_quant_ph">Quantum Physics</string>
+
+    <!-- Sub-Categories for Mathematics -->
+    <string name="category_math_ag">Algebraic Geometry</string>
+    <string name="category_math_at">Algebraic Topology</string>
+    <string name="category_math_ap">Analysis of PDEs</string>
+    <string name="category_math_ct">Category Theory</string>
+    <string name="category_math_ca">Classical Analysis and ODEs</string>
+    <string name="category_math_co">Combinatorics</string>
+    <string name="category_math_ac">Commutative Algebra</string>
+    <string name="category_math_cv">Complex Variables</string>
+    <string name="category_math_dg">Differential Geometry</string>
+    <string name="category_math_ds">Dynamical Systems</string>
+    <string name="category_math_fa">Functional Analysis</string>
+    <string name="category_math_gm">General Mathematics</string>
+    <string name="category_math_gn">General Topology</string>
+    <string name="category_math_gt">Geometric Topology</string>
+    <string name="category_math_gr">Group Theory</string>
+    <string name="category_math_ho">History and Overview</string>
+    <string name="category_math_it">Information Theory</string>
+    <string name="category_math_kt">K-Theory and Homology</string>
+    <string name="category_math_lo">Logic</string>
+    <!--<string name="category_math_mp">Mathematical Physics</string>--><!-- Duplicate key, handled by math-ph -->
+    <string name="category_math_mg">Metric Geometry</string>
+    <string name="category_math_nt">Number Theory</string>
+    <string name="category_math_na">Numerical Analysis</string>
+    <string name="category_math_oa">Operator Algebras</string>
+    <string name="category_math_oc">Optimization and Control</string>
+    <string name="category_math_pr">Probability</string>
+    <string name="category_math_qa">Quantum Algebra</string>
+    <string name="category_math_rt">Representation Theory</string>
+    <string name="category_math_ra">Rings and Algebras</string>
+    <string name="category_math_sp">Spectral Theory</string>
+    <string name="category_math_st">Statistics Theory</string>
+    <string name="category_math_sg">Symplectic Geometry</string>
+
+    <!-- Sub-Categories for Computer Science -->
+    <string name="category_cs_ai">Artificial Intelligence</string>
+    <string name="category_cs_cl">Computation and Language</string>
+    <string name="category_cs_cc">Computational Complexity</string>
+    <string name="category_cs_ce">Computational Engineering</string>
+    <string name="category_cs_cg">Computational Geometry</string>
+    <string name="category_cs_gt">Computer Science and Game Theory</string>
+    <string name="category_cs_cv">Computer Vision and Pattern Recognition</string>
+    <string name="category_cs_cy">Computers and Society</string>
+    <string name="category_cs_cr">Cryptography and Security</string>
+    <string name="category_cs_ds">Data Structures and Algorithms</string>
+    <string name="category_cs_db">Databases</string>
+    <string name="category_cs_dm">Discrete Mathematics</string>
+    <string name="category_cs_dc">Distributed Computing</string>
+    <string name="category_cs_et">Emerging Technologies</string>
+    <string name="category_cs_fl">Formal Languages and Automata Theory</string>
+    <string name="category_cs_gl">General Literature</string>
+    <string name="category_cs_gr">Graphics</string>
+    <string name="category_cs_ar">Hardware Architecture</string>
+    <string name="category_cs_hc">Human-Computer Interaction</string>
+    <string name="category_cs_ir">Information Retrieval</string>
+    <string name="category_cs_it">Information Theory</string>
+    <string name="category_cs_lg">Machine Learning</string>
+    <string name="category_cs_lo">Logic in Computer Science</string>
+    <string name="category_cs_ms">Mathematical Software</string>
+    <string name="category_cs_ma">Multiagent Systems</string>
+    <string name="category_cs_mm">Multimedia</string>
+    <string name="category_cs_ni">Networking and Internet Architecture</string>
+    <string name="category_cs_ne">Neural and Evolutionary Computing</string>
+    <string name="category_cs_na">Numerical Analysis</string>
+    <string name="category_cs_os">Operating Systems</string>
+    <string name="category_cs_pf">Performance</string>
+    <string name="category_cs_pl">Programming Languages</string>
+    <string name="category_cs_ro">Robotics</string>
+    <string name="category_cs_si">Social and Information Networks</string>
+    <string name="category_cs_se">Software Engineering</string>
+    <string name="category_cs_sd">Sound</string>
+    <string name="category_cs_sc">Symbolic Computation</string>
+    <string name="category_cs_sy">Systems and Control</string>
+
+    <!-- Sub-Categories for Quantitative Biology -->
+    <string name="category_q_bio_bm">Biomolecules</string>
+    <string name="category_q_bio_cb">Cell Behavior</string>
+    <string name="category_q_bio_gn">Genomics</string>
+    <string name="category_q_bio_mn">Molecular Networks</string>
+    <string name="category_q_bio_nc">Neurons and Cognition</string>
+    <string name="category_q_bio_ot">Other Quantitative Biology</string>
+    <string name="category_q_bio_pe">Populations and Evolution</string>
+    <string name="category_q_bio_qm">Quantitative Methods</string>
+    <string name="category_q_bio_sc">Subcellular Processes</string>
+    <string name="category_q_bio_to">Tissues and Organs</string>
+
+    <!-- Sub-Categories for Quantitative Finance -->
+    <string name="category_q_fin_cp">Computational Finance</string>
+    <string name="category_q_fin_ec">Economics</string>
+    <string name="category_q_fin_gn">General Finance</string>
+    <string name="category_q_fin_mf">Mathematical Finance</string>
+    <string name="category_q_fin_pm">Portfolio Management</string>
+    <string name="category_q_fin_pr">Pricing of Securities</string>
+    <string name="category_q_fin_rm">Risk Management</string>
+    <string name="category_q_fin_st">Statistical Finance</string>
+    <string name="category_q_fin_tr">Trading and Market Microstructure</string>
+
+    <!-- Sub-Categories for Statistics -->
+    <string name="category_stat_ap">Applications</string>
+    <string name="category_stat_co">Computation</string>
+    <string name="category_stat_ml">Machine Learning</string>
+    <string name="category_stat_me">Methodology</string>
+    <string name="category_stat_ot">Other Statistics</string>
+    <string name="category_stat_th">Statistics Theory</string>
+
+    <!-- Sub-Categories for EESS -->
+    <string name="category_eess_as">Audio and Speech Processing</string>
+    <string name="category_eess_iv">Image and Video Processing</string>
+    <string name="category_eess_sp">Signal Processing</string>
+    <!-- <string name="category_eess_sy">Systems and Control</string> --> <!-- Duplicate key, handled by cs.SY -->
+
+    <!-- Sub-Categories for Economics -->
+    <string name="category_econ_em">Econometrics</string>
+    <string name="category_econ_gn">General Economics</string>
+    <string name="category_econ_th">Theoretical Economics</string>
+</resources>

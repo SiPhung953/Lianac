@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Lianac" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/cornell_red</item>
+        <item name="colorPrimaryDark">@color/cornell_red</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/cornell_red</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <style name="Theme.Lianac" parent="Base.Theme.Lianac" />
+</resources>
