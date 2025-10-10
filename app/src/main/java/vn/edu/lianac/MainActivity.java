@@ -28,7 +28,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDelegate;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import vn.edu.lianac.ui.ArticleListingFragment;
+import vn.edu.lianac.ui.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: fix janky startup animations
     // TODO: Fix sidebar icons
+    private FrameLayout searchContainerWrapper;
+    private boolean isSearchVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +70,16 @@ public class MainActivity extends AppCompatActivity {
             v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, systemBars.top));
             return insets;
         });
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         try {
             PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
             ((TextView) findViewById(R.id.version)).setText(" v" + pInfo.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
         // This hides only the nav bar
@@ -77,26 +90,46 @@ public class MainActivity extends AppCompatActivity {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         );
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+        searchContainerWrapper = findViewById(R.id.searchContainerWrapper);
+
+        ImageView searchIcon = findViewById(R.id.search_icon);
+        searchIcon.setOnClickListener(v -> toggleSearch());
+
+        setupFragments();
+    }
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         topAppBar = findViewById(R.id.topAppBar);
+    private void setupFragments() {
+        searchContainerWrapper.setVisibility(View.GONE);
 
         // Set toolbar as ActionBar
         setSupportActionBar(topAppBar);
         int verticalPadding = getResources().getDimensionPixelSize(
                 com.google.android.material.R.dimen.mtrl_navigation_item_shape_vertical_margin);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.searchContainer, new SearchFragment())
+                .commit();
 
         // Setup drawer toggle (hamburger icon)
         toggle = new ActionBarDrawerToggle(this, drawerLayout, topAppBar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.resultsContainer, new ArticleListingFragment())
+                .commit();
+    }
 
         if (savedInstanceState == null) {
             replaceFragment(new SubjectFragment());
             getSupportActionBar().setTitle("Subjects");
             navigationView.setCheckedItem(R.id.nav_subjects);
+    private void toggleSearch() {
+        if (isSearchVisible) {
+            searchContainerWrapper.setVisibility(View.GONE);
+            isSearchVisible = false;
         } else {
             getSupportActionBar().setTitle(savedInstanceState.getCharSequence("title"));
         }
@@ -139,20 +172,25 @@ public class MainActivity extends AppCompatActivity {
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.content_frame, fragment);
         transaction.commit();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
+            searchContainerWrapper.setVisibility(View.VISIBLE);
+            isSearchVisible = true;
         }
-        return super.onOptionsItemSelected(item);
     }
 
-     // magic, do not touch
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putCharSequence("title", getSupportActionBar().getTitle());
-    }
-}
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+            if (toggle.onOptionsItemSelected(item)) {
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+            public void onBackPressed () {
+                super.onBackPressed();
+            }
+
+            // magic, do not touch
+            @Override
+            protected void onSaveInstanceState (@NonNull Bundle outState){
+                super.onSaveInstanceState(outState);
+                outState.putCharSequence("title", getSupportActionBar().getTitle());
+            }
+        }

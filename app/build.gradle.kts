@@ -39,6 +39,8 @@ dependencies {
 //    implementation("androidx.appcompat:appcompat:1.6.1")
     // Fragment
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation (libs.gson)
+    implementation(libs.okhttp)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
