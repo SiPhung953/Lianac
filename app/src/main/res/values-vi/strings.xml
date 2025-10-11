@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--  Global  -->
     <string name="app_name">Lianac</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="subject">Skjnlasdasjnkdasnjk</string>
+
     <!-- Appearance -->
     <string name="appearance">Giao Diện</string>
     <string name="light_dark_mode">Chế độ Sáng/Tối</string>
@@ -27,6 +29,19 @@
     <string name="annotations">Chú thích</string>
     <string name="annotations_desc">Đánh dấu, ghi chú, xuất được</string>
     <string name="auto_save_annotations">Tự động lưu chú thích</string>
+
+    <!--  Download  -->
+    <string name="download_title">Tải Xuống</string>
+    <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
+
+    <string name="state_queued">Chờ</string>
+    <string name="state_downloading">Đang Tải</string>
+    <string name="state_completed">Thành Công</string>
+    <string name="state_failed">Thất Bại</string>
+    <string name="state_cancelled">Đã Huỷ</string>
+
+    <string name="download_start_error">Tải không thành công.</string>
+    <string name="download_removed">Đã xoá.</string>
 
     <!-- Messages -->
     <string name="language_changed">Ngôn ngữ đã đổi sang Tiếng Việt</string>

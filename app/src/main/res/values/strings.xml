@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--  Global  -->
     <string name="app_name">Lianac</string>
 
+    <!--  Download  -->
     <string name="download_title">Downloads</string>
     <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
 
