@@ -6,5 +6,5 @@ public enum DownloadState {
     DOWNLOADING, // Actively progressing (Black Progress)
     COMPLETED,  // Download finished successfully (Green Progress)
     FAILED,     // Download terminated with an error (Red Progress)
-    CANCELLED   // Removed by user or finished cancellation
+    REMOVED     // Removed by user
 }

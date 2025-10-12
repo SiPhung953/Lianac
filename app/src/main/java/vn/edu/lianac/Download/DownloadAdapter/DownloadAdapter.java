@@ -8,8 +8,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import vn.edu.lianac.R;
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
 import vn.edu.lianac.Download.DownloadState.DownloadState;
@@ -18,16 +20,16 @@ import java.util.List;
 
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.DownloadViewHolder> {
 
-    private List<DownloadItem> mDownloads;
+    private List<DownloadItem> mDownloads = new ArrayList<>();
     private final DownloadInteractionListener mListener;
 
     public interface DownloadInteractionListener {
-        void onActionButtonClick(DownloadItem item, DownloadState currentState);
+        void onActionButtonClick(DownloadItem item);
         void onDeleteButtonClick(DownloadItem item);
+        void onItemClick(DownloadItem item);
     }
 
-    public DownloadAdapter(List<DownloadItem> downloads, DownloadInteractionListener listener) {
-        mDownloads = downloads;
+    public DownloadAdapter(DownloadInteractionListener listener) {
         mListener = listener;
     }
 
@@ -57,10 +59,8 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
             case DOWNLOADING:
                 progressColor = Color.BLACK;
                 actionIconId = R.drawable.cancel_download_fill;
-                deleteButtonVisible = false;
                 break;
             case FAILED:
-            case CANCELLED:
                 progressColor = Color.RED;
                 actionIconId = R.drawable.retry_download_fill;
                 deleteButtonVisible = true;
@@ -70,18 +70,18 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
                 actionIconId = R.drawable.downloaddone_download_fill;
                 deleteButtonVisible = true;
                 break;
-            default: // NOT_DOWNLOADED
+            default: // AKA NOT_DOWNLOADED
                 progressColor = Color.GRAY;
                 actionIconId = R.drawable.downloadstart_download_fill;
-                deleteButtonVisible = false;
         }
 
         holder.progressBar.getProgressDrawable().setColorFilter(progressColor, android.graphics.PorterDuff.Mode.SRC_IN);
         holder.btnAction.setImageResource(actionIconId);
         holder.btnDelete.setVisibility(deleteButtonVisible ? View.VISIBLE : View.GONE);
 
-        holder.btnAction.setOnClickListener(v -> mListener.onActionButtonClick(item, item.getState()));
+        holder.btnAction.setOnClickListener(v -> mListener.onActionButtonClick(item));
         holder.btnDelete.setOnClickListener(v -> mListener.onDeleteButtonClick(item));
+        holder.itemView.setOnClickListener(v -> mListener.onItemClick(item));
     }
 
     @Override
@@ -89,18 +89,18 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         return mDownloads.size();
     }
 
-    public void updateList(List<DownloadItem> newDownloads) {
-        mDownloads = newDownloads;
-        notifyDataSetChanged();
+    public void submitList(List<DownloadItem> newDownloads) {
+        DownloadDiffCallback diffCallback = new DownloadDiffCallback(mDownloads, newDownloads);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        mDownloads.clear();
+        mDownloads.addAll(newDownloads);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     static class DownloadViewHolder extends RecyclerView.ViewHolder {
-        final TextView tvTitle;
-        final TextView tvFileSize;
+        final TextView tvTitle, tvFileSize, tvPercentage;
         final ProgressBar progressBar;
-        final TextView tvPercentage;
-        final ImageButton btnAction;
-        final ImageButton btnDelete;
+        final ImageButton btnAction, btnDelete;
 
         public DownloadViewHolder(View view) {
             super(view);
@@ -110,6 +110,36 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
             tvPercentage = view.findViewById(R.id.tv_download_percentage);
             btnAction = view.findViewById(R.id.btn_action);
             btnDelete = view.findViewById(R.id.btn_delete);
+        }
+    }
+
+    private static class DownloadDiffCallback extends DiffUtil.Callback {
+        private final List<DownloadItem> oldList;
+        private final List<DownloadItem> newList;
+
+        public DownloadDiffCallback(List<DownloadItem> oldList, List<DownloadItem> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).getUrl().equals(newList.get(newItemPosition).getUrl());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
         }
     }
 }

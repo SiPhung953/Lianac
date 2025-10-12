@@ -1,6 +1,8 @@
 package vn.edu.lianac.Download;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,13 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
 
 import vn.edu.lianac.Download.DownloadAdapter.DownloadAdapter;
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
@@ -24,8 +30,6 @@ import vn.edu.lianac.Download.DownloadItemDecoration.DownloadItemDecoration;
 import vn.edu.lianac.Download.DownloadState.DownloadState;
 import vn.edu.lianac.Download.DownloadViewModel.DownloadViewModel;
 import vn.edu.lianac.R;
-
-import java.util.ArrayList;
 
 public class DownloadFragment extends Fragment implements DownloadAdapter.DownloadInteractionListener {
 
@@ -61,7 +65,6 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
         }
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,22 +75,26 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = new ViewModelProvider(this).get(DownloadViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(DownloadViewModel.class);
         progressReceiver = new DownloadResultReceiver(new Handler(Looper.getMainLooper()));
-
 
         mRecyclerView = view.findViewById(R.id.recycler_view_downloads);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mAdapter = new DownloadAdapter(new ArrayList<>(), this);
+        // The adapter is initialized with an empty list. Data will come from LiveData.
+        mAdapter = new DownloadAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addItemDecoration(
                 new DownloadItemDecoration(getContext(), R.drawable.divider_line)
         );
 
+        // Observe the download list from the ViewModel
         mViewModel.downloadList.observe(getViewLifecycleOwner(), downloadItems -> {
-            mAdapter.updateList(downloadItems);
+            if (downloadItems != null) {
+                // Use the new submitList method to efficiently update the adapter
+                mAdapter.submitList(downloadItems);
+            }
         });
 
         // Observe the start download event from the ViewModel
@@ -105,10 +112,8 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
         btnDownload.setOnClickListener(v -> {
             String url = etPdfUrl.getText().toString();
             if (!url.isEmpty()) {
-                // The ViewModel will now fetch the title and add the item to the list
                 mViewModel.fetchTitleAndAddDownload(url);
                 etPdfUrl.setText("");
-                // The download will be started by the user via the item's action button
             }
         });
         // End of testing section
@@ -126,13 +131,33 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
     }
 
     @Override
-    public void onActionButtonClick(DownloadItem item, DownloadState currentState) {
-        // The ViewModel will handle the state change and trigger the download event
+    public void onActionButtonClick(DownloadItem item) {
         mViewModel.handleDownloadAction(item);
     }
 
     @Override
     public void onDeleteButtonClick(DownloadItem item) {
         mViewModel.deleteDownload(item);
+    }
+
+    @Override
+    public void onItemClick(DownloadItem item) {
+        if (item.getState() == DownloadState.COMPLETED && item.getFilePath() != null) {
+            File file = new File(item.getFilePath());
+            if (file.exists()) {
+                Uri fileUri = FileProvider.getUriForFile(requireContext(),
+                        requireContext().getPackageName() + ".provider", file);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(fileUri, "application/pdf");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getContext(), "No PDF viewer found", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

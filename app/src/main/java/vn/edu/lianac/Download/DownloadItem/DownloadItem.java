@@ -1,17 +1,25 @@
 package vn.edu.lianac.Download.DownloadItem;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 import vn.edu.lianac.Download.DownloadState.DownloadState;
 
+@Entity(tableName = "downloads")
 public class DownloadItem {
-    private long downloadId;
+    @PrimaryKey
+    @NonNull
     private String url;
+
+    private long downloadId;
     private String paperName;
     private String fileSize; // e.g., "1.2 MB"
     private int progressPercentage; // 0 to 100
     private DownloadState state;
     private String filePath; // To store the local URI of the downloaded file
 
-    public DownloadItem(String url, String paperName, DownloadState state) {
+    // Constructor for Room
+    public DownloadItem(@NonNull String url, String paperName, DownloadState state) {
         this.url = url;
         this.paperName = paperName;
         this.state = state;
@@ -21,12 +29,13 @@ public class DownloadItem {
     }
 
     // --- Getters ---
-    public long getDownloadId() {
-        return downloadId;
-    }
-
+    @NonNull
     public String getUrl() {
         return url;
+    }
+
+    public long getDownloadId() {
+        return downloadId;
     }
 
     public String getPaperName() {
@@ -50,8 +59,16 @@ public class DownloadItem {
     }
 
     // --- Setters ---
+    public void setUrl(@NonNull String url) {
+        this.url = url;
+    }
+
     public void setDownloadId(long downloadId) {
         this.downloadId = downloadId;
+    }
+
+    public void setPaperName(String paperName) {
+        this.paperName = paperName;
     }
 
     public void setFileSize(String fileSize) {
