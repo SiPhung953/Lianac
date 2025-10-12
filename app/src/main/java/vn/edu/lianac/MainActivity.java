@@ -14,6 +14,7 @@ import vn.edu.lianac.R;
 import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
 
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle("Settings");
-            } else if (id == R.id.search) {
+            } else if (id == R.id.nav_search) {
                 handleSearch();
                 getSupportActionBar().setTitle("Search");
             }
@@ -162,8 +163,14 @@ public class MainActivity extends AppCompatActivity {
         }
         ViewGroup container = findViewById(R.id.content_frame);
         container.removeAllViews();
-        container.addView(findViewById(R.id.searchContainer));
-        container.addView(findViewById(R.id.resultsContainer));
+        ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_containers, container, false);
+
+        View sContainer = view.findViewById(R.id.searchContainer);
+        View rContainer = view.findViewById(R.id.resultsContainer);
+        view.removeView(sContainer);
+        view.removeView(rContainer);
+        container.addView(sContainer);
+        container.addView(rContainer);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.searchContainer, new SearchFragment())
                 .commit();
