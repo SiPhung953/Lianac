@@ -139,17 +139,6 @@
     <string name="category_physics_space_ph">Space Physics</string>
     <string name="category_quant_ph">Quantum Physics</string>
 
-    <string name="settings_appearance">Appearance</string>
-    <string name="settings_light_mode">Light</string>
-    <string name="settings_dark_mode">Dark</string>
-    <string name="settings_text_density">Text Density</string>
-    <string name="settings_language">Language</string>
-    <string name="settings_reading_viewer">Reading/Viewer</string>
-    <string name="settings_default_viewer">Default Viewer</string>
-    <string name="settings_scroll">Scroll</string>
-    <string name="settings_horizontal">Horizontal</string>
-    <string name="settings_vertical">Vertical</string>
-    <!-- TODO: Change this shit above -->
     <!-- Sub-Categories for Mathematics -->
     <string name="category_math_ag">Algebraic Geometry</string>
     <string name="category_math_at">Algebraic Topology</string>
@@ -184,9 +173,6 @@
     <string name="category_math_st">Statistics Theory</string>
     <string name="category_math_sg">Symplectic Geometry</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="subject">Skjnlasdasjnkdasnjk</string>
     <!-- Appearance -->
     <string name="appearance">Appearance</string>
     <string name="light_dark_mode">Light/Dark mode</string>
@@ -198,6 +184,7 @@
     <string name="comfortable">Comfortable</string>
     <string name="compact">Compact</string>
     <string name="language">Language</string>
+
     <!-- Sub-Categories for Computer Science -->
     <string name="category_cs_ai">Artificial Intelligence</string>
     <string name="category_cs_cl">Computation and Language</string>
