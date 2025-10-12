@@ -16,6 +16,7 @@ import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -32,6 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatDelegate;
 
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     MaterialToolbar topAppBar;
     ActionBarDrawerToggle toggle;
+    private boolean showSearch = false;
+    private boolean searchShowing = true;
 
     // TODO: fix janky startup animations
     // TODO: Fix sidebar icons
@@ -130,9 +135,11 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_search) {
                 handleSearch();
                 getSupportActionBar().setTitle("Search");
+                toggleSearchAction(true);
             }
 
             if (fragment != null) {
+                toggleSearchAction(false);
                 replaceFragment(fragment);
                 item.setChecked(true);
             }
@@ -140,6 +147,12 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawers();
             return true;
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        return true;
     }
 
     public void replaceFragment(Fragment fragment) {
@@ -180,8 +193,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem action = menu.findItem(R.id.action_search);
+        action.setVisible(showSearch);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void toggleSearchAction(boolean visible) {
+        showSearch = visible;
+        invalidateOptionsMenu(); // triggers onPrepareOptionsMenu() again
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        if (item.getItemId() == R.id.action_search) {
+            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
+            searchShowing = !searchShowing;
             return true;
         }
         return super.onOptionsItemSelected(item);
