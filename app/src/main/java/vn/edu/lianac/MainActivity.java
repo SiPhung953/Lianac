@@ -148,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // really not sure why this is needed given that transaction.replace should already do this
+        // internally, some1 with spare time plaese educate me on this
+        ((ViewGroup) findViewById(R.id.content_frame)).removeAllViews();
         // Giúp animation tốt hơn
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.content_frame, fragment);

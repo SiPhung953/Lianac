@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">#3700B3</item>
         <item name="colorAccent">#03DAC5</item>
         <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColor">#FF000000</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>
