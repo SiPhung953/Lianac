@@ -5,13 +5,15 @@ import vn.edu.lianac.Download.DownloadFragment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 
 import vn.edu.lianac.R;
+import vn.edu.lianac.ui.ArticleListingFragment;
+import vn.edu.lianac.ui.SearchFragment;
+
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,8 +29,14 @@ import android.content.SharedPreferences;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatDelegate;
-
+import vn.edu.lianac.ui.ArticleListingFragment;
+import vn.edu.lianac.ui.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle("Settings");
+            } else if (id == R.id.search) {
+                handleSearch();
+                getSupportActionBar().setTitle("Search");
             }
 
             if (fragment != null) {
@@ -142,6 +153,26 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    // TODO: investigate performance impact
+    private void handleSearch() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.remove(fragment).commit();
+        }
+        ViewGroup container = findViewById(R.id.content_frame);
+        container.removeAllViews();
+        container.addView(findViewById(R.id.searchContainer));
+        container.addView(findViewById(R.id.resultsContainer));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.searchContainer, new SearchFragment())
+                .commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.resultsContainer, new ArticleListingFragment())
+                .commit();
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
@@ -155,5 +186,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("title", getSupportActionBar().getTitle());
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="library_grey">#FF6b6459</color>
+    <color name="cornell_red">#FFb31b1b</color>
+    <color name="publishing_pink">#FFfb595a</color>
+    <color name="warm_white">#FFf9f7f7</color>
+    <color name="archival_blue">#FF1f5e96</color>
+    <color name="open_blue">#FFa5d6fe</color>
+    <color name="cool_white">#FFf7fafc</color>
+    <color name="access_lime">#FFc4d82e</color>
+    <color name="link_blue">#FF1e8bc3</color>
+    <color name="repo_brown">#FF1c1a17</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple_700">#3700B3</color>
