@@ -12,14 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.models.Article;
-import vn.edu.lianac.models.Category;
 import vn.edu.lianac.models.SearchResult;
 
 public class ArxivParser {
     private static final String TAG = "ArxivParser";
-    private static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
-    private static final String ARXIV_NAMESPACE = "http://arxiv.org/schemas/atom";
     private static final String OPENSEARCH_NAMESPACE = "http://a9.com/-/spec/opensearch/1.1/";
+    private static final String ARXIV_NAMESPACE = "http://arxiv.org/schemas/atom";
 
     /**
      * Parse arXiv Atom feed XML into a SearchResult object containing articles and metadata
@@ -55,12 +53,8 @@ public class ArxivParser {
         int startIndex = 0;
         int itemsPerPage = 0;
 
-        // Handle both with and without namespace
-        String name = parser.getName();
-        if (!"feed".equals(name)) {
-            Log.e(TAG, "Expected 'feed' element, got: " + name);
-            return new SearchResult(entries, totalResults, startIndex, itemsPerPage);
-        }
+        // Verify we're at a feed element
+        parser.require(XmlPullParser.START_TAG, null, "feed");
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -122,7 +116,7 @@ public class ArxivParser {
 
         Article article = new Article();
         List<String> authors = new ArrayList<>();
-        List<Category> categories = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -130,44 +124,66 @@ public class ArxivParser {
             }
 
             String tagName = parser.getName();
+            String namespace = parser.getNamespace();
 
             try {
-                switch (tagName) {
-                    case "id":
-                        article.setId(extractArxivId(readText(parser)));
-                        break;
-                    case "title":
-                        article.setTitle(cleanText(readText(parser)));
-                        break;
-                    case "summary":
-                        article.setSummary(cleanText(readText(parser)));
-                        break;
-                    case "published":
-                        // Store raw ISO 8601 date
-                        article.setPublishedDateRaw(readText(parser).trim());
-                        break;
-                    case "updated":
-                        // Store raw ISO 8601 date
-                        article.setUpdatedDateRaw(readText(parser).trim());
-                        break;
-                    case "author":
-                        String author = readAuthor(parser);
-                        if (author != null && !author.isEmpty()) {
-                            authors.add(author);
-                        }
-                        break;
-                    case "link":
-                        readLink(parser, article);
-                        break;
-                    case "category":
-                        Category cat = readCategory(parser);
-                        if (cat != null) {
-                            categories.add(cat);
-                        }
-                        break;
-                    default:
-                        skip(parser);
-                        break;
+                // Check for arxiv namespace elements
+                if (ARXIV_NAMESPACE.equals(namespace)) {
+                    switch (tagName) {
+                        case "doi":
+                            String doi = readText(parser);
+                            if (doi != null && !doi.trim().isEmpty()) {
+                                article.setDoi(doi.trim());
+                                Log.d(TAG, "Found DOI: " + doi.trim());
+                            }
+                            break;
+                        case "comment":
+                        case "journal_ref":
+                        case "primary_category":
+                            // Skip other arxiv namespace elements for now
+                            skip(parser);
+                            break;
+                        default:
+                            skip(parser);
+                            break;
+                    }
+                } else {
+                    // Handle standard Atom elements
+                    switch (tagName) {
+                        case "id":
+                            article.setId(extractArxivId(readText(parser)));
+                            break;
+                        case "title":
+                            article.setTitle(cleanText(readText(parser)));
+                            break;
+                        case "summary":
+                            article.setSummary(cleanText(readText(parser)));
+                            break;
+                        case "published":
+                            article.setPublishedDateRaw(readText(parser).trim());
+                            break;
+                        case "updated":
+                            article.setUpdatedDateRaw(readText(parser).trim());
+                            break;
+                        case "author":
+                            String author = readAuthor(parser);
+                            if (author != null && !author.isEmpty()) {
+                                authors.add(author);
+                            }
+                            break;
+                        case "link":
+                            readLink(parser, article);
+                            break;
+                        case "category":
+                            String cat = readCategory(parser);
+                            if (cat != null && !cat.isEmpty()) {
+                                categories.add(cat);
+                            }
+                            break;
+                        default:
+                            skip(parser);
+                            break;
+                    }
                 }
             } catch (Exception e) {
                 Log.w(TAG, "Error parsing tag: " + tagName, e);
@@ -207,12 +223,11 @@ public class ArxivParser {
         return authorName != null ? authorName.trim() : null;
     }
 
-    private static Category readCategory(XmlPullParser parser)
+    private static String readCategory(XmlPullParser parser)
             throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "category");
 
         String term = parser.getAttributeValue(null, "term");
-        String label = parser.getAttributeValue(null, "label");
 
         // Move to end tag
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -221,21 +236,9 @@ public class ArxivParser {
 
         parser.require(XmlPullParser.END_TAG, null, "category");
 
-        if (term == null || term.isEmpty()) {
-            return null;
-        }
-
-        // Use term as fallback if label is missing
-        // CategoryDataProvider can enrich this later with proper names
-        return new Category(term, label != null && !label.isEmpty() ? label : term);
+        return (term != null && !term.isEmpty()) ? term : null;
     }
 
-    /**
-     * Parse link elements - arXiv provides multiple link types:
-     * - rel="alternate" with no type = abstract page
-     * - rel="related" with title="pdf" = PDF link
-     * - rel="related" with title="doi" = DOI link
-     */
     private static void readLink(XmlPullParser parser, Article article)
             throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "link");
@@ -243,7 +246,6 @@ public class ArxivParser {
         String rel = parser.getAttributeValue(null, "rel");
         String href = parser.getAttributeValue(null, "href");
         String title = parser.getAttributeValue(null, "title");
-        String type = parser.getAttributeValue(null, "type");
 
         // Move to end tag
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -257,21 +259,10 @@ public class ArxivParser {
         }
 
         // Determine link type
-        if ("alternate".equals(rel)) {
-            // This is the abstract page URL
-            // Only set if not already set (use first occurrence)
-            if (article.getAbsUrl() == null) {
-                article.setAbsUrl(href);
-            }
-        } else if ("related".equals(rel)) {
-            if ("pdf".equals(title)) {
-                // This is the PDF link
-                // Only set if not already set (use first occurrence)
-                if (article.getPdfUrl() == null) {
-                    article.setPdfUrl(href);
-                }
-            }
-            // Ignore DOI and other related links for now
+        if ("alternate".equals(rel) && article.getAbsUrl() == null) {
+            article.setAbsUrl(href);
+        } else if ("related".equals(rel) && "pdf".equals(title) && article.getPdfUrl() == null) {
+            article.setPdfUrl(href);
         }
     }
 
@@ -287,10 +278,6 @@ public class ArxivParser {
         return result != null ? result : "";
     }
 
-    /**
-     * Skip the current tag and all its children
-     * This is essential for forward compatibility when arXiv adds new fields
-     */
     private static void skip(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -310,18 +297,11 @@ public class ArxivParser {
         }
     }
 
-    // --- Utility Methods ---
-
-    /**
-     * Extract arXiv ID from full URL
-     * Example: http://arxiv.org/abs/1234.5678v1 -> 1234.5678v1
-     */
     private static String extractArxivId(String idUrl) {
         if (idUrl == null || idUrl.isEmpty()) {
             return null;
         }
 
-        // Extract ID from URL
         int lastSlash = idUrl.lastIndexOf('/');
         if (lastSlash >= 0 && lastSlash < idUrl.length() - 1) {
             return idUrl.substring(lastSlash + 1);
@@ -330,15 +310,11 @@ public class ArxivParser {
         return idUrl;
     }
 
-    /**
-     * Clean text by removing extra whitespace and newlines
-     */
     private static String cleanText(String text) {
         if (text == null || text.isEmpty()) {
             return "";
         }
 
-        // Replace multiple whitespaces/newlines with single space
         return text.trim().replaceAll("\\s+", " ");
     }
 }

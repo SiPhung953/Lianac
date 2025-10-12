@@ -1,101 +1,330 @@
 package vn.edu.lianac.ui;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import vn.edu.lianac.R;
-import vn.edu.lianac.models.Article;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * RecyclerView adapter for displaying a list of Article objects.
- * Uses ListAdapter for efficient list updates.
- */
-public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ArticleViewHolder> {
+import vn.edu.lianac.R;
+import vn.edu.lianac.models.Article;
+import vn.edu.lianac.utils.CategoryProvider;
 
-    /**
-     * Constructor uses a DiffUtil callback to efficiently update the list.
-     */
+/**
+ * Article adapter using ListAdapter for efficient updates.
+ * Displays article information with clickable category badges.
+ */
+public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHolder> {
+    private static final String TAG = "ArticleAdapter";
+
     public ArticleAdapter() {
         super(DIFF_CALLBACK);
+        Log.d(TAG, "ArticleAdapter created");
     }
 
     @NonNull
     @Override
-    public ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the item layout from item_article.xml
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder called");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_article, parent, false);
-        return new ArticleViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArticleViewHolder holder, int position) {
-        // Get the article at the current position and bind its data to the ViewHolder
-        Article article = getItem(position);
-        if (article != null) {
-            holder.bind(article);
-        }
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder called for position: " + position);
+        holder.bind(getItem(position));
     }
 
-    /**
-     * ViewHolder class that holds references to the views for a single article item.
-     */
-    public static class ArticleViewHolder extends RecyclerView.ViewHolder {
-        // Declare views from item_article.xml
-        private final TextView articleId;
-        private final TextView articleTitle;
-        private final TextView articleAuthors;
-        private final TextView articlePublished;
-        // The categories container is optional for now, but can be populated if needed.
+    @Override
+    public void submitList(List<Article> list) {
+        Log.d(TAG, "submitList called with " + (list != null ? list.size() : "null") + " items");
+        // Force a new list instance to trigger diff calculation
+        super.submitList(list != null ? new ArrayList<>(list) : null);
+    }
 
-        public ArticleViewHolder(@NonNull View itemView) {
+    @Override
+    public void submitList(List<Article> list, Runnable commitCallback) {
+        Log.d(TAG, "submitList (with callback) called with " + (list != null ? list.size() : "null") + " items");
+        // Force a new list instance to trigger diff calculation
+        super.submitList(list != null ? new ArrayList<>(list) : null, commitCallback);
+    }
+
+    @Override
+    public void onCurrentListChanged(@NonNull List<Article> previousList, @NonNull List<Article> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        Log.d(TAG, "onCurrentListChanged - previous: " + previousList.size() + ", current: " + currentList.size());
+    }
+
+    @Override
+    public int getItemCount() {
+        int count = super.getItemCount();
+        Log.d(TAG, "getItemCount returning: " + count);
+        return count;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final Context context;
+        private final TextView articleId;
+        private final LinearLayout categoriesContainer;
+        private final TextView titleText;
+        private final TextView authorsText;
+        private final TextView submittedText;
+        private final TextView announcedText;
+        private final TextView classesText;
+        private final TextView doiText;
+        private final CategoryProvider categoryProvider;
+
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Find views by their ID
+            context = itemView.getContext();
             articleId = itemView.findViewById(R.id.articleId);
-            articleTitle = itemView.findViewById(R.id.articleTitle);
-            articleAuthors = itemView.findViewById(R.id.articleAuthors);
-            articlePublished = itemView.findViewById(R.id.articlePublished);
+            categoriesContainer = itemView.findViewById(R.id.categoriesContainer);
+            titleText = itemView.findViewById(R.id.articleTitle);
+            authorsText = itemView.findViewById(R.id.articleAuthors);
+            submittedText = itemView.findViewById(R.id.articleSubmitted);
+            announcedText = itemView.findViewById(R.id.articleAnnounced);
+            classesText = itemView.findViewById(R.id.articleClasses);
+            doiText = itemView.findViewById(R.id.articleDoi);
+
+            // Initialize CategoryProvider
+            categoryProvider = CategoryProvider.getInstance(context);
+        }
+
+        void bind(Article article) {
+            Log.d(TAG, "Binding article: " + article.getTitle());
+
+            // Set arXiv ID
+            articleId.setText(article.getId());
+            Log.d(TAG, "Article ID: " + article.getId());
+
+            // Clear and populate categories
+            categoriesContainer.removeAllViews();
+            List<String> categories = article.getCategories();
+            Log.d(TAG, "Categories: " + (categories != null ? categories.size() : "null"));
+
+            if (categories != null && !categories.isEmpty()) {
+                boolean isFirst = true;
+                List<String> validCategories = new ArrayList<>();
+                List<String> acmMscClasses = new ArrayList<>();
+                java.util.Set<String> seenCategories = new java.util.LinkedHashSet<>();
+
+                // Separate valid arXiv categories from ACM/MSC codes
+                for (String categoryId : categories) {
+                    // FIX: Map math.MP to math-ph
+                    String normalizedCategoryId = normalizeCategoryId(categoryId);
+
+                    String displayName = categoryProvider.getCategoryDisplayName(normalizedCategoryId);
+                    if (displayName.equals(normalizedCategoryId)) {
+                        // It's an ACM/MSC code
+                        acmMscClasses.add(categoryId);  // Keep original for ACM/MSC display
+                    } else {
+                        // It's a valid arXiv category - add only if not seen before
+                        if (seenCategories.add(normalizedCategoryId)) {
+                            validCategories.add(normalizedCategoryId);
+                        }
+                    }
+                }
+
+                // Display valid categories as badges
+                for (String categoryId : validCategories) {
+                    TextView badge = createCategoryBadge(categoryId, isFirst);
+                    if (badge != null) {
+                        categoriesContainer.addView(badge);
+                        isFirst = false;
+                    }
+                }
+
+                // Store ACM/MSC classes in the article for display later
+                article.setAcmMscClasses(acmMscClasses);
+            }
+
+            // Set title
+            titleText.setText(article.getTitle());
+
+            // Set authors
+            authorsText.setText(article.getFormattedAuthors());
+
+            // Set submitted date
+            submittedText.setText(article.getFormattedSubmittedDate());
+
+            // Set announced date (if different from submitted)
+            String announcedDate = article.getFormattedAnnouncedDate();
+            if (announcedDate != null && !announcedDate.isEmpty()) {
+                announcedText.setText(announcedDate);
+                announcedText.setVisibility(View.VISIBLE);
+            } else {
+                announcedText.setVisibility(View.GONE);
+            }
+
+            // Set ACM/MSC classes (if any)
+            String classesString = article.getAcmMscClassesString();
+            if (classesString != null && !classesString.isEmpty()) {
+                classesText.setText(classesString);
+                classesText.setVisibility(View.VISIBLE);
+            } else {
+                classesText.setVisibility(View.GONE);
+            }
+
+            // FIX: Set DOI with better null/empty checks
+            String doi = article.getDoi();
+            Log.d(TAG, "DOI for article " + article.getId() + ": " + doi);
+
+            if (doi != null && !doi.trim().isEmpty()) {
+                doiText.setText("DOI: " + doi);
+                doiText.setVisibility(View.VISIBLE);
+                doiText.setOnClickListener(v -> {
+                    String doiUrl = "https://doi.org/" + doi;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                    try {
+                        context.startActivity(browserIntent);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Cannot open DOI link", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Failed to open DOI link", e);
+                    }
+                });
+            } else {
+                doiText.setVisibility(View.GONE);
+            }
+
+            // Make entire item clickable
+            itemView.setOnClickListener(v -> {
+                Toast.makeText(context, "Opening article: " + article.getId(), Toast.LENGTH_SHORT).show();
+                // TODO: Navigate to article detail screen
+            });
+
+            Log.d(TAG, "Bind complete for: " + article.getId());
         }
 
         /**
-         * Binds an Article object's data to the views.
-         * @param article The article to display.
+         * Normalize category IDs to handle arXiv inconsistencies
+         * Example: math.MP should be math-ph
          */
-        public void bind(Article article) {
-            // Use the model's getters and convenience methods to populate the UI
-            articleId.setText(article.getId());
-            articleTitle.setText(article.getTitle());
-            articleAuthors.setText(article.getFormattedAuthors()); // Using the convenience method
-            articlePublished.setText(article.getPublishedDateFormatted()); // Using the formatted date
+        private String normalizeCategoryId(String categoryId) {
+            if (categoryId == null) return null;
+
+            // Handle math.MP -> math-ph mapping
+            if ("math.MP".equals(categoryId)) {
+                Log.d(TAG, "Normalizing math.MP to math-ph");
+                return "math-ph";
+            }
+
+            // Add other mappings here if needed in the future
+
+            return categoryId;
+        }
+
+        private TextView createCategoryBadge(String categoryId, boolean isFirst) {
+            String displayName = categoryProvider.getCategoryDisplayName(categoryId);
+
+            // Skip if it's just the ID echoed back (no resource found)
+            // This filters out MSC/ACM codes like "82-10" that aren't in strings.xml
+            if (displayName.equals(categoryId)) {
+                Log.d(TAG, "Skipping unknown category: " + categoryId);
+                return null;  // Don't create badge for unknown categories
+            }
+
+            TextView badge = new TextView(context);
+            badge.setText(categoryId);  // Display the category CODE (e.g., "cs.AI")
+            badge.setTextSize(11f);
+
+            // Only first badge gets the background
+            if (isFirst) {
+                badge.setTextColor(context.getResources().getColor(android.R.color.white));
+                badge.setBackgroundResource(R.drawable.category_first_badge_background);
+            }
+            else {
+                badge.setTextColor(context.getResources().getColor(android.R.color.black));
+                badge.setBackgroundResource(R.drawable.category_normal_badge_background);
+            }
+
+            // Set margins
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            int marginPx = dpToPx(4);
+            params.setMargins(0, 0, marginPx, 0);
+            badge.setLayoutParams(params);
+
+            // Make clickable to show full category name
+            badge.setClickable(true);
+            badge.setFocusable(true);
+            badge.setOnClickListener(v -> {
+                Toast.makeText(context, displayName, Toast.LENGTH_SHORT).show();
+            });
+
+            return badge;
+        }
+
+        private int dpToPx(int dp) {
+            float density = context.getResources().getDisplayMetrics().density;
+            return Math.round(dp * density);
         }
     }
 
-    /**
-     * DiffUtil.ItemCallback implementation for calculating the difference between two lists.
-     * This allows ListAdapter to perform efficient updates (e.g., animations for added/removed items).
-     */
-    private static final DiffUtil.ItemCallback<Article> DIFF_CALLBACK = new DiffUtil.ItemCallback<Article>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            // Articles are the same if their unique IDs match.
-            return oldItem.getId().equals(newItem.getId());
-        }
+    private static final DiffUtil.ItemCallback<Article> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull Article old, @NonNull Article newItem) {
+                    if (old.getId() == null || newItem.getId() == null) {
+                        return false;
+                    }
+                    return old.getId().equals(newItem.getId());
+                }
 
-        @Override
-        public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            // Check if the content has changed.
-            // For simplicity, we can compare titles and authors. For full accuracy,
-            // you might compare hashes or all relevant fields.
-            return oldItem.getTitle().equals(newItem.getTitle()) &&
-                    oldItem.getAuthors().equals(newItem.getAuthors()) &&
-                    oldItem.getPublishedDateRaw().equals(newItem.getPublishedDateRaw());
-        }
-    };
+                @Override
+                public boolean areContentsTheSame(@NonNull Article old, @NonNull Article newItem) {
+                    // Compare title
+                    if (!safeEquals(old.getTitle(), newItem.getTitle())) {
+                        return false;
+                    }
+
+                    // Compare published date
+                    if (!safeEquals(old.getPublishedDate(), newItem.getPublishedDate())) {
+                        return false;
+                    }
+
+                    // Compare DOI
+                    if (!safeEquals(old.getDoi(), newItem.getDoi())) {
+                        return false;
+                    }
+
+                    // Compare categories
+                    List<String> oldCats = old.getCategories();
+                    List<String> newCats = newItem.getCategories();
+
+                    if (oldCats == null && newCats == null) {
+                        return true;
+                    }
+                    if (oldCats == null || newCats == null) {
+                        return false;
+                    }
+                    if (oldCats.size() != newCats.size()) {
+                        return false;
+                    }
+
+                    return oldCats.equals(newCats);
+                }
+
+                private boolean safeEquals(String str1, String str2) {
+                    if (str1 == null && str2 == null) return true;
+                    if (str1 == null || str2 == null) return false;
+                    return str1.equals(str2);
+                }
+            };
 }

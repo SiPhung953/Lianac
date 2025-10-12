@@ -61,26 +61,43 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Collapsible Search Container Wrapper -->
+    <!-- Main Content Container (holds both search and results) -->
     <FrameLayout
-        android:id="@+id/searchContainerWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="?android:attr/colorBackground">
-
-        <FrameLayout
-            android:id="@+id/searchContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </FrameLayout>
-    </FrameLayout>
-
-    <!-- Results Container -->
-    <FrameLayout
-        android:id="@+id/resultsContainer"
+        android:id="@+id/mainContentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <!-- This container holds swappable fragments -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Collapsible Search Container -->
+            <FrameLayout
+                android:id="@+id/searchContainerWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="?android:attr/colorBackground">
+
+                <FrameLayout
+                    android:id="@+id/searchContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!-- SearchFragment goes here -->
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Results/Content Container -->
+            <FrameLayout
+                android:id="@+id/contentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <!-- ArticleListingFragment, BookmarksFragment, DetailFragment, etc. -->
+            </FrameLayout>
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

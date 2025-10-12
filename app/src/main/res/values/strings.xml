@@ -30,7 +30,7 @@
     <string-array name="boolean_operators">
         <item>AND</item>
         <item>OR</item>
-        <item>NOT</item>
+        <item>ANDNOT</item>
     </string-array>
 
     <string-array name="sort_options">

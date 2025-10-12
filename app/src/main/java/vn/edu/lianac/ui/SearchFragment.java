@@ -10,84 +10,78 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import vn.edu.lianac.R;
-import vn.edu.lianac.models.SearchRow;
-import vn.edu.lianac.repository.ArxivRepository;
-import vn.edu.lianac.utils.QueryOptions;
+import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.viewmodel.SearchViewModel;
-import vn.edu.lianac.viewmodel.SearchViewModelFactory;
 
+/**
+ * Basic search fragment with drawer for advanced filters.
+ *
+ * Responsibilities:
+ * - Basic search bar (search term + field selector)
+ * - Drawer management (open/close animations)
+ * - Load ManageSearchFragment into drawer
+ * - Perform basic search when user presses Enter
+ */
 public class SearchFragment extends Fragment {
 
+    // Basic search views
     private EditText searchBox;
-    private ImageButton filterButton;
     private Spinner fieldSpinner;
-    private FrameLayout advancedSearchDrawer;
+    private ImageButton filterButton;
+
+    // Drawer container
+    private FrameLayout advancedDrawer;
     private View scrimOverlay;
     private boolean isDrawerOpen = false;
 
-    private SearchViewModel searchViewModel;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SearchViewModelFactory factory = new SearchViewModelFactory(ArxivRepository.getInstance());
-        searchViewModel = new ViewModelProvider(requireActivity(), factory).get(SearchViewModel.class);
-    }
+    // ViewModel
+    private SearchViewModel viewModel;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
-
-        searchBox = view.findViewById(R.id.searchBox);
-        filterButton = view.findViewById(R.id.filterButton);
-        fieldSpinner = view.findViewById(R.id.fieldSpinner);
-        advancedSearchDrawer = view.findViewById(R.id.advancedSearchDrawer);
-        scrimOverlay = view.findViewById(R.id.scrimOverlay);
-
-        // Add ManageSearchFragment to the drawer
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.advancedSearchDrawer, new ManageSearchFragment())
-                .commit();
-
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setupFieldSpinner();
-        setupEventListeners();
+        viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
+
+        initViews(view);
+        setupBasicSearch();
+        loadManageSearchFragment();
     }
 
-    private void setupFieldSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.search_fields,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        fieldSpinner.setAdapter(adapter);
+    private void initViews(View view) {
+        searchBox = view.findViewById(R.id.searchBox);
+        fieldSpinner = view.findViewById(R.id.fieldSpinner);
+        filterButton = view.findViewById(R.id.filterButton);
+        advancedDrawer = view.findViewById(R.id.advancedSearchDrawer);
+        scrimOverlay = view.findViewById(R.id.scrimOverlay);
     }
 
-    private void setupEventListeners() {
-        // Toggle the advanced search drawer
-        filterButton.setOnClickListener(v -> toggleDrawer());
+    private void setupBasicSearch() {
+        // Field spinner
+        ArrayAdapter<CharSequence> fieldAdapter = ArrayAdapter.createFromResource(
+                requireContext(), R.array.search_fields, android.R.layout.simple_spinner_item);
+        fieldAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fieldSpinner.setAdapter(fieldAdapter);
 
-        // Close drawer when scrim is clicked
-        scrimOverlay.setOnClickListener(v -> closeDrawer());
-
-        // Trigger basic search
+        // Search on Enter key
         searchBox.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performBasicSearch();
@@ -95,26 +89,89 @@ public class SearchFragment extends Fragment {
             }
             return false;
         });
+
+        // Filter button opens drawer
+        filterButton.setOnClickListener(v -> openDrawer());
+
+        // Scrim closes drawer
+        scrimOverlay.setOnClickListener(v -> closeDrawer());
     }
 
-    private void toggleDrawer() {
-        if (isDrawerOpen) {
-            closeDrawer();
-        } else {
-            openDrawer();
+    /**
+     * Load ManageSearchFragment into the drawer container
+     */
+    private void loadManageSearchFragment() {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.advancedSearchDrawer, new ManageSearchFragment())
+                .commit();
+    }
+
+    public String getCurrentSearchTerm() {
+        return searchBox.getText().toString().trim();
+    }
+
+    public String getCurrentSearchField() {
+        return getFieldCode(fieldSpinner.getSelectedItemPosition());
+    }
+
+    /**
+     * Perform basic search (only search term + field, no advanced filters)
+     */
+    /**
+     * Perform basic search while preserving any existing advanced filters
+     */
+    /**
+     * Perform basic search while preserving any existing advanced filters
+     */
+    private void performBasicSearch() {
+        String searchTerm = searchBox.getText().toString().trim();
+        if (searchTerm.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a search term", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        String field = getFieldCode(fieldSpinner.getSelectedItemPosition());
+
+        // Get existing query to preserve advanced filters
+        QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
+
+        QueryOptions.Builder builder;
+        if (currentQuery != null) {
+            // Start with existing query to preserve all filters
+            builder = currentQuery.toBuilder();
+        } else {
+            // No existing query, create fresh builder
+            builder = new QueryOptions.Builder();
+        }
+
+        // Update basic search term and field
+        builder.searchTerm(searchTerm)
+                .searchField(field)
+                .start(0);  // Reset to first page for new search
+
+        QueryOptions query = builder.build();
+        viewModel.search(query);
     }
 
+    // ==================== DRAWER MANAGEMENT ====================
+
+    /**
+     * Open the advanced search drawer
+     */
     private void openDrawer() {
-        advancedSearchDrawer.setVisibility(View.VISIBLE);
+        if (isDrawerOpen) return;
+
+        advancedDrawer.setVisibility(View.VISIBLE);
         scrimOverlay.setVisibility(View.VISIBLE);
 
-        // Animate both drawer and scrim
-        advancedSearchDrawer.animate()
+        // Slide in from right
+        advancedDrawer.animate()
                 .translationX(0)
                 .setDuration(300)
                 .start();
 
+        // Fade in scrim
+        scrimOverlay.setAlpha(0f);
         scrimOverlay.animate()
                 .alpha(1f)
                 .setDuration(300)
@@ -123,93 +180,40 @@ public class SearchFragment extends Fragment {
         isDrawerOpen = true;
     }
 
-    // Public method to be called from ManageSearchFragment
+    /**
+     * Close the advanced search drawer
+     * Called by ManageSearchFragment when user applies filters or closes drawer
+     */
     public void closeDrawer() {
-        if (isDrawerOpen) {
-            closeDrawerInternal();
-        }
-    }
+        if (!isDrawerOpen) return;
 
-    // Private method that performs the actual closing animation
-    private void closeDrawerInternal() {
-        advancedSearchDrawer.animate()
-                .translationX(advancedSearchDrawer.getWidth())
+        // Slide out to right
+        advancedDrawer.animate()
+                .translationX(advancedDrawer.getWidth())
                 .setDuration(300)
                 .start();
 
+        // Fade out scrim
         scrimOverlay.animate()
                 .alpha(0f)
                 .setDuration(300)
                 .withEndAction(() -> {
                     scrimOverlay.setVisibility(View.GONE);
-                    advancedSearchDrawer.setVisibility(View.GONE);
+                    advancedDrawer.setVisibility(View.GONE);
                 })
                 .start();
 
         isDrawerOpen = false;
     }
 
-    private void performBasicSearch() {
-        String searchTerm = searchBox.getText().toString().trim();
-        if (searchTerm.isEmpty()) {
-            return;
-        }
+    // ==================== HELPERS ====================
 
-        String selectedField = getFieldValue(fieldSpinner.getSelectedItemPosition());
-
-        QueryOptions currentQuery = searchViewModel.getCurrentQuery();
-        QueryOptions.Builder builder;
-
-        if (currentQuery != null) {
-            // Start with existing query to preserve filters
-            builder = currentQuery.toBuilder();
-
-            // Get existing rows (from advanced search)
-            List<SearchRow> existingRows = new ArrayList<>();
-            if (currentQuery.getRows() != null && !currentQuery.getRows().isEmpty()) {
-                existingRows.addAll(currentQuery.getRows());
-
-                // Remove the first row if it was from a previous basic search
-                // (We identify it by checking if it has the old searchTerm)
-                if (!existingRows.isEmpty()) {
-                    SearchRow firstRow = existingRows.get(0);
-                    // If the first row matches the old basic search, remove it
-                    if (currentQuery.hasSearchTerm() &&
-                            firstRow.getValue().equals(currentQuery.getSearchTerm()) &&
-                            firstRow.getField().equals(currentQuery.getSearchField())) {
-                        existingRows.remove(0);
-                    }
-                }
-            }
-
-            // Add new basic search as first row
-            SearchRow newSearchRow = new SearchRow(selectedField, searchTerm, "AND");
-            existingRows.add(0, newSearchRow);
-
-            builder.rows(existingRows);
-            builder.searchTerm(searchTerm); // Store for reference
-            builder.searchField(selectedField);
-            builder.start(0);
-        } else {
-            // No existing query, create fresh
-            builder = new QueryOptions.Builder();
-            builder.searchTerm(searchTerm)
-                    .searchField(selectedField)
-                    .start(0);
-        }
-
-        searchViewModel.search(builder.build());
-
-        if (isDrawerOpen) {
-            closeDrawerInternal();
-        }
+    private String getFieldCode(int position) {
+        String[] fields = {"all", "ti", "au", "abs", "co", "jr", "cat", "rn", "id"};
+        return (position >= 0 && position < fields.length) ? fields[position] : "all";
     }
 
-    private String getFieldValue(int position) {
-        String[] fieldValues = {"all", "ti", "au", "abs", "co", "jr", "cat", "rn", "id"};
-        if (position >= 0 && position < fieldValues.length) {
-            return fieldValues[position];
-        }
-        return "all";
+    public boolean isDrawerOpen() {
+        return isDrawerOpen;
     }
 }
