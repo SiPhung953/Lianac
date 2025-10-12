@@ -281,4 +281,6 @@
     <string name="category_econ_em">Econometrics</string>
     <string name="category_econ_gn">General Economics</string>
     <string name="category_econ_th">Theoretical Economics</string>
+        <!-- other strings might be here -->
+        <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

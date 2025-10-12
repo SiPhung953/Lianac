@@ -5,16 +5,13 @@ import vn.edu.lianac.Download.DownloadFragment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 
 import vn.edu.lianac.R;
-import vn.edu.lianac.ui.ArticleListingFragment;
-import vn.edu.lianac.ui.SearchFragment;
-
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -30,14 +27,8 @@ import android.content.SharedPreferences;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatDelegate;
-import vn.edu.lianac.ui.ArticleListingFragment;
-import vn.edu.lianac.ui.SearchFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -131,9 +122,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle("Settings");
-            } else if (id == R.id.nav_search) {
-                handleSearch();
-                getSupportActionBar().setTitle("Search");
             }
 
             if (fragment != null) {
@@ -148,39 +136,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // really not sure why this is needed given that transaction.replace should already do this
-        // internally, some1 with spare time plaese educate me on this
-        ((ViewGroup) findViewById(R.id.content_frame)).removeAllViews();
         // Giúp animation tốt hơn
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.content_frame, fragment);
         transaction.commit();
-    }
-
-    // TODO: investigate performance impact
-    private void handleSearch() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.remove(fragment).commit();
-        }
-        ViewGroup container = findViewById(R.id.content_frame);
-        container.removeAllViews();
-        ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_containers, container, false);
-
-        View sContainer = view.findViewById(R.id.searchContainer);
-        View rContainer = view.findViewById(R.id.resultsContainer);
-        view.removeView(sContainer);
-        view.removeView(rContainer);
-        container.addView(sContainer);
-        container.addView(rContainer);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.searchContainer, new SearchFragment())
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.resultsContainer, new ArticleListingFragment())
-                .commit();
     }
 
     @Override
@@ -196,10 +155,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("title", getSupportActionBar().getTitle());
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
