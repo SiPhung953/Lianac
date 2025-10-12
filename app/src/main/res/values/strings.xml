@@ -54,6 +54,7 @@
     <string name="placeholder_search">Search...</string>
     <string name="placehold_advanced_search">Search term...</string>
 
+    <!--  Download  -->
     <string name="download_title">Downloads</string>
     <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
     <string name="select_category_placeholder">Select a category</string>
