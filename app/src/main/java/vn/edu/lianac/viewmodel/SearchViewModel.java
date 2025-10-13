@@ -195,6 +195,10 @@ public class SearchViewModel extends ViewModel {
         }
     }
 
+    public void updateQueryOptions(QueryOptions options) {
+        currentQuery.postValue(options);
+    }
+
     public void clearResults() {
         currentQuery.postValue(null);
         lastSearchResult = null;

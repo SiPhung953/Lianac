@@ -91,6 +91,10 @@ public class ManageSearchFragment extends Fragment {
         restoreFiltersFromViewModel();
     }
 
+    public void onDrawerClosed() {
+        removeEmptyRows();
+    }
+
     private void bindViews(View view) {
         closeDrawerButton = view.findViewById(R.id.closeDrawerButton);
         applyFiltersButton = view.findViewById(R.id.applyFiltersButton);
@@ -119,7 +123,7 @@ public class ManageSearchFragment extends Fragment {
 
     private void setupEventListeners() {
         closeDrawerButton.setOnClickListener(v -> {
-            removeEmptyRows();
+//            removeEmptyRows();
             closeDrawer();
         });
 
@@ -129,12 +133,11 @@ public class ManageSearchFragment extends Fragment {
         });
 
         searchButton.setOnClickListener(v -> {
-            applyFilters();
+            applyFilters();  // Saves the query
             QueryOptions currentQuery = searchViewModel.getCurrentQuery().getValue();
             if (currentQuery != null) {
-                searchViewModel.search(currentQuery);
+                searchViewModel.search(currentQuery);  // Searches once
             }
-            searchViewModel.refresh();
             closeDrawer();
         });
 
@@ -215,21 +218,38 @@ public class ManageSearchFragment extends Fragment {
     /**
      * Remove empty rows but always keep at least one
      */
+    /**
+     * Remove empty rows but always keep at least one
+     */
     private void removeEmptyRows() {
         List<View> rowsToRemove = new ArrayList<>();
+        int filledRowCount = 0;
 
+        // First pass: count filled rows and identify empty ones
         for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
             View rowView = searchFieldsContainer.getChildAt(i);
             EditText valueField = rowView.findViewById(R.id.valueField);
             String value = valueField.getText().toString().trim();
 
-            if (value.isEmpty() && searchFieldsContainer.getChildCount() - rowsToRemove.size() > 1) {
+            if (value.isEmpty()) {
                 rowsToRemove.add(rowView);
+            } else {
+                filledRowCount++;
             }
         }
 
-        for (View rowView : rowsToRemove) {
-            searchFieldsContainer.removeView(rowView);
+        // Decision: Remove all empty rows if there's at least one filled row
+        // Otherwise, keep exactly one empty row
+        if (filledRowCount > 0) {
+            // Remove all empty rows
+            for (View rowView : rowsToRemove) {
+                searchFieldsContainer.removeView(rowView);
+            }
+        } else {
+            // All rows are empty - keep only the first one, remove the rest
+            for (int i = 1; i < rowsToRemove.size(); i++) {
+                searchFieldsContainer.removeView(rowsToRemove.get(i));
+            }
         }
 
         updateRemoveButtonsVisibility();
@@ -425,7 +445,17 @@ public class ManageSearchFragment extends Fragment {
     private void applyFilters() {
         removeEmptyRows();
 
+        // Get existing query to preserve sort/page size settings
+        QueryOptions existingQuery = searchViewModel.getCurrentQuery().getValue();
+
         QueryOptions.Builder builder = new QueryOptions.Builder();
+
+        // Preserve sort and page size from existing query (prevents spinner triggering)
+        if (existingQuery != null) {
+            builder.sortBy(existingQuery.getSortBy())
+                    .sortOrder(existingQuery.getSortOrder())
+                    .maxResults(existingQuery.getMaxResults());
+        }
 
         // Try to get basic search term from parent SearchFragment
         Fragment parentFragment = getParentFragment();
@@ -440,7 +470,6 @@ public class ManageSearchFragment extends Fragment {
             }
         } else {
             // Fallback: try to get from existing query
-            QueryOptions existingQuery = searchViewModel.getCurrentQuery().getValue();
             if (existingQuery != null && existingQuery.hasSearchTerm()) {
                 builder.searchTerm(existingQuery.getSearchTerm())
                         .searchField(existingQuery.getSearchField());
@@ -471,10 +500,11 @@ public class ManageSearchFragment extends Fragment {
         if (!fromDate.isEmpty()) builder.dateFrom(fromDate);
         if (!toDate.isEmpty()) builder.dateTo(toDate);
 
-        builder.start(0);
+        builder.start(0);  // Reset to first page when applying filters
 
         QueryOptions newQuery = builder.build();
-        searchViewModel.search(newQuery);
+        searchViewModel.updateQueryOptions(newQuery);
+        updateFilterButtonIndicator();
     }
 
     private String getFieldValue(int position) {
@@ -503,6 +533,7 @@ public class ManageSearchFragment extends Fragment {
         // Reset query in ViewModel
         QueryOptions basicQuery = new QueryOptions.Builder().start(0).build();
         searchViewModel.search(basicQuery);
+        updateFilterButtonIndicator();
 
         Toast.makeText(getContext(), "Advanced filters cleared", Toast.LENGTH_SHORT).show();
     }
@@ -579,6 +610,31 @@ public class ManageSearchFragment extends Fragment {
 
         // Fallback to just the code if lookup failed
         return categoryCode;
+    }
+
+    private boolean hasAdvancedFilters() {
+        // Check if there are multiple search rows or any non-empty rows
+        int nonEmptyRows = 0;
+        for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
+            View rowView = searchFieldsContainer.getChildAt(i);
+            EditText valueField = rowView.findViewById(R.id.valueField);
+            if (!valueField.getText().toString().trim().isEmpty()) {
+                nonEmptyRows++;
+            }
+        }
+
+        // Has filters if: multiple rows, categories selected, or dates set
+        return nonEmptyRows > 0 ||
+                !selectedCategories.isEmpty() ||
+                !dateFromField.getText().toString().trim().isEmpty() ||
+                !dateToField.getText().toString().trim().isEmpty();
+    }
+
+    private void updateFilterButtonIndicator() {
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof SearchFragment) {
+            ((SearchFragment) parentFragment).updateFilterIndicator(hasAdvancedFilters());
+        }
     }
 
     // ==================== DRAWER CONTROL ====================

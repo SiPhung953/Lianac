@@ -200,10 +200,21 @@ public class SearchFragment extends Fragment {
                 .withEndAction(() -> {
                     scrimOverlay.setVisibility(View.GONE);
                     advancedDrawer.setVisibility(View.GONE);
+
+                    // NEW: Notify ManageSearchFragment that drawer has closed
+                    notifyDrawerClosed();
                 })
                 .start();
 
         isDrawerOpen = false;
+    }
+
+    // NEW METHOD: Call ManageSearchFragment's cleanup
+    private void notifyDrawerClosed() {
+        Fragment childFragment = getChildFragmentManager().findFragmentById(R.id.advancedSearchDrawer);
+        if (childFragment instanceof ManageSearchFragment) {
+            ((ManageSearchFragment) childFragment).onDrawerClosed();
+        }
     }
 
     // ==================== HELPERS ====================
@@ -215,5 +226,13 @@ public class SearchFragment extends Fragment {
 
     public boolean isDrawerOpen() {
         return isDrawerOpen;
+    }
+
+    public void updateFilterIndicator(boolean hasFilters) {
+        if (hasFilters) {
+            filterButton.setBackgroundResource(R.drawable.filter_button_with_indicator);
+        } else {
+            filterButton.setBackgroundResource(R.drawable.filter_button_normal);
+        }
     }
 }
