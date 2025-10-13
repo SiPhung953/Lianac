@@ -109,7 +109,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Subjects");
             navigationView.setCheckedItem(R.id.nav_subjects);
         } else {
-            getSupportActionBar().setTitle(savedInstanceState.getCharSequence("title"));
+            CharSequence title = savedInstanceState.getCharSequence("title");
+            getSupportActionBar().setTitle(title);
+            if (savedInstanceState.getCharSequence("title").toString().equals("Search")) {
+                searchShowing = savedInstanceState.getBoolean("searchVisibility");
+                prepareContainers();
+                toggleSearchAction(savedInstanceState.getBoolean("searchIconShowing"));
+            }
         }
 
         // Handle navigation item clicks
@@ -173,6 +179,14 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.remove(fragment).commit();
         }
+        prepareContainers();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.searchContainer, new SearchFragment())
+                .replace(R.id.resultsContainer, new ArticleListingFragment())
+                .commit();
+    }
+
+    private void prepareContainers() {
         ViewGroup container = findViewById(R.id.content_frame);
         container.removeAllViews();
         ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_containers, container, false);
@@ -183,13 +197,7 @@ public class MainActivity extends AppCompatActivity {
         view.removeView(rContainer);
         container.addView(sContainer);
         container.addView(rContainer);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.searchContainer, new SearchFragment())
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.resultsContainer, new ArticleListingFragment())
-                .commit();
+        findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -227,5 +235,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("title", getSupportActionBar().getTitle());
+        // I am touching magic
+        outState.putBoolean("searchVisibility", searchShowing);
+        outState.putBoolean("searchIconShowing", showSearch);
     }
 }
