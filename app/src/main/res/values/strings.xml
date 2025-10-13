@@ -89,10 +89,10 @@
     <string name="category_cond_mat_supr_con">Superconductivity</string>
     <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
     <string name="category_hep">High Energy Physics</string>
-    <string name="category_hep_ex">Experiment</string>
-    <string name="category_hep_lat">Lattice</string>
-    <string name="category_hep_ph">Phenomenology</string>
-    <string name="category_hep_th">Theory</string>
+    <string name="category_hep_ex">High Energy Physics - Experiment</string>
+    <string name="category_hep_lat">High Energy Physics - Lattice</string>
+    <string name="category_hep_ph">High Energy Physics - Phenomenology</string>
+    <string name="category_hep_th">High Energy Physics - Theory</string>
     <string name="category_math_ph">Mathematical Physics</string>
     <string name="category_nlin">Nonlinear Sciences</string>
     <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
@@ -148,7 +148,7 @@
     <string name="category_math_it">Information Theory</string>
     <string name="category_math_kt">K-Theory and Homology</string>
     <string name="category_math_lo">Logic</string>
-    <!--<string name="category_math_mp">Mathematical Physics</string>--><!-- Duplicate key, handled by math-ph -->
+    <string name="category_math_mp">Mathematical Physics</string>
     <string name="category_math_mg">Metric Geometry</string>
     <string name="category_math_nt">Number Theory</string>
     <string name="category_math_na">Numerical Analysis</string>
@@ -237,7 +237,7 @@
     <string name="category_eess_as">Audio and Speech Processing</string>
     <string name="category_eess_iv">Image and Video Processing</string>
     <string name="category_eess_sp">Signal Processing</string>
-    <!-- <string name="category_eess_sy">Systems and Control</string> --> <!-- Duplicate key, handled by cs.SY -->
+    <string name="category_eess_sy">Systems and Control</string>
 
     <!-- Sub-Categories for Economics -->
     <string name="category_econ_em">Econometrics</string>

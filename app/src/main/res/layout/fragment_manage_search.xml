@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:fitsSystemWindows="false">
 
-        <!-- Header - FIXED: No extra padding/margin that causes blank space -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,49 +130,72 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <!-- Category Selector -->
+            <!-- Main Category Selection -->
             <TextView
+                android:id="@+id/mainCategoryLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select a category to add"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
-
-                <Spinner
-                    android:id="@+id/mainCategorySpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp" />
-
-                <Button
-                    android:id="@+id/addCategoryButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add"/>
-            </LinearLayout>
-
-            <!-- Selected Categories ChipGroup -->
-            <TextView
-                android:id="@+id/selectedCategoriesLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selected Categories:"
-                android:visibility="gone"
+                android:text="Select Main Categories:"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/selectedCategoriesChipGroup"
+                android:id="@+id/mainCategoryChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:chipSpacingVertical="4dp"/>
+                app:chipSpacingVertical="8dp"
+                app:singleLine="false"
+                app:selectionRequired="false"/>
+
+            <!-- Physics Filter Section -->
+            <TextView
+                android:id="@+id/physicsFilterLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Physics Subjects to Expand:"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/physicsFilterChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingVertical="8dp"
+                app:singleLine="false"
+                app:selectionRequired="false"
+                android:visibility="gone"/>
+
+            <!-- Leaf Categories Section -->
+            <TextView
+                android:id="@+id/leafCategoryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Specific Categories:"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/leafCategoryChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingVertical="8dp"
+                app:singleLine="false"
+                android:visibility="gone"/>
+
+            <!-- Selected Categories Summary -->
+            <TextView
+                android:id="@+id/selectedCategoriesSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No categories selected"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <View
@@ -230,7 +253,7 @@
                 android:focusable="false"
                 android:clickable="true"
                 android:inputType="none"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="wrap_content"

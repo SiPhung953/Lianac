@@ -41,7 +41,7 @@ public class CategoryProvider {
         if (instance == null) {
             throw new IllegalStateException("CategoryProvider not initialized. Call getInstance(context) first.");
         }
-        return instance.mainCategoryIds;
+        return new ArrayList<>(instance.mainCategoryIds);
     }
 
     public static List<String> getSubcategories(String mainCategory) {
@@ -142,6 +142,48 @@ public class CategoryProvider {
 
     public boolean isMainCategory(String categoryId) {
         return mainCategoryIds.contains(categoryId);
+    }
+
+    public boolean hasSubcategories(String categoryId) {
+        CategoryNode node = categoryMap.get(categoryId);
+        return node != null && !node.getSubcategories().isEmpty();
+    }
+
+    public List<String> getAllLeafCategories(String categoryId) {
+        List<String> leafCategories = new ArrayList<>();
+        collectLeafCategories(categoryId, leafCategories);
+        return leafCategories;
+    }
+
+    private void collectLeafCategories(String categoryId, List<String> leafCategories) {
+        CategoryNode node = categoryMap.get(categoryId);
+        if (node == null) return;
+
+        List<String> subcategories = node.getSubcategories();
+        if (subcategories.isEmpty()) {
+            // This is a leaf category
+            leafCategories.add(categoryId);
+        } else {
+            // Recursively collect leaf categories from subcategories
+            for (String subId : subcategories) {
+                collectLeafCategories(subId, leafCategories);
+            }
+        }
+    }
+
+    // Helper method to get expandable physics categories (categories that have subcategories)
+    public List<String> getExpandableCategories(String mainCategoryId) {
+        List<String> expandable = new ArrayList<>();
+        List<String> subcategories = getSubcategoriesForCategory(mainCategoryId);
+
+        if (subcategories != null) {
+            for (String subcat : subcategories) {
+                if (hasSubcategories(subcat)) {
+                    expandable.add(subcat);
+                }
+            }
+        }
+        return expandable;
     }
 
     private static class CategoryNode {

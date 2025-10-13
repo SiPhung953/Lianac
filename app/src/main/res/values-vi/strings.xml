@@ -1,8 +1,9 @@
 <resources>
+    <string name="app_name" translatable="false">Lianac</string>
 
     <!-- Display names for search fields -->
     <string-array name="search_fields">
-        <item>Tất cả</item>
+        <item>All Fields</item>
         <item>Title</item>
         <item>Author</item>
         <item>Abstract</item>
@@ -24,6 +25,12 @@
         <item>cat</item>
         <item>rn</item>
         <item>id</item>
+    </string-array>
+
+    <string-array name="boolean_operators">
+        <item>AND</item>
+        <item>OR</item>
+        <item>ANDNOT</item>
     </string-array>
 
     <string-array name="sort_options">
@@ -53,17 +60,17 @@
     <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
 
     <!-- Main Categories -->
-    <string name="category_physics">Vật lí</string>
-    <string name="category_math">Toán hoc</string>
+    <string name="category_physics">Physics</string>
+    <string name="category_math">Mathematics</string>
     <string name="category_cs">Computer Science</string>
     <string name="category_q_bio">Quantitative Biology</string>
     <string name="category_q_fin">Quantitative Finance</string>
-    <string name="category_stat">Thống kê</string>
+    <string name="category_stat">Statistics</string>
     <string name="category_eess">Electrical Engineering and Systems Science</string>
-    <string name="category_econ">Kinh tế</string>
+    <string name="category_econ">Economics</string>
 
     <!-- Sub-Categories for Physics -->
-    <string name="category_astro_ph">Vũ trụ thiên văn</string>
+    <string name="category_astro_ph">Astrophysics</string>
     <string name="category_astro_ph_co">Cosmology and Nongalactic Astrophysics</string>
     <string name="category_astro_ph_ep">Earth and Planetary Astrophysics</string>
     <string name="category_astro_ph_ga">Astrophysics of Galaxies</string>
@@ -82,10 +89,10 @@
     <string name="category_cond_mat_supr_con">Superconductivity</string>
     <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
     <string name="category_hep">High Energy Physics</string>
-    <string name="category_hep_ex">Experiment</string>
-    <string name="category_hep_lat">Lattice</string>
-    <string name="category_hep_ph">Phenomenology</string>
-    <string name="category_hep_th">Theory</string>
+    <string name="category_hep_ex">High Energy Physics - Experiment</string>
+    <string name="category_hep_lat">High Energy Physics - Lattice</string>
+    <string name="category_hep_ph">High Energy Physics - Phenomenology</string>
+    <string name="category_hep_th">High Energy Physics - Theory</string>
     <string name="category_math_ph">Mathematical Physics</string>
     <string name="category_nlin">Nonlinear Sciences</string>
     <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
@@ -141,7 +148,7 @@
     <string name="category_math_it">Information Theory</string>
     <string name="category_math_kt">K-Theory and Homology</string>
     <string name="category_math_lo">Logic</string>
-    <!--<string name="category_math_mp">Mathematical Physics</string>--><!-- Duplicate key, handled by math-ph -->
+    <string name="category_math_mp">Mathematical Physics</string>
     <string name="category_math_mg">Metric Geometry</string>
     <string name="category_math_nt">Number Theory</string>
     <string name="category_math_na">Numerical Analysis</string>
@@ -230,7 +237,7 @@
     <string name="category_eess_as">Audio and Speech Processing</string>
     <string name="category_eess_iv">Image and Video Processing</string>
     <string name="category_eess_sp">Signal Processing</string>
-    <!-- <string name="category_eess_sy">Systems and Control</string> --> <!-- Duplicate key, handled by cs.SY -->
+    <string name="category_eess_sy">Systems and Control</string>
 
     <!-- Sub-Categories for Economics -->
     <string name="category_econ_em">Econometrics</string>
