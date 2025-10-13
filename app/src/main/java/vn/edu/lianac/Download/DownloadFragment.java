@@ -132,7 +132,11 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
 
     @Override
     public void onActionButtonClick(DownloadItem item) {
-        mViewModel.handleDownloadAction(item);
+        if (item.getState() == DownloadState.COMPLETED) {
+            onItemClick(item);
+        } else {
+            mViewModel.handleDownloadAction(item);
+        }
     }
 
     @Override
@@ -144,10 +148,27 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
     @Override
     public void onItemClick(DownloadItem item) {
         if (item.getState() == DownloadState.COMPLETED && item.getFilePath() != null) {
-            File file = new File(item.getFilePath());
+            File file;
+            String filePath = item.getFilePath();
+
+            if (filePath.startsWith("file://")) {
+                try {
+                    Uri uri = Uri.parse(filePath);
+                    file = new File(uri.getPath());
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Error Parsing File Path", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                file = new File(filePath);
+            }
+
             if (file.exists()) {
-                Uri fileUri = FileProvider.getUriForFile(requireContext(),
-                        requireContext().getPackageName() + ".provider", file);
+                Uri fileUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        requireContext().getPackageName() + ".provider",
+                        file
+                );
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(fileUri, "application/pdf");
@@ -155,9 +176,12 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
 
                 try {
                     startActivity(intent);
+                    Toast.makeText(getContext(), "Opening PDF", Toast.LENGTH_SHORT).show();
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(getContext(), R.string.no_pdf_viewer_found, Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(getContext(), "File not found", Toast.LENGTH_SHORT).show();
             }
         }
     }

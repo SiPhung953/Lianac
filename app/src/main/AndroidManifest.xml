@@ -15,7 +15,16 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity
+            <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="vn.edu.lianac.provider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/provider_paths" />
+            </provider>
+            <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -27,5 +36,5 @@
             android:name=".Download.DownloadService"
             android:exported="false" />
     </application>
-
+    
 </manifest>
