@@ -35,7 +35,7 @@
             android:id="@+id/btn_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Download" />
+            android:text="@string/download" />
     </LinearLayout>
     <!-- End of testing section -->
 

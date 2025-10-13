@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_filter"
                 android:background="@drawable/filter_button_normal"
-                android:contentDescription="Advanced filters"
+                android:contentDescription="@string/advanced_filters"
                 android:scaleType="centerInside"
                 app:tint="?android:attr/textColorPrimary" />
         </LinearLayout>

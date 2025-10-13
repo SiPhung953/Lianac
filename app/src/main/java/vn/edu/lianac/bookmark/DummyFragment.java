@@ -38,7 +38,7 @@ public class DummyFragment extends Fragment {
     private void toggleBookmark() {
         if (bookmarkManager.isBookmarked(articleId)) {
             bookmarkManager.removeBookmark(articleId);
-            Toast.makeText(requireContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
         } else {
             BookmarkItem item = new BookmarkItem(
                     articleId,
@@ -46,7 +46,7 @@ public class DummyFragment extends Fragment {
                     System.currentTimeMillis()
             );
             bookmarkManager.addBookmark(item);
-            Toast.makeText(requireContext(), "Bookmarked!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmarked, Toast.LENGTH_SHORT).show();
         }
     }
 }

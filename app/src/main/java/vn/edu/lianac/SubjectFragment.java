@@ -79,7 +79,7 @@ public class SubjectFragment extends Fragment {
 
         if (menuButton != null) {
             menuButton.setOnClickListener(v ->
-                    Toast.makeText(getContext(), "Menu clicked", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(getContext(), R.string.menu_clicked, Toast.LENGTH_SHORT).show()
             );
         }
 
@@ -93,17 +93,17 @@ public class SubjectFragment extends Fragment {
 
         if (downloadButton != null) {
             downloadButton.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.loading, Toast.LENGTH_SHORT).show();
                 downloadButton.setEnabled(false);
 
                 new Handler().postDelayed(() -> {
                     boolean success = Math.random() > 0.3;
                     if (success) {
                         downloadButton.setImageResource(R.drawable.check);
-                        Toast.makeText(getContext(), "Done!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.done, Toast.LENGTH_SHORT).show();
                     } else {
                         downloadButton.setImageResource(R.drawable.cancel);
-                        Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
                     downloadButton.setEnabled(true);
                 }, 2000);
@@ -116,7 +116,7 @@ public class SubjectFragment extends Fragment {
     private void toggleBookmark() {
         if (bookmarkManager.isBookmarked(subjectName)) {
             bookmarkManager.removeBookmark(subjectName);
-            Toast.makeText(requireContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
         } else {
             BookmarkItem item = new BookmarkItem(
                     subjectName,
@@ -124,7 +124,7 @@ public class SubjectFragment extends Fragment {
                     System.currentTimeMillis()
             );
             bookmarkManager.addBookmark(item);
-            Toast.makeText(requireContext(), "Bookmarked!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmarked, Toast.LENGTH_SHORT).show();
         }
     }
 

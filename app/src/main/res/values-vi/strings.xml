@@ -235,7 +235,6 @@
     <string name="annotations">Chú thích</string>
     <string name="annotations_desc">Đánh dấu, ghi chú, có thể xuất</string>
     <string name="auto_save_annotations">Tự động lưu chú thích</string>
-    <string name="open_pdf_guide">Mở hướng dẫn PDF</string>
 
     <!-- Messages -->
     <string name="language_changed_to_english">Ngôn ngữ đã đổi sang Tiếng Anh</string>
@@ -303,6 +302,16 @@
     <string name="opening_in_app_viewer">Đang mở bằng trình xem trong ứng dụng</string>
     <string name="open_pdf_with">Mở PDF bằng</string>
     <string name="language_changed_to_vietnamese">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+    <string name="bookmark_removed">Đã xóa dấu trang</string>
+    <string name="bookmarked">Đã đánh dấu trang!</string>
+    <string name="loading">Đang tải...</string>
+    <string name="done">Hoàn tất!</string>
+    <string name="error">Lỗi!</string>
+    <string name="menu_clicked">Đã nhấp vào menu</string>
+    <string name="no_pdf_link_available">Không có liên kết PDF!</string>
+    <string name="no_app_found_to_open_pdf">Không tìm thấy ứng dụng để mở PDF!</string>
+    <string name="no_pdf_viewer_found">Không tìm thấy trình xem PDF</string>
+
 
     <!-- Drawer Menu -->
     <string name="nav_subjects">Môn học</string>
@@ -311,4 +320,34 @@
     <string name="nav_math">Demo Toán</string>
     <string name="nav_settings">Cài đặt</string>
     <string name="nav_search">Tìm kiếm</string>
+
+    <!-- Article Listing -->
+    <string name="sort_by">Sắp xếp theo:</string>
+    <string name="results_per_page">Kết quả mỗi trang:</string>
+    <string name="error_loading_data">Lỗi tải dữ liệu</string>
+    <string name="first">Đầu</string>
+    <string name="previous">Trước</string>
+    <string name="next">Sau</string>
+    <string name="last">Cuối</string>
+
+    <!-- Advanced Search -->
+    <string name="close">Đóng</string>
+    <string name="additional_search_fields">Trường tìm kiếm bổ sung</string>
+    <string name="add_field">+ Thêm trường</string>
+    <string name="categories">Chuyên mục</string>
+    <string name="select_category_to_add">Chọn một chuyên mục để thêm</string>
+    <string name="add">Thêm</string>
+    <string name="selected_categories">Chuyên mục đã chọn:</string>
+    <string name="date_range">Phạm vi ngày</string>
+    <string name="from">Từ</string>
+    <string name="to">Đến</string>
+    <string name="date_format_hint">YYYY-MM-DD</string>
+    <string name="reset">Đặt lại</string>
+    <string name="apply">Áp dụng</string>
+    <string name="advanced_filters">Bộ lọc nâng cao</string>
+
+    <!-- General Actions -->
+    <string name="download">Tải xuống</string>
+    <string name="bookmark">Dấu trang</string>
+    <string name="menu">Mục lục</string>
 </resources>

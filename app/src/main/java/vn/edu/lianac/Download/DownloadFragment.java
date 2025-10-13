@@ -155,7 +155,7 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
                 try {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(getContext(), "No PDF viewer found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_pdf_viewer_found, Toast.LENGTH_SHORT).show();
                 }
             }
         }

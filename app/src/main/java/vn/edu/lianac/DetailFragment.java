@@ -63,7 +63,7 @@ public class DetailFragment extends Fragment {
         // --- MENU ---
         if (menuIcon != null) {
             menuIcon.setOnClickListener(v ->
-                    Toast.makeText(getContext(), "Menu clicked", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(getContext(), R.string.menu_clicked, Toast.LENGTH_SHORT).show()
             );
         }
 
@@ -79,17 +79,17 @@ public class DetailFragment extends Fragment {
         // --- DOWNLOAD (popup) ---
         if (downloadIcon != null) {
             downloadIcon.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.loading, Toast.LENGTH_SHORT).show();
                 downloadIcon.setEnabled(false);
 
                 new Handler().postDelayed(() -> {
                     boolean success = Math.random() > 0.3;
                     if (success) {
                         downloadIcon.setImageResource(R.drawable.check);
-                        Toast.makeText(getContext(), "Done!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.done, Toast.LENGTH_SHORT).show();
                     } else {
                         downloadIcon.setImageResource(R.drawable.cancel);
-                        Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
                     downloadIcon.setEnabled(true);
                 }, 2000);
@@ -100,7 +100,7 @@ public class DetailFragment extends Fragment {
         if (readButton != null) {
             readButton.setOnClickListener(v -> {
                 if (pdfUrl.isEmpty()) {
-                    Toast.makeText(getContext(), "No PDF link available!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_pdf_link_available, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -111,7 +111,7 @@ public class DetailFragment extends Fragment {
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
-                    Toast.makeText(getContext(), "No app found to open PDF!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_app_found_to_open_pdf, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -122,7 +122,7 @@ public class DetailFragment extends Fragment {
     private void toggleBookmark() {
         if (bookmarkManager.isBookmarked(articleId)) {
             bookmarkManager.removeBookmark(articleId);
-            Toast.makeText(requireContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
         } else {
             BookmarkItem item = new BookmarkItem(
                     articleId,
@@ -130,7 +130,7 @@ public class DetailFragment extends Fragment {
                     System.currentTimeMillis()
             );
             bookmarkManager.addBookmark(item);
-            Toast.makeText(requireContext(), "Bookmarked!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.bookmarked, Toast.LENGTH_SHORT).show();
         }
     }
 

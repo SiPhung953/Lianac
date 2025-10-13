@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sort by:"
+            android:text="@string/sort_by"
             android:textSize="13sp"
             android:textStyle="bold"
             android:paddingEnd="8dp"/>
@@ -55,7 +55,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Results per page:"
+            android:text="@string/results_per_page"
             android:textSize="13sp"
             android:paddingEnd="8dp"/>
 
@@ -81,7 +81,7 @@
         android:textColor="@android:color/holo_red_dark"
         android:gravity="center"
         android:visibility="gone"
-        android:text="Error loading data" />
+        android:text="@string/error_loading_data" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -120,7 +120,7 @@
                 android:id="@+id/firstPageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="First"
+                android:text="@string/first"
                 android:textSize="11sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -129,7 +129,7 @@
                 android:id="@+id/prevPageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Previous"
+                android:text="@string/previous"
                 android:textSize="11sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -138,7 +138,7 @@
                 android:id="@+id/nextPageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next"
+                android:text="@string/next"
                 android:textSize="11sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>
@@ -147,7 +147,7 @@
                 android:id="@+id/lastPageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last"
+                android:text="@string/last"
                 android:textSize="11sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"/>

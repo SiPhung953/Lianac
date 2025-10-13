@@ -303,6 +303,15 @@
     <string name="opening_in_app_viewer">Opening with in-app viewer</string>
     <string name="open_pdf_with">Open PDF with</string>
     <string name="language_changed_to_vietnamese">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+    <string name="bookmark_removed">Bookmark removed</string>
+    <string name="bookmarked">Bookmarked!</string>
+    <string name="loading">Loading...</string>
+    <string name="done">Done!</string>
+    <string name="error">Error!</string>
+    <string name="menu_clicked">Menu clicked</string>
+    <string name="no_pdf_link_available">No PDF link available!</string>
+    <string name="no_app_found_to_open_pdf">No app found to open PDF!</string>
+    <string name="no_pdf_viewer_found">No PDF viewer found</string>
 
     <!-- Drawer Menu -->
     <string name="nav_subjects">Subjects</string>
@@ -311,4 +320,34 @@
     <string name="nav_math">Math Demo</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_search">Search</string>
+
+    <!-- Article Listing -->
+    <string name="sort_by">Sort by:</string>
+    <string name="results_per_page">Results per page:</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="first">First</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="last">Last</string>
+
+    <!-- Advanced Search -->
+    <string name="close">Close</string>
+    <string name="additional_search_fields">Additional Search Fields</string>
+    <string name="add_field">+ Add Field</string>
+    <string name="categories">Categories</string>
+    <string name="select_category_to_add">Select a category to add</string>
+    <string name="add">Add</string>
+    <string name="selected_categories">Selected Categories:</string>
+    <string name="date_range">Date Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="date_format_hint">YYYY-MM-DD</string>
+    <string name="reset">Reset</string>
+    <string name="apply">Apply</string>
+    <string name="advanced_filters">Advanced filters</string>
+
+    <!-- General Actions -->
+    <string name="download">Download</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="menu">Menu</string>
 </resources>
