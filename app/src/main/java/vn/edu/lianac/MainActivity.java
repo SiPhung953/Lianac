@@ -1,6 +1,5 @@
 package vn.edu.lianac;
 
-import androidx.fragment.app.FragmentManager;
 import vn.edu.lianac.Download.DownloadFragment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 
-import vn.edu.lianac.R;
 import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
 
@@ -31,9 +29,9 @@ import com.google.android.material.navigation.NavigationView;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -104,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        ImageButton aboutButton = findViewById(R.id.about_button);
+        aboutButton.setOnClickListener(v -> {
+            AboutDialog bottomSheet = new AboutDialog();
+            bottomSheet.show(getSupportFragmentManager(), "AboutBottomSheet");
+        });
         if (savedInstanceState == null) {
             replaceFragment(new SubjectFragment());
             getSupportActionBar().setTitle(R.string.nav_subjects);
