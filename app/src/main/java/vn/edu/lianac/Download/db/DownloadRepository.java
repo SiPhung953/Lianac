@@ -32,8 +32,8 @@ public class DownloadRepository {
     }
 
     public void delete(DownloadItem download) {
-        if (download == null || download.getUrl() == null) {
-            return; // Nothing to do
+        if (download == null /*|| download.getUrl() == null*/ /*Possibly redundant OR*/) {
+            return;
         }
         final String url = download.getUrl();
 
@@ -41,12 +41,51 @@ public class DownloadRepository {
             DownloadItem freshItem = mDownloadDao.findByUrl(url);
 
             // Use the fresh item to check the state and file path
-            if (freshItem != null && freshItem.getState() == DownloadState.COMPLETED && freshItem.getFilePath() != null && !freshItem.getFilePath().isEmpty()) {
+            if (freshItem == null) {
+                android.util.Log.e("DownloadRepository", "freshItem is NULL for url: " + url);
+                return; // Nothing to do lmao
+            }
+
+            android.util.Log.d("DownloadRepository", "Delete called for: " + freshItem.getPaperName());
+            android.util.Log.d("DownloadRepository", "State: " + freshItem.getState());
+            android.util.Log.d("DownloadRepository", "FilePath: " + freshItem.getFilePath());
+
+            if (freshItem.getState() == DownloadState.COMPLETED && freshItem.getFilePath() != null && !freshItem.getFilePath().isEmpty()) {
+
+                // URI to file path converter
                 File file = new File(freshItem.getFilePath());
-                if (file.exists()) {
-                    file.delete();
-                    // Deletes the file from device storage
+                String filePath = freshItem.getFilePath();
+
+                if (filePath.startsWith("file://")) {
+                    try {
+                        android.net.Uri uri = android.net.Uri.parse(filePath);
+                        file = new File(uri.getPath());
+                    } catch (Exception e) {
+                        android.util.Log.e("DownloadRepository", "Error parsing file path", e);
+                        return;
+                    }
+                } else {
+                    file = new File(filePath);
                 }
+
+                android.util.Log.d("DownloadRepository", "File exists: " + file.exists());
+                android.util.Log.d("DownloadRepository", "File path: " + file.getAbsolutePath());
+                android.util.Log.d("DownloadRepository", "File can write: " + file.canWrite());
+
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    // Deletes the file from device storage
+                    // Added boolean condition for logging/toasts
+                    if (deleted) {
+                        android.util.Log.d("DownloadRepository", "File deleted successfully");
+                    } else {
+                        android.util.Log.d("DownloadRepository", "File deletion failed");
+                    }
+                } else {
+                    android.util.Log.d("DownloadRepository", "File does not exist");
+                }
+            } else {
+                android.util.Log.d("DownloadRepository", "File deletion skipped");
             }
 
             // Delete from database using the fresh item
@@ -54,6 +93,8 @@ public class DownloadRepository {
 
             // Better version using Primary key "url"
             // mDownloadDao.deleteByUrl(url);
+
+            android.util.Log.d("DownloadRepository", "Database record deleted");
         });
     }
 
