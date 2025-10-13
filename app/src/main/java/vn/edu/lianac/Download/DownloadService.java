@@ -108,10 +108,6 @@ public class DownloadService extends IntentService {
             resultData.putInt(EXTRA_PROGRESS, progress);
             resultData.putInt("status", status);
             resultData.putString(EXTRA_URL, url);
-
-            resultData.putString(DownloadService.EXTRA_URL, url);
-            receiver.send(UPDATE_CODE, resultData);
-
             if (filePath != null) {
                 resultData.putString(EXTRA_FILE_PATH, filePath);
             }

@@ -3,6 +3,8 @@ package vn.edu.lianac.Download.db;
 import android.app.Application;
 import android.app.DownloadManager;
 import androidx.lifecycle.LiveData;
+
+import java.io.File;
 import java.util.List;
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
 import vn.edu.lianac.Download.DownloadState.DownloadState;
@@ -30,8 +32,31 @@ public class DownloadRepository {
     }
 
     public void delete(DownloadItem download) {
-        AppDatabase.databaseWriteExecutor.execute(() -> mDownloadDao.delete(download));
+        if (download == null || download.getUrl() == null) {
+            return; // Nothing to do
+        }
+        final String url = download.getUrl();
+
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            DownloadItem freshItem = mDownloadDao.findByUrl(url);
+
+            // Use the fresh item to check the state and file path
+            if (freshItem != null && freshItem.getState() == DownloadState.COMPLETED && freshItem.getFilePath() != null && !freshItem.getFilePath().isEmpty()) {
+                File file = new File(freshItem.getFilePath());
+                if (file.exists()) {
+                    file.delete();
+                    // Deletes the file from device storage
+                }
+            }
+
+            // Delete from database using the fresh item
+            mDownloadDao.delete(freshItem);
+
+            // Better version using Primary key "url"
+            // mDownloadDao.deleteByUrl(url);
+        });
     }
+
 
     public void updateDownloadProgress(long downloadId, int progress, int status, String url, String filePath) {
         AppDatabase.databaseWriteExecutor.execute(() -> {

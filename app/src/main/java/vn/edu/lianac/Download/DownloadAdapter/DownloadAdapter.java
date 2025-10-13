@@ -9,18 +9,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
 import vn.edu.lianac.R;
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
 import vn.edu.lianac.Download.DownloadState.DownloadState;
 
-import java.util.List;
+public class DownloadAdapter extends ListAdapter<DownloadItem, DownloadAdapter.DownloadViewHolder> {
 
-public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.DownloadViewHolder> {
-
-    private List<DownloadItem> mDownloads = new ArrayList<>();
     private final DownloadInteractionListener mListener;
 
     public interface DownloadInteractionListener {
@@ -30,6 +26,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
     }
 
     public DownloadAdapter(DownloadInteractionListener listener) {
+        super(DIFF_CALLBACK);
         mListener = listener;
     }
 
@@ -43,7 +40,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
 
     @Override
     public void onBindViewHolder(@NonNull DownloadViewHolder holder, int position) {
-        DownloadItem item = mDownloads.get(position);
+        DownloadItem item = getItem(position);
 
         holder.tvTitle.setText(item.getPaperName());
         holder.tvFileSize.setText(item.getFileSize());
@@ -84,19 +81,6 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         holder.itemView.setOnClickListener(v -> mListener.onItemClick(item));
     }
 
-    @Override
-    public int getItemCount() {
-        return mDownloads.size();
-    }
-
-    public void submitList(List<DownloadItem> newDownloads) {
-        DownloadDiffCallback diffCallback = new DownloadDiffCallback(mDownloads, newDownloads);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-        mDownloads.clear();
-        mDownloads.addAll(newDownloads);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
     static class DownloadViewHolder extends RecyclerView.ViewHolder {
         final TextView tvTitle, tvFileSize, tvPercentage;
         final ProgressBar progressBar;
@@ -113,33 +97,16 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.Downlo
         }
     }
 
-    private static class DownloadDiffCallback extends DiffUtil.Callback {
-        private final List<DownloadItem> oldList;
-        private final List<DownloadItem> newList;
-
-        public DownloadDiffCallback(List<DownloadItem> oldList, List<DownloadItem> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
+    private static final DiffUtil.ItemCallback<DownloadItem> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<DownloadItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull DownloadItem oldItem, @NonNull DownloadItem newItem) {
+            return oldItem.getUrl().equals(newItem.getUrl());
         }
 
         @Override
-        public int getOldListSize() {
-            return oldList.size();
+        public boolean areContentsTheSame(@NonNull DownloadItem oldItem, @NonNull DownloadItem newItem) {
+            return oldItem.equals(newItem);
         }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldList.get(oldItemPosition).getUrl().equals(newList.get(newItemPosition).getUrl());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
-        }
-    }
+    };
 }
