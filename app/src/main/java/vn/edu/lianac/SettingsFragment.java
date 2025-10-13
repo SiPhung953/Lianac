@@ -52,7 +52,7 @@ public class SettingsFragment extends Fragment {
     private Spinner spinnerTextDensity, spinnerLanguage, spinnerDefaultViewer;
     private View layoutInAppSettings;
 
-    // Flags để tránh trigger listeners khi load settings lần đầu
+    // Flags to avoid triggering listeners on initial load
     private boolean isLanguageInitialLoad = true;
     private boolean isTextDensityInitialLoad = true;
     private boolean isViewerInitialLoad = true;
@@ -69,7 +69,7 @@ public class SettingsFragment extends Fragment {
         // Initialize views
         initViews(view);
 
-        // Setup spinners
+        // Setup spinners with data from resources
         setupSpinners();
 
         // Load saved settings
@@ -97,36 +97,34 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        // Text Density Spinner
-        String[] textDensityOptions = {"Comfortable", "Compact"};
-        ArrayAdapter<String> textDensityAdapter = new ArrayAdapter<>(
+        // Text Density Spinner - from resource
+        ArrayAdapter<CharSequence> textDensityAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
-                textDensityOptions
+                R.array.text_density_options,
+                android.R.layout.simple_spinner_item
         );
         textDensityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTextDensity.setAdapter(textDensityAdapter);
 
-        // Language Spinner
-        String[] languageOptions = {"English (EN)", "Tiếng Việt (VN)"};
-        ArrayAdapter<String> languageAdapter = new ArrayAdapter<>(
+        // Language Spinner - from resource
+        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
-                languageOptions
+                R.array.language_options,
+                android.R.layout.simple_spinner_item
         );
         languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguage.setAdapter(languageAdapter);
 
-        // Default Viewer Spinner
-        String[] viewerOptions = {"In-app", "External PDF app"};
-        ArrayAdapter<String> viewerAdapter = new ArrayAdapter<>(
+        // Default Viewer Spinner - from resource
+        ArrayAdapter<CharSequence> viewerAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
-                viewerOptions
+                R.array.viewer_options,
+                android.R.layout.simple_spinner_item
         );
         viewerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDefaultViewer.setAdapter(viewerAdapter);
     }
+
 
     private void loadSettings() {
         // Load Theme Mode
@@ -193,16 +191,12 @@ public class SettingsFragment extends Fragment {
         // Compact List Listener
         switchCompactList.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sharedPreferences.edit().putBoolean(KEY_COMPACT_LIST, isChecked).apply();
-            // Bỏ Toast nếu không cần thiết
-            // Toast.makeText(requireContext(), "Compact list: " + (isChecked ? "ON" : "OFF"),
-            //         Toast.LENGTH_SHORT).show();
         });
 
         // Text Density Listener
         spinnerTextDensity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Bỏ qua lần đầu tiên (khi load settings)
                 if (isTextDensityInitialLoad) {
                     isTextDensityInitialLoad = false;
                     return;
@@ -218,17 +212,15 @@ public class SettingsFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Language Listener - ✅ FIX: Không hiện toast khi load lần đầu
+        // Language Listener
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Bỏ qua lần đầu tiên (khi load settings)
                 if (isLanguageInitialLoad) {
                     isLanguageInitialLoad = false;
                     return;
                 }
 
-                // Kiểm tra xem language có thực sự thay đổi không
                 int currentLanguage = sharedPreferences.getInt(KEY_LANGUAGE, 0);
                 if (currentLanguage != position) {
                     sharedPreferences.edit().putInt(KEY_LANGUAGE, position).apply();
@@ -244,7 +236,6 @@ public class SettingsFragment extends Fragment {
         spinnerDefaultViewer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Bỏ qua lần đầu tiên (khi load settings)
                 if (isViewerInitialLoad) {
                     isViewerInitialLoad = false;
                     return;
@@ -253,14 +244,7 @@ public class SettingsFragment extends Fragment {
                 int currentViewer = sharedPreferences.getInt(KEY_DEFAULT_VIEWER, 0);
                 if (currentViewer != position) {
                     sharedPreferences.edit().putInt(KEY_DEFAULT_VIEWER, position).apply();
-
-                    if (position == 0) {
-                        // In-app viewer selected
-                        layoutInAppSettings.setVisibility(View.VISIBLE);
-                    } else {
-                        // External PDF app selected
-                        layoutInAppSettings.setVisibility(View.GONE);
-                    }
+                    layoutInAppSettings.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
                 }
             }
 
@@ -287,45 +271,30 @@ public class SettingsFragment extends Fragment {
 
     private void changeLanguage(int position) {
         String languageCode = (position == 0) ? "en" : "vi";
-
-        // Lưu language preference
         sharedPreferences.edit().putString("app_language", languageCode).apply();
 
-        // Đổi locale
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocale(locale);
-        } else {
-            config.locale = locale;
-        }
+        config.setLocale(locale);
 
-        requireContext().getResources().updateConfiguration(config,
-                requireContext().getResources().getDisplayMetrics());
+        requireContext().getResources().updateConfiguration(config, requireContext().getResources().getDisplayMetrics());
 
-        // Hiển thị toast TRƯỚC KHI restart
-        String message = position == 0 ? "Language changed to English" : "Ngôn ngữ đã đổi sang Tiếng Việt";
+        // Show toast using string resources
+        String message = (position == 0) ? getString(R.string.language_changed_to_english) : getString(R.string.language_changed_to_vietnamese);
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
 
-        // RESTART Activity sau một chút delay để toast hiển thị
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                requireActivity().recreate();
-            }
-        }, 500); // 500ms delay
+        // Restart Activity to apply language change
+        new Handler().postDelayed(() -> requireActivity().recreate(), 500); // 500ms delay
     }
 
-    // Method để mở PDF với External App - ✅ FIX: Hỗ trợ FileProvider cho Android 7.0+
     public void openPDFWithExternalApp(String pdfPath) {
         int viewerPreference = sharedPreferences.getInt(KEY_DEFAULT_VIEWER, 0);
 
         if (viewerPreference == 1) { // External PDF app
             File file = new File(pdfPath);
 
-            // Sử dụng FileProvider cho Android 7.0+
             Uri uri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 uri = FileProvider.getUriForFile(
@@ -341,30 +310,28 @@ public class SettingsFragment extends Fragment {
             intent.setDataAndType(uri, "application/pdf");
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            // Kiểm tra xem có app nào có thể mở PDF không
             PackageManager pm = requireContext().getPackageManager();
-            List<ResolveInfo> activities = pm.queryIntentActivities(intent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
+            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
             if (activities.size() > 0) {
-                // Tạo chooser để người dùng chọn app
-                Intent chooser = Intent.createChooser(intent, "Open PDF with");
+                // Use string resource for chooser title
+                Intent chooser = Intent.createChooser(intent, getString(R.string.open_pdf_with));
                 startActivity(chooser);
             } else {
+                // Use string resource for toast message
                 Toast.makeText(requireContext(),
-                        "No PDF reader app found. Please install one.",
+                        getString(R.string.no_pdf_reader_found),
                         Toast.LENGTH_LONG).show();
             }
         } else {
-            // Mở bằng In-app viewer
-            // Implement your in-app PDF viewer here
+            // Use string resource for toast message
             Toast.makeText(requireContext(),
-                    "Opening with in-app viewer",
+                    getString(R.string.opening_in_app_viewer),
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Getter methods để các fragment/activity khác có thể sử dụng settings
+    // Getter methods for other fragments/activities
     public boolean isCompactListEnabled() {
         return sharedPreferences.getBoolean(KEY_COMPACT_LIST, false);
     }

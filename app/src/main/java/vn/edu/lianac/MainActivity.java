@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             replaceFragment(new SubjectFragment());
-            getSupportActionBar().setTitle("Subjects");
+            getSupportActionBar().setTitle(R.string.nav_subjects);
             navigationView.setCheckedItem(R.id.nav_subjects);
         } else {
             CharSequence title = savedInstanceState.getCharSequence("title");
@@ -125,22 +125,22 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_subjects) {
                 fragment = new SubjectFragment();
-                getSupportActionBar().setTitle("Subjects");
+                getSupportActionBar().setTitle(R.string.nav_subjects);
             } else if (id == R.id.nav_downloads) {
                 fragment = new DownloadFragment();
-                getSupportActionBar().setTitle("Downloads");
+                getSupportActionBar().setTitle(R.string.nav_downloads);
             } else if (id == R.id.nav_bookmarks) {
                 fragment = new BookmarkListFragment();
-                getSupportActionBar().setTitle("Bookmarks");
+                getSupportActionBar().setTitle(R.string.nav_bookmarks);
             } else if (id == R.id.nav_math) { // Xử lý sự kiện click cho item mới (Math)
                 fragment = new MathFragment();
-                getSupportActionBar().setTitle("Math");
+                getSupportActionBar().setTitle(R.string.nav_math);
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
-                getSupportActionBar().setTitle("Settings");
+                getSupportActionBar().setTitle(R.string.nav_settings);
             } else if (id == R.id.nav_search) {
                 handleSearch();
-                getSupportActionBar().setTitle("Search");
+                getSupportActionBar().setTitle(R.string.nav_search);
                 toggleSearchAction(true);
             }
 

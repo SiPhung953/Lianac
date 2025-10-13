@@ -237,7 +237,7 @@
     <string name="annotations_desc">Highlight, notes, exportable</string>
     <string name="auto_save_annotations">Auto-save annotations</string>
     <!-- Messages -->
-    <string name="language_changed">Language changed to English</string>
+    <string name="language_changed_to_english">Language changed to English</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- Sub-Categories for Quantitative Biology -->
@@ -283,4 +283,32 @@
     <string name="category_econ_th">Theoretical Economics</string>
         <!-- other strings might be here -->
         <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Settings Screen Options -->
+    <string-array name="text_density_options">
+        <item>@string/comfortable</item>
+        <item>@string/compact</item>
+    </string-array>
+    <string-array name="language_options">
+        <item>English (EN)</item>
+        <item>Tiếng Việt (VN)</item>
+    </string-array>
+    <string-array name="viewer_options">
+        <item>@string/in_app</item>
+        <item>@string/external_pdf_app</item>
+    </string-array>
+
+    <!-- Toasts and Dialogs -->
+    <string name="no_pdf_reader_found">No PDF reader app found. Please install one.</string>
+    <string name="opening_in_app_viewer">Opening with in-app viewer</string>
+    <string name="open_pdf_with">Open PDF with</string>
+    <string name="language_changed_to_vietnamese">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+
+    <!-- Drawer Menu -->
+    <string name="nav_subjects">Subjects</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_bookmarks">Bookmarks</string>
+    <string name="nav_math">Math Demo</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_search">Search</string>
 </resources>
