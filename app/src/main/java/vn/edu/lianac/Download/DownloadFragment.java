@@ -138,6 +138,7 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
     @Override
     public void onDeleteButtonClick(DownloadItem item) {
         mViewModel.deleteDownload(item);
+        Toast.makeText(getContext(), "Download Deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override

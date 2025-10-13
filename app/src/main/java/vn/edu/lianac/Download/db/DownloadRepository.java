@@ -42,13 +42,8 @@ public class DownloadRepository {
 
             // Use the fresh item to check the state and file path
             if (freshItem == null) {
-                android.util.Log.e("DownloadRepository", "freshItem is NULL for url: " + url);
                 return; // Nothing to do lmao
             }
-
-            android.util.Log.d("DownloadRepository", "Delete called for: " + freshItem.getPaperName());
-            android.util.Log.d("DownloadRepository", "State: " + freshItem.getState());
-            android.util.Log.d("DownloadRepository", "FilePath: " + freshItem.getFilePath());
 
             if (freshItem.getState() == DownloadState.COMPLETED && freshItem.getFilePath() != null && !freshItem.getFilePath().isEmpty()) {
 
@@ -68,33 +63,19 @@ public class DownloadRepository {
                     file = new File(filePath);
                 }
 
-                android.util.Log.d("DownloadRepository", "File exists: " + file.exists());
-                android.util.Log.d("DownloadRepository", "File path: " + file.getAbsolutePath());
-                android.util.Log.d("DownloadRepository", "File can write: " + file.canWrite());
-
                 if (file.exists()) {
                     boolean deleted = file.delete();
                     // Deletes the file from device storage
                     // Added boolean condition for logging/toasts
                     if (deleted) {
-                        android.util.Log.d("DownloadRepository", "File deleted successfully");
-                    } else {
-                        android.util.Log.d("DownloadRepository", "File deletion failed");
                     }
-                } else {
-                    android.util.Log.d("DownloadRepository", "File does not exist");
                 }
-            } else {
-                android.util.Log.d("DownloadRepository", "File deletion skipped");
             }
 
             // Delete from database using the fresh item
-            mDownloadDao.delete(freshItem);
-
-            // Better version using Primary key "url"
-            // mDownloadDao.deleteByUrl(url);
-
-            android.util.Log.d("DownloadRepository", "Database record deleted");
+            // mDownloadDao.delete(freshItem);
+            // Changed to a better version using Primary key "url"
+            mDownloadDao.deleteByUrl(url);
         });
     }
 
