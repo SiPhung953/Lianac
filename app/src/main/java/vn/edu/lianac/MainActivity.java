@@ -95,10 +95,17 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
+        // Reset ViewModel to default query
+        androidx.lifecycle.ViewModelProvider viewModelProvider =
+                new androidx.lifecycle.ViewModelProvider(this);
+        vn.edu.lianac.viewmodel.SearchViewModel viewModel =
+                viewModelProvider.get(vn.edu.lianac.viewmodel.SearchViewModel.class);
+        viewModel.resetToDefault();
+
         // Load home fragment without adding to back stack
         loadContentFragment(new ArticleListingFragment(), false);
 
-        // Hide search when going home (optional, UX preference)
+        // Hide search when going home
         hideSearch();
     }
 

@@ -107,6 +107,40 @@ public class SearchViewModel extends ViewModel {
         search(defaultQuery);
     }
 
+    /**
+     * Search articles by category with specific sort order
+     */
+    public void searchByCategory(String categoryId, String sortBy) {
+        List<String> categoryList = new ArrayList<>();
+        categoryList.add(categoryId);
+
+        QueryOptions query = new QueryOptions.Builder()
+                .categories(categoryList)
+                .sortBy(sortBy)
+                .sortOrder("descending")
+                .maxResults(25)
+                .start(0)
+                .build();
+
+        search(query);
+    }
+
+    /**
+     * Reset to default all:all query
+     */
+    public void resetToDefault() {
+        QueryOptions defaultQuery = new QueryOptions.Builder()
+                .searchTerm("all")
+                .searchField("all")
+                .sortBy("submittedDate")
+                .sortOrder("descending")
+                .maxResults(10)
+                .start(0)
+                .build();
+
+        search(defaultQuery);
+    }
+
     public void nextPage() {
         QueryOptions current = currentQuery.getValue();
         if (!Boolean.TRUE.equals(hasNextPage.getValue()) || current == null) {

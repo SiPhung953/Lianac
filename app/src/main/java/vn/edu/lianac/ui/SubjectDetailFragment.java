@@ -13,34 +13,48 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
 import vn.edu.lianac.utils.CategoryProvider;
 
 /**
- * Fragment to display detailed information about a subject
+ * Fragment to display detailed information about a subject with hierarchical navigation
  */
 public class SubjectDetailFragment extends Fragment {
 
     private static final String ARG_CATEGORY_ID = "category_id";
     private static final String ARG_CATEGORY_NAME = "category_name";
+    private static final String ARG_BREADCRUMB_PATH = "breadcrumb_path";
 
     private String categoryId;
     private String categoryName;
+    private ArrayList<BreadcrumbItem> breadcrumbPath;
 
+    private LinearLayout hierarchyNavigation;
+    private LinearLayout breadcrumbContainer;
     private TextView subjectHeader;
     private TextView subjectDescription;
     private TextView subcategoriesTitle;
     private Button btnNew, btnRecent, btnPopular;
-
     private LinearLayout subcategoriesContainer;
 
+    /**
+     * Create new instance with breadcrumb tracking
+     */
     public static SubjectDetailFragment newInstance(String categoryId, String categoryName) {
+        return newInstance(categoryId, categoryName, new ArrayList<>());
+    }
+
+    public static SubjectDetailFragment newInstance(String categoryId, String categoryName,
+                                                    ArrayList<BreadcrumbItem> breadcrumbPath) {
         SubjectDetailFragment fragment = new SubjectDetailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_CATEGORY_ID, categoryId);
         args.putString(ARG_CATEGORY_NAME, categoryName);
+        args.putParcelableArrayList(ARG_BREADCRUMB_PATH, breadcrumbPath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,6 +65,10 @@ public class SubjectDetailFragment extends Fragment {
         if (getArguments() != null) {
             categoryId = getArguments().getString(ARG_CATEGORY_ID);
             categoryName = getArguments().getString(ARG_CATEGORY_NAME);
+            breadcrumbPath = getArguments().getParcelableArrayList(ARG_BREADCRUMB_PATH);
+            if (breadcrumbPath == null) {
+                breadcrumbPath = new ArrayList<>();
+            }
         }
     }
 
@@ -67,11 +85,14 @@ public class SubjectDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initViews(view);
+        setupBreadcrumbs();
         setupClickListeners();
         loadSubjectData();
     }
 
     private void initViews(View view) {
+        hierarchyNavigation = view.findViewById(R.id.hierarchyNavigation);
+        breadcrumbContainer = view.findViewById(R.id.breadcrumbContainer);
         subjectHeader = view.findViewById(R.id.subjectHeader);
         subjectDescription = view.findViewById(R.id.subjectDescription);
         subcategoriesTitle = view.findViewById(R.id.subcategoriesTitle);
@@ -81,10 +102,126 @@ public class SubjectDetailFragment extends Fragment {
         btnPopular = view.findViewById(R.id.btnPopular);
     }
 
+    private void setupBreadcrumbs() {
+        if (breadcrumbPath.isEmpty()) {
+            // No breadcrumbs for top-level categories
+            hierarchyNavigation.setVisibility(View.GONE);
+            return;
+        }
+
+        hierarchyNavigation.setVisibility(View.VISIBLE);
+        breadcrumbContainer.removeAllViews();
+
+        // Add "Lianac" home link
+        TextView homeLink = createBreadcrumbLink("Lianac", null);
+        homeLink.setOnClickListener(v -> navigateToHome());
+        breadcrumbContainer.addView(homeLink);
+
+        // Add separator
+        breadcrumbContainer.addView(createBreadcrumbSeparator());
+
+        // Add each breadcrumb item
+        for (int i = 0; i < breadcrumbPath.size(); i++) {
+            BreadcrumbItem item = breadcrumbPath.get(i);
+
+            if (i == breadcrumbPath.size() - 1) {
+                // Last item (current category) - not clickable
+                TextView currentLink = createBreadcrumbCurrent(item.name);
+                breadcrumbContainer.addView(currentLink);
+            } else {
+                // Parent categories - clickable
+                TextView link = createBreadcrumbLink(item.name, item);
+                final int index = i;
+                link.setOnClickListener(v -> navigateToBreadcrumb(index));
+                breadcrumbContainer.addView(link);
+                breadcrumbContainer.addView(createBreadcrumbSeparator());
+            }
+        }
+    }
+
+    private TextView createBreadcrumbLink(String text, BreadcrumbItem item) {
+        TextView textView = new TextView(requireContext());
+        textView.setText(text);
+        textView.setTextColor(getResources().getColor(R.color.cornell_red, null));
+        textView.setTextSize(14);
+        textView.setClickable(true);
+        textView.setFocusable(true);
+        textView.setBackgroundResource(android.R.drawable.list_selector_background);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 4, 0);
+        textView.setLayoutParams(params);
+
+        if (item != null) {
+            textView.setTag(item);
+        }
+
+        return textView;
+    }
+
+    private TextView createBreadcrumbCurrent(String text) {
+        TextView textView = new TextView(requireContext());
+        textView.setText(text);
+        textView.setTextColor(getResources().getColor(android.R.color.black, null));
+        textView.setTextSize(14);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        textView.setLayoutParams(params);
+
+        return textView;
+    }
+
+    private TextView createBreadcrumbSeparator() {
+        TextView separator = new TextView(requireContext());
+        separator.setText(" > ");
+        separator.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+        separator.setTextSize(14);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(4, 0, 4, 0);
+        separator.setLayoutParams(params);
+
+        return separator;
+    }
+
+    private void navigateToHome() {
+        // Navigate back to SubjectsFragment (main categories list)
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToContent(new SubjectsFragment());
+        }
+    }
+
+    private void navigateToBreadcrumb(int index) {
+        // Navigate to a parent category in the breadcrumb path
+        BreadcrumbItem item = breadcrumbPath.get(index);
+
+        // Create new breadcrumb path up to this point
+        ArrayList<BreadcrumbItem> newPath = new ArrayList<>(breadcrumbPath.subList(0, index));
+
+        SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                item.categoryId,
+                item.name,
+                newPath
+        );
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).loadContentFragment(fragment, false);
+        }
+    }
+
     private void setupClickListeners() {
-        btnNew.setOnClickListener(v -> showPapers("new"));
-        btnRecent.setOnClickListener(v -> showPapers("recent"));
-        btnPopular.setOnClickListener(v -> showPapers("popular"));
+        btnNew.setOnClickListener(v -> showPapers("submittedDate"));
+        btnRecent.setOnClickListener(v -> showPapers("lastUpdatedDate"));
+        btnPopular.setOnClickListener(v -> showPapers("relevance"));
     }
 
     private void loadSubjectData() {
@@ -150,12 +287,22 @@ public class SubjectDetailFragment extends Fragment {
         subjectName.setText(String.format("%s (%s)", displayName, subcategoryId));
         subjectDescription.setText(description);
 
-        // Set click listener
+        // Set click listener to navigate to subcategory detail
         subcategoryView.setOnClickListener(v -> {
-            // Navigate to dummy destination for now
-            Toast.makeText(requireContext(),
-                    "Subcategory: " + displayName + " (" + subcategoryId + ")",
-                    Toast.LENGTH_SHORT).show();
+            // Create new breadcrumb path including current category
+            ArrayList<BreadcrumbItem> newPath = new ArrayList<>(breadcrumbPath);
+            newPath.add(new BreadcrumbItem(categoryId, categoryName));
+
+            // Navigate to subcategory detail
+            SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                    subcategoryId,
+                    displayName,
+                    newPath
+            );
+
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToContent(fragment);
+            }
         });
     }
 
@@ -172,12 +319,57 @@ public class SubjectDetailFragment extends Fragment {
         return String.format("Research papers and preprints in %s", displayName);
     }
 
-    private void showPapers(String type) {
-        // For now, just show a toast
-        String message = String.format("Showing %s papers in %s", type, categoryName);
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    private void showPapers(String sortBy) {
+        if (getActivity() instanceof MainActivity) {
+            // Get ViewModel and execute category search
+            androidx.lifecycle.ViewModelProvider viewModelProvider =
+                    new androidx.lifecycle.ViewModelProvider(requireActivity());
+            vn.edu.lianac.viewmodel.SearchViewModel viewModel =
+                    viewModelProvider.get(vn.edu.lianac.viewmodel.SearchViewModel.class);
+            viewModel.searchByCategory(categoryId, sortBy);
 
-        // TODO: Later implement actual paper browsing
-        // This could navigate to ArticleListingFragment with pre-configured search
+            // Navigate to ArticleListingFragment
+            ((MainActivity) getActivity()).navigateToContent(new ArticleListingFragment());
+        }
+    }
+    /**
+     * Parcelable class to store breadcrumb information
+     */
+    public static class BreadcrumbItem implements android.os.Parcelable {
+        public final String categoryId;
+        public final String name;
+
+        public BreadcrumbItem(String categoryId, String name) {
+            this.categoryId = categoryId;
+            this.name = name;
+        }
+
+        protected BreadcrumbItem(android.os.Parcel in) {
+            categoryId = in.readString();
+            name = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(android.os.Parcel dest, int flags) {
+            dest.writeString(categoryId);
+            dest.writeString(name);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<BreadcrumbItem> CREATOR = new Creator<BreadcrumbItem>() {
+            @Override
+            public BreadcrumbItem createFromParcel(android.os.Parcel in) {
+                return new BreadcrumbItem(in);
+            }
+
+            @Override
+            public BreadcrumbItem[] newArray(int size) {
+                return new BreadcrumbItem[size];
+            }
+        };
     }
 }

@@ -23,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.viewmodel.SearchViewModel;
@@ -353,8 +355,19 @@ public class ArticleListingFragment extends Fragment {
 
     private void updateVisibility() {
         boolean hasArticles = adapter.getItemCount() > 0;
+        Boolean isLoading = viewModel.getIsLoading().getValue();
+
         Log.d(TAG, "updateVisibility - hasArticles: " + hasArticles + ", itemCount: " + adapter.getItemCount());
-        recyclerView.setVisibility(View.VISIBLE);
+
+        if (!hasArticles && isLoading != null && !isLoading) {
+            // No articles and not loading - show "No results"
+            errorText.setText("No results found");
+            errorText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            // Error text visibility is already handled by error observer
+        }
     }
 
     private void updatePaginationInfo() {
@@ -370,15 +383,26 @@ public class ArticleListingFragment extends Fragment {
             int firstResult = start + 1;
             int lastResult = Math.min(start + pageSize, total);
 
-            // Display "Showing 1-50 of 407,047 results"
-            String resultsInfo = String.format("Showing %,d-%,d of %,d results",
-                    firstResult, lastResult, total);
+            // Check if category filter is active
+            String resultsInfo;
+            List<String> categories = currentQuery.getCategories();
+            if (categories != null && !categories.isEmpty()) {
+                // Get category display name
+                String categoryId = categories.get(0);
+                String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
+                resultsInfo = String.format("Showing %,d-%,d of %,d results in %s (%s)",
+                        firstResult, lastResult, total, displayName, categoryId);
+            } else {
+                resultsInfo = String.format("Showing %,d-%,d of %,d results",
+                        firstResult, lastResult, total);
+            }
+
             resultsText.setText(resultsInfo);
             resultsText.setVisibility(View.VISIBLE);
 
             if (current != null && pages != null) {
                 String pageInfo = String.format("Page %d of %,d", current, pages);
-                pageTextTop.setVisibility(View.GONE);  // Hide the top page text
+                pageTextTop.setVisibility(View.GONE);
                 pageTextBottom.setText(pageInfo);
                 bottomPaginationContainer.setVisibility(View.VISIBLE);
             }
