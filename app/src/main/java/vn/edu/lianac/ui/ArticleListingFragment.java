@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Locale;
 
+import vn.edu.lianac.ui.ArticleAdapter;
 import vn.edu.lianac.R;
+import vn.edu.lianac.ui.WebViewFragment;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 public class ArticleListingFragment extends Fragment {
@@ -86,10 +88,25 @@ public class ArticleListingFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ArticleAdapter();
         recyclerView.setAdapter(adapter);
+
+        // When choose 1 pdf → Open WebViewFragment
+        adapter.setOnArticleClickListener(article -> {
+            String url = article.getPdfUrl();
+            if (url == null || url.isEmpty()) {
+                url = article.getAbsUrl(); // fallback -> abstract if not have PDF
+            }
+            if (url != null && url.contains("arxiv.org/pdf") && !url.endsWith(".pdf")) {
+                url = url + ".pdf";
+            }
+            Log.d("ArticleListingFragment", "Opening PDF URL: " + url);//Check log print
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, WebViewFragment.newInstance(url))
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void setupSpinners() {
-        // Sort spinner
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.sort_options,
@@ -105,7 +122,7 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isFirstSelection) {
                     isFirstSelection = false;
-                    return;  // Skip the automatic first trigger
+                    return;
                 }
                 String sortBy = getSortByValue(position);
                 String sortOrder = getSortOrderValue(position);
@@ -116,7 +133,6 @@ public class ArticleListingFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Page size spinner
         ArrayAdapter<CharSequence> pageSizeAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.page_sizes,
@@ -132,7 +148,7 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isFirstSelection) {
                     isFirstSelection = false;
-                    return;  // Skip the automatic first trigger
+                    return;
                 }
                 int pageSize = getPageSizeValue(position);
                 searchViewModel.updatePageSize(pageSize);
@@ -151,59 +167,26 @@ public class ArticleListingFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        // Observe search results
         searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), articles -> {
             if (articles != null) {
                 Log.d("ArticleListingFragment", "Received " + articles.size() + " articles");
-
-                // Handle API limitation: empty results on non-first pages
-                Integer currentPage = searchViewModel.getCurrentPage().getValue();
-                Integer totalResults = searchViewModel.getTotalResults().getValue();
-
-                if (articles.isEmpty()) {
-                    if (currentPage != null && currentPage > 1 && totalResults != null && totalResults > 0) {
-                        // API hit its limitation
-                        int maxAccessibleResults = (currentPage - 1) * 10;
-                        errorText.setText(String.format(Locale.US,
-                                "API limitation reached. Only the first ~%d results are available for this search. " +
-                                        "Try using more specific search terms for better results.",
-                                maxAccessibleResults));
-                        updateUIVisibility(false, true);
-                    } else {
-                        // First page is empty - no results found
-                        errorText.setText("No results found");
-                        updateUIVisibility(false, true);
-                    }
-                    return;
-                }
-
-                adapter.submitList(articles);
+                adapter.setArticles(articles);
                 updateUIVisibility(false, false);
             }
         });
 
-        // Observe loading state
         searchViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-            // Hide error text while loading
-            if (isLoading) {
-                errorText.setVisibility(View.GONE);
-            }
+            if (isLoading) errorText.setVisibility(View.GONE);
         });
 
-        // Observe errors
         searchViewModel.getError().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 errorText.setText(error);
                 updateUIVisibility(false, true);
-            } else {
-                // Clear error when it's null
-                errorText.setVisibility(View.GONE);
-            }
+            } else errorText.setVisibility(View.GONE);
         });
 
-
-        // Observe individual pagination values instead of a PaginationInfo object
         searchViewModel.getTotalResults().observe(getViewLifecycleOwner(), totalResults -> {
             resultsCountText.setText(String.format(Locale.US, "%d results", totalResults));
             updatePaginationUI();
@@ -237,14 +220,10 @@ public class ArticleListingFragment extends Fragment {
         pageSizeContainer.setVisibility(View.VISIBLE);
         paginationButtonsContainer.setVisibility(View.VISIBLE);
 
-        // Get maximum reliable page based on search type
         int maxReliablePage = searchViewModel.getMaxReliablePage();
         int effectiveTotalPages = Math.min(totalPages, maxReliablePage);
-
-        // Always show normal page display, but limit navigation
         pageInfoText.setText(String.format(Locale.US, "Page %d of %d", currentPage, totalPages));
 
-        // Disable navigation beyond the reliable page limit for broad searches
         boolean canGoForward = currentPage < totalPages;
         if (searchViewModel.isBroadSearch()) {
             canGoForward = currentPage < effectiveTotalPages;
@@ -256,27 +235,17 @@ public class ArticleListingFragment extends Fragment {
         lastPageButton.setEnabled(canGoForward);
     }
 
-    // Helper methods
     private String getSortByValue(int position) {
         String[] values = {"submittedDate", "lastUpdatedDate", "relevance"};
-        if (position >= 0 && position < values.length) {
-            return values[position];
-        }
-        return "submittedDate";
+        return position >= 0 && position < values.length ? values[position] : "submittedDate";
     }
 
     private String getSortOrderValue(int position) {
-        // All default sort orders are descending in the provided example
         return "descending";
     }
 
     private int getPageSizeValue(int position) {
         int[] sizes = {10, 25, 50, 100, 200};
-        if (position >= 0 && position < sizes.length) {
-            return sizes[position];
-        }
-        return 25;
+        return position >= 0 && position < sizes.length ? sizes[position] : 25;
     }
-
-
 }
