@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Advanced Search"
+                android:text="@string/advanced_search"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white" />
@@ -37,7 +37,7 @@
                 android:layout_height="40dp"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Close"
+                android:contentDescription="@string/close"
                 app:tint="@android:color/white" />
         </LinearLayout>
 
@@ -63,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Additional Search Fields"
+                android:text="@string/additional_search_fields"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -86,7 +86,7 @@
                 android:id="@+id/addFieldButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+ Add Field"
+                android:text="@string/add_field"
                 android:layout_marginTop="8dp" />
         </LinearLayout>
 
@@ -117,7 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Categories"
+                android:text="@string/categories"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -135,7 +135,7 @@
                 android:id="@+id/mainCategoryLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Main Categories:"
+                android:text="@string/select_main_categories"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
@@ -152,7 +152,7 @@
                 android:id="@+id/physicsFilterLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Physics Subjects to Expand:"
+                android:text="@string/select_physics_subjects_to_expand"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
@@ -172,7 +172,7 @@
                 android:id="@+id/leafCategoryLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Specific Categories:"
+                android:text="@string/select_specific_categories"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
@@ -191,7 +191,7 @@
                 android:id="@+id/selectedCategoriesSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No categories selected"
+                android:text="@string/no_categories_selected"
                 android:textSize="12sp"
                 android:textColor="#666666"
                 android:layout_marginTop="12dp"
@@ -225,7 +225,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Date Range"
+                android:text="@string/date_range"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -241,7 +241,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="From"
+                android:text="@string/from"
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
@@ -258,7 +258,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="To"
+                android:text="@string/to"
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
@@ -289,7 +289,7 @@
                 android:id="@+id/resetButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reset"
+                android:text="@string/reset"
                 android:layout_marginEnd="8dp"
                 style="?android:attr/buttonBarButtonStyle" />
 
@@ -297,13 +297,13 @@
                 android:id="@+id/applyFiltersButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Apply" />
+                android:text="@string/apply" />
 
             <Button
                 android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search"
+                android:text="@string/search"
                 android:layout_marginStart="4dp" />
         </LinearLayout>
     </LinearLayout>

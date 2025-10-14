@@ -51,7 +51,7 @@
     <string name="advanced_search">Advanced Search</string>
     <string name="basic_search">Basic Search</string>
     <string name="placeholder_search">Search...</string>
-    <string name="placehold_advanced_search">Search term...</string>
+    <string name="placeholder_advanced_search">Search term...</string>
 
     <string name="select_category_placeholder">Select a category</string>
     <string name="select_valid_category_toast">Please select a valid category</string>
@@ -245,4 +245,31 @@
     <string name="category_econ_th">Theoretical Economics</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu">Menu</string>
+    <string name="next">Next ▶</string>
+    <string name="prev">◀ Prev</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="per_page">Per page:</string>
+    <string name="close">Close</string>
+    <string name="additional_search_fields">Additional Search Fields</string>
+    <string name="add_field">+ Add Field</string>
+    <string name="categories">Categories</string>
+    <string name="select_main_categories">Select Main Categories:</string>
+    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
+    <string name="select_specific_categories">Select Specific Categories:</string>
+    <string name="no_categories_selected">No categories selected</string>
+    <string name="date_range">Date Range</string>
+    <string name="from">From</string>
+    <string name="reset">Reset</string>
+    <string name="to">To</string>
+    <string name="apply">Apply</string>
+    <string name="advanced_filters">Advanced filters</string>
+    <string name="subcategories">Subcategories</string>
+    <string name="popular">Popular</string>
+    <string name="recent">Recent</string>
+    <string name="newest">New</string>
+    <string name="remove_field">Remove field</string>
+    <string name="home">Home</string>
+    <string name="current">Current</string>
 </resources>

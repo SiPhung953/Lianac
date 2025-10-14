@@ -15,7 +15,7 @@
         android:id="@+id/navHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home"
+        android:text="@string/home"
         android:textColor="?android:attr/colorAccent"
         android:textSize="14sp"
         android:clickable="true"
@@ -35,7 +35,7 @@
         android:id="@+id/navCurrent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current"
+        android:text="@string/current"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="14sp" />
 
