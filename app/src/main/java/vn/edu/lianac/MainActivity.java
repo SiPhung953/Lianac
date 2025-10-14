@@ -48,12 +48,18 @@ public class MainActivity extends AppCompatActivity {
     private boolean showSearch = false;
     private boolean searchShowing = true;
 
-    // TODO: fix janky startup animations
-    // TODO: Fix sidebar icons
+    // ADDED: Track if we're in search mode
+    private boolean isSearchMode = false;
 
     private static final String PREFS_NAME = "AppSettings";
     private static final String KEY_LANGUAGE = "language";
     private static final String KEY_THEME = "theme";
+
+    // ADDED: Keys for savedInstanceState
+    private static final String KEY_SEARCH_MODE = "search_mode";
+    private static final String KEY_SEARCH_VISIBILITY = "search_visibility";
+    private static final String KEY_SEARCH_ICON_SHOWING = "search_icon_showing";
+    private static final String KEY_TITLE = "title";
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -88,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //Window setup
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -125,9 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set toolbar as ActionBar
         setSupportActionBar(topAppBar);
-        // Development purposes, ignore the cannot resolve symbol R warning its wrong
-        int verticalPadding = getResources().getDimensionPixelSize(
-                com.google.android.material.R.dimen.mtrl_navigation_item_shape_vertical_margin);
 
         // Setup drawer toggle (hamburger icon)
         toggle = new ActionBarDrawerToggle(this, drawerLayout, topAppBar,
@@ -140,18 +144,36 @@ public class MainActivity extends AppCompatActivity {
             AboutDialog bottomSheet = new AboutDialog();
             bottomSheet.show(getSupportFragmentManager(), "AboutBottomSheet");
         });
+
+        // FIXED: Handle both initial launch and rotation
         if (savedInstanceState == null) {
+            // First launch - show subjects
             replaceFragment(new SubjectFragment());
             getSupportActionBar().setTitle(R.string.nav_subjects);
             navigationView.setCheckedItem(R.id.nav_subjects);
+            isSearchMode = false;
         } else {
-            CharSequence title = savedInstanceState.getCharSequence("title");
+            // Rotation - restore state
+            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
             getSupportActionBar().setTitle(title);
-            if (savedInstanceState.getCharSequence("title").toString().equals("Search")) {
-                searchShowing = savedInstanceState.getBoolean("searchVisibility");
+
+            // ADDED: Check if we were in search mode
+            isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
+
+            if (isSearchMode) {
+                // Restore search mode
+                searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
+                boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
+
+                // Recreate search UI
                 prepareContainers();
-                toggleSearchAction(savedInstanceState.getBoolean("searchIconShowing"));
+
+                // FragmentManager will automatically restore fragments
+                // but we need to ensure the containers are ready
+                toggleSearchAction(searchIconShowing);
+                navigationView.setCheckedItem(R.id.nav_search);
             }
+            // For other fragments, FragmentManager will restore them automatically
         }
 
         // Handle navigation item clicks
@@ -162,22 +184,30 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_subjects) {
                 fragment = new SubjectFragment();
                 getSupportActionBar().setTitle(R.string.nav_subjects);
+                isSearchMode = false;
             } else if (id == R.id.nav_downloads) {
                 fragment = new DownloadFragment();
                 getSupportActionBar().setTitle(R.string.nav_downloads);
+                isSearchMode = false;
             } else if (id == R.id.nav_bookmarks) {
                 fragment = new BookmarkListFragment();
                 getSupportActionBar().setTitle(R.string.nav_bookmarks);
-            } else if (id == R.id.nav_math) { // Xử lý sự kiện click cho item mới (Math)
+                isSearchMode = false;
+            } else if (id == R.id.nav_math) {
                 fragment = new MathFragment();
                 getSupportActionBar().setTitle(R.string.nav_math);
+                isSearchMode = false;
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle(R.string.nav_settings);
+                isSearchMode = false;
             } else if (id == R.id.nav_search) {
                 handleSearch();
                 getSupportActionBar().setTitle(R.string.nav_search);
                 toggleSearchAction(true);
+                isSearchMode = true;
+                drawerLayout.closeDrawers();
+                return true; // Early return for search
             }
 
             if (fragment != null) {
@@ -199,16 +229,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // really not sure why this is needed given that transaction.replace should already do this
-        // internally, some1 with spare time plaese educate me on this
         ((ViewGroup) findViewById(R.id.content_frame)).removeAllViews();
-        // Giúp animation tốt hơn
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.content_frame, fragment);
         transaction.commit();
     }
 
-    // TODO: investigate performance impact
     private void handleSearch() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (fragment != null) {
@@ -266,13 +292,12 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-     // magic, do not touch
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putCharSequence("title", getSupportActionBar().getTitle());
-        // I am touching magic
-        outState.putBoolean("searchVisibility", searchShowing);
-        outState.putBoolean("searchIconShowing", showSearch);
+        outState.putCharSequence(KEY_TITLE, getSupportActionBar().getTitle());
+        outState.putBoolean(KEY_SEARCH_MODE, isSearchMode);
+        outState.putBoolean(KEY_SEARCH_VISIBILITY, searchShowing);
+        outState.putBoolean(KEY_SEARCH_ICON_SHOWING, showSearch);
     }
 }
