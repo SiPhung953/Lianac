@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 
+import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.viewmodel.SearchViewModel;
@@ -65,7 +66,6 @@ public class SearchFragment extends Fragment {
         setupBasicSearch();
         loadManageSearchFragment();
     }
-
     private void initViews(View view) {
         searchBox = view.findViewById(R.id.searchBox);
         fieldSpinner = view.findViewById(R.id.fieldSpinner);
