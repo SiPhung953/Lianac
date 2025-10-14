@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    // TODO: investigate performance impact
     private void handleSearch() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (fragment != null) {
@@ -189,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    // Prepares fragment containers for search section
     private void prepareContainers() {
         ViewGroup container = findViewById(R.id.content_frame);
         container.removeAllViews();
