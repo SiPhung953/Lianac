@@ -30,7 +30,7 @@
     <string-array name="boolean_operators">
         <item>AND</item>
         <item>OR</item>
-        <item>ANDNOT</item>
+        <item>NOT</item>
     </string-array>
 
     <string-array name="sort_options">
@@ -272,4 +272,5 @@
     <string name="remove_field">Remove field</string>
     <string name="home">Home</string>
     <string name="current">Current</string>
+    <string name="include_cross_listed">Include cross-listed papers</string>
 </resources>

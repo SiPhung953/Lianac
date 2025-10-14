@@ -183,7 +183,7 @@ public class QueryBuilder {
             String operator = row.getOperator();
             if (operator != null && !operator.isEmpty() && !rowQueries.isEmpty()) {
                 // Convert "ANDNOT" to "AND NOT" for arXiv API
-                if ("ANDNOT".equalsIgnoreCase(operator)) {
+                if ("NOT".equalsIgnoreCase(operator)) {
                     operator = "AND NOT";
                 }
                 rowQueries.add(operator.toUpperCase());

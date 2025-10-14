@@ -125,15 +125,23 @@ public class SearchFragment extends Fragment {
      */
     private void performBasicSearch() {
         String searchTerm = searchBox.getText().toString().trim();
-        if (searchTerm.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a search term", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String field = getFieldCode(fieldSpinner.getSelectedItemPosition());
 
-        // Get existing query to preserve advanced filters
+        // Get existing query to check for advanced filters
         QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
+
+        // Check if we have any advanced filters
+        boolean hasAdvancedFilters = currentQuery != null && (
+                (currentQuery.getRows() != null && !currentQuery.getRows().isEmpty()) ||
+                        (currentQuery.getCategories() != null && !currentQuery.getCategories().isEmpty()) ||
+                        currentQuery.hasDateFilter()
+        );
+
+        // If no search term AND no advanced filters, show error
+        if (searchTerm.isEmpty() && !hasAdvancedFilters) {
+            Toast.makeText(getContext(), "Please enter a search term or add filters", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         QueryOptions.Builder builder;
         if (currentQuery != null) {
@@ -144,10 +152,15 @@ public class SearchFragment extends Fragment {
             builder = new QueryOptions.Builder();
         }
 
-        // Update basic search term and field
-        builder.searchTerm(searchTerm)
-                .searchField(field)
-                .start(0);  // Reset to first page for new search
+        // Update basic search term and field (even if empty - filters will be used)
+        if (!searchTerm.isEmpty()) {
+            builder.searchTerm(searchTerm).searchField(field);
+        } else {
+            // Clear search term if empty, let filters drive the query
+            builder.searchTerm(null).searchField(null);
+        }
+
+        builder.start(0);  // Reset to first page for new search
 
         QueryOptions query = builder.build();
         viewModel.search(query);

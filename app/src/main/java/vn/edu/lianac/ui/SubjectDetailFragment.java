@@ -124,19 +124,19 @@ public class SubjectDetailFragment extends Fragment {
         for (int i = 0; i < breadcrumbPath.size(); i++) {
             BreadcrumbItem item = breadcrumbPath.get(i);
 
-            if (i == breadcrumbPath.size() - 1) {
-                // Last item (current category) - not clickable
-                TextView currentLink = createBreadcrumbCurrent(item.name);
-                breadcrumbContainer.addView(currentLink);
-            } else {
-                // Parent categories - clickable
-                TextView link = createBreadcrumbLink(item.name, item);
-                final int index = i;
-                link.setOnClickListener(v -> navigateToBreadcrumb(index));
-                breadcrumbContainer.addView(link);
-                breadcrumbContainer.addView(createBreadcrumbSeparator());
-            }
+            // All parent items are clickable (navigate back to them)
+            TextView link = createBreadcrumbLink(item.name, item);
+            final int index = i;
+            link.setOnClickListener(v -> navigateToBreadcrumb(index));
+            breadcrumbContainer.addView(link);
+
+            // Add separator after each item (including last one for current category)
+            breadcrumbContainer.addView(createBreadcrumbSeparator());
         }
+
+        // Add current category as non-clickable last item
+        TextView currentLink = createBreadcrumbCurrent(categoryName);
+        breadcrumbContainer.addView(currentLink);
     }
 
     private TextView createBreadcrumbLink(String text, BreadcrumbItem item) {

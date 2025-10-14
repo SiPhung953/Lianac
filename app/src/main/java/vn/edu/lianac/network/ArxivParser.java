@@ -137,10 +137,15 @@ public class ArxivParser {
                                 Log.d(TAG, "Found DOI: " + doi.trim());
                             }
                             break;
+                        case "primary_category":  // NEW: Parse primary category
+                            String primaryCat = parser.getAttributeValue(null, "term");
+                            if (primaryCat != null && !primaryCat.trim().isEmpty()) {
+                                article.setPrimaryCategory(primaryCat.trim());
+                            }
+                            skip(parser);
+                            break;
                         case "comment":
                         case "journal_ref":
-                        case "primary_category":
-                            // Skip other arxiv namespace elements for now
                             skip(parser);
                             break;
                         default:

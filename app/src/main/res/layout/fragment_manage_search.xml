@@ -4,14 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:fitsSystemWindows="false"
     android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:fitsSystemWindows="false">
+        android:orientation="vertical">
 
         <!-- Header -->
         <LinearLayout
@@ -41,7 +39,7 @@
                 app:tint="@android:color/white" />
         </LinearLayout>
 
-        <!-- Search Fields Section -->
+        <!-- Search Fields Header -->
         <LinearLayout
             android:id="@+id/searchFieldsHeader"
             android:layout_width="match_parent"
@@ -68,6 +66,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Search Fields Content -->
         <LinearLayout
             android:id="@+id/searchFieldsContent"
             android:layout_width="match_parent"
@@ -95,7 +94,7 @@
             android:layout_height="1dp"
             android:background="#CCCCCC" />
 
-        <!-- Categories Section -->
+        <!-- Categories Header (was missing) -->
         <LinearLayout
             android:id="@+id/categoriesHeader"
             android:layout_width="match_parent"
@@ -122,6 +121,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Categories Content -->
         <LinearLayout
             android:id="@+id/categoriesContent"
             android:layout_width="match_parent"
@@ -130,63 +130,90 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <!-- Main Category Selection -->
-            <TextView
-                android:id="@+id/mainCategoryLabel"
-                android:layout_width="wrap_content"
+            <!-- Main Category subsection -->
+            <LinearLayout
+                android:id="@+id/mainCategoryHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/select_main_categories"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/mainCategoryToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▼"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/mainCategoryLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/select_main_categories"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/mainCategoryChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:chipSpacingVertical="8dp"
-                app:singleLine="false"
-                app:selectionRequired="false"/>
-
-            <!-- Physics Filter Section -->
-            <TextView
-                android:id="@+id/physicsFilterLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/select_physics_subjects_to_expand"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginBottom="8dp"
-                android:visibility="gone"/>
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/physicsFilterChipGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 app:chipSpacingVertical="8dp"
                 app:singleLine="false"
                 app:selectionRequired="false"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
-            <!-- Leaf Categories Section -->
-            <TextView
-                android:id="@+id/leafCategoryLabel"
-                android:layout_width="wrap_content"
+            <!-- Leaf Category subsection -->
+            <LinearLayout
+                android:id="@+id/leafCategoryHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/select_specific_categories"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"/>
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackground"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/leafCategoryToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▼"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/leafCategoryLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/select_specific_categories"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/leafCategoryChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="8dp"
                 app:chipSpacingVertical="8dp"
                 app:singleLine="false"
                 android:visibility="gone"/>
 
-            <!-- Selected Categories Summary -->
+            <CheckBox
+                android:id="@+id/includeCrossListCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/include_cross_listed"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
             <TextView
                 android:id="@+id/selectedCategoriesSummary"
                 android:layout_width="wrap_content"
@@ -194,8 +221,8 @@
                 android:text="@string/no_categories_selected"
                 android:textSize="12sp"
                 android:textColor="#666666"
-                android:layout_marginTop="12dp"
-                android:visibility="gone"/>
+                android:layout_marginTop="4dp"
+                android:visibility="visible"/>
         </LinearLayout>
 
         <View
@@ -203,7 +230,7 @@
             android:layout_height="1dp"
             android:background="#CCCCCC" />
 
-        <!-- Date Range Section -->
+        <!-- Date Range Header -->
         <LinearLayout
             android:id="@+id/dateRangeHeader"
             android:layout_width="match_parent"

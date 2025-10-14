@@ -15,7 +15,8 @@ public class Article {
     private String updatedDate;    // ISO 8601 format (announced date)
     private String pdfUrl;
     private String absUrl;
-    private List<String> categories;  // Simplified: just store category codes
+    private List<String> categories;  // All categories (primary + cross-listed)
+    private String primaryCategory;
     private List<String> acmMscClasses;  // ACM/MSC classification codes
     private String doi;
     private boolean bookmarked;
@@ -56,7 +57,9 @@ public class Article {
 
     public List<String> getCategories() { return categories; }
     public void setCategories(List<String> categories) { this.categories = categories; }
-
+    public void setPrimaryCategory(String primaryCategory) {
+        this.primaryCategory = primaryCategory;
+    }
     public List<String> getAcmMscClasses() { return acmMscClasses; }
     public void setAcmMscClasses(List<String> classes) { this.acmMscClasses = classes; }
 
@@ -121,6 +124,10 @@ public class Article {
     }
 
     public String getPrimaryCategory() {
+        return primaryCategory;
+    }
+
+    public String getFirstCategory() {
         return (categories != null && !categories.isEmpty()) ? categories.get(0) : "";
     }
 

@@ -16,6 +16,7 @@ public class QueryOptions {
     private final String sortBy;
     private final String sortOrder;
     private final List<String> categories;
+    private final boolean includeCrossLists;
     private final String dateFrom;
     private final String dateTo;
 
@@ -28,6 +29,7 @@ public class QueryOptions {
         this.sortBy = builder.sortBy;
         this.sortOrder = builder.sortOrder;
         this.categories = builder.categories;
+        this.includeCrossLists = builder.includeCrossLists;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
     }
@@ -42,6 +44,7 @@ public class QueryOptions {
     public String getSortBy() { return sortBy; }
     public String getSortOrder() { return sortOrder; }
     public List<String> getCategories() { return categories; }
+    public boolean isIncludeCrossLists() { return includeCrossLists; }
     public String getDateFrom() { return dateFrom; }
     public String getDateTo() { return dateTo; }
 
@@ -137,7 +140,8 @@ public class QueryOptions {
                 .sortOrder(sortOrder)
                 .categories(categories)
                 .dateFrom(dateFrom)
-                .dateTo(dateTo);
+                .dateTo(dateTo)
+                .includeCrossLists(includeCrossLists);
     }
 
     @Override
@@ -162,6 +166,7 @@ public class QueryOptions {
         private String sortBy = "submittedDate";
         private String sortOrder = "descending";
         private List<String> categories = new ArrayList<>();
+        private boolean includeCrossLists = false;
         private String dateFrom;
         private String dateTo;
 
@@ -202,6 +207,11 @@ public class QueryOptions {
 
         public Builder categories(List<String> cats) {
             this.categories = (cats != null) ? new ArrayList<>(cats) : new ArrayList<>();
+            return this;
+        }
+
+        public Builder includeCrossLists(boolean include) {
+            this.includeCrossLists = include;
             return this;
         }
 

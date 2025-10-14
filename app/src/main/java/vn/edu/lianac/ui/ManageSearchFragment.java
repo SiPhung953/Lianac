@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -25,7 +26,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,15 +37,7 @@ import vn.edu.lianac.utils.CategoryProvider;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
- * Advanced search filters fragment.
- *
- * Features:
- * - Additional search fields (dynamic rows with boolean operators)
- * - Category selection with chips
- * - Date range picker
- * - Apply/Reset/Search buttons
- *
- * This fragment is loaded into SearchFragment's drawer.
+ * Advanced search filters fragment - cleaned & refactored.
  */
 public class ManageSearchFragment extends Fragment {
 
@@ -56,34 +49,34 @@ public class ManageSearchFragment extends Fragment {
     private EditText dateFromField, dateToField;
     private LinearLayout searchFieldsContainer;
 
-    // State
-    private final List<String> selectedCategories = new ArrayList<>();
-    private SearchViewModel searchViewModel;
-
     // Category chip system
     private ChipGroup mainCategoryChipGroup;
-    private ChipGroup physicsFilterChipGroup;
     private ChipGroup leafCategoryChipGroup;
-    private TextView physicsFilterLabel;
     private TextView leafCategoryLabel;
-    private TextView selectedCategoriesSummary;
+    private TextView selectedCategoriesSummary, mainCategoryLabel;
+    private LinearLayout mainCategoryHeader, leafCategoryHeader;
+    private TextView mainCategoryToggle, leafCategoryToggle;
+    private CheckBox includeCrossListCheckbox;
 
-    private final Set<String> selectedMainCategories = new HashSet<>();
-    private final Set<String> selectedPhysicsSubjects = new HashSet<>();
+    // State
+    private final List<String> selectedCategories = new ArrayList<>();
+    private final Set<String> selectedMainCategories = new LinkedHashSet<>();
+    private SearchViewModel searchViewModel;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_manage_search, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         searchViewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
 
-        // Initialize CategoryProvider
+        // Ensure CategoryProvider is initialized
         CategoryProvider.getInstance(requireContext());
 
         bindViews(view);
@@ -92,83 +85,92 @@ public class ManageSearchFragment extends Fragment {
         setupCategoryChipSystem();
         setupDatePicker();
 
-        // Always start with at least one search field row
-        if (searchFieldsContainer.getChildCount() == 0) {
+        // Ensure at least one search row
+        if (searchFieldsContainer != null && searchFieldsContainer.getChildCount() == 0) {
             addSearchFieldRow(null);
         }
 
-        // Restore previous filters if they exist
         restoreFiltersFromViewModel();
     }
 
-    public void onDrawerClosed() {
-        removeEmptyRows();
-    }
-
+    // ------------------- View binding -------------------
     private void bindViews(View view) {
         closeDrawerButton = view.findViewById(R.id.closeDrawerButton);
         applyFiltersButton = view.findViewById(R.id.applyFiltersButton);
         resetButton = view.findViewById(R.id.resetButton);
         searchButton = view.findViewById(R.id.searchButton);
         addFieldButton = view.findViewById(R.id.addFieldButton);
+
         searchFieldsContent = view.findViewById(R.id.searchFieldsContent);
         categoriesContent = view.findViewById(R.id.categoriesContent);
         dateRangeContent = view.findViewById(R.id.dateRangeContent);
+
         searchFieldsToggle = view.findViewById(R.id.searchFieldsToggle);
         categoriesToggle = view.findViewById(R.id.categoriesToggle);
         dateRangeToggle = view.findViewById(R.id.dateRangeToggle);
+
         dateFromField = view.findViewById(R.id.dateFromField);
         dateToField = view.findViewById(R.id.dateToField);
         searchFieldsContainer = view.findViewById(R.id.searchFieldsContainer);
 
-        // Category chip system views
         mainCategoryChipGroup = view.findViewById(R.id.mainCategoryChipGroup);
-        physicsFilterChipGroup = view.findViewById(R.id.physicsFilterChipGroup);
         leafCategoryChipGroup = view.findViewById(R.id.leafCategoryChipGroup);
-        physicsFilterLabel = view.findViewById(R.id.physicsFilterLabel);
-        leafCategoryLabel = view.findViewById(R.id.leafCategoryLabel);
         selectedCategoriesSummary = view.findViewById(R.id.selectedCategoriesSummary);
 
-        // Header click listeners for collapsible sections
-        view.findViewById(R.id.searchFieldsHeader).setOnClickListener(this::onToggleClicked);
-        view.findViewById(R.id.categoriesHeader).setOnClickListener(this::onToggleClicked);
-        view.findViewById(R.id.dateRangeHeader).setOnClickListener(this::onToggleClicked);
+        mainCategoryHeader = view.findViewById(R.id.mainCategoryHeader);
+        mainCategoryToggle = view.findViewById(R.id.mainCategoryToggle);
+        mainCategoryLabel = view.findViewById(R.id.mainCategoryLabel);
+        leafCategoryHeader = view.findViewById(R.id.leafCategoryHeader);
+        leafCategoryToggle = view.findViewById(R.id.leafCategoryToggle);
+
+        includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
+
+        // Header click listeners
+        View sfh = view.findViewById(R.id.searchFieldsHeader);
+        View ch = view.findViewById(R.id.categoriesHeader);
+        View drh = view.findViewById(R.id.dateRangeHeader);
+        if (sfh != null) sfh.setOnClickListener(this::onToggleClicked);
+        if (ch != null) ch.setOnClickListener(this::onToggleClicked);
+        if (drh != null) drh.setOnClickListener(this::onToggleClicked);
+
+        if (mainCategoryHeader != null) mainCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
+        if (leafCategoryHeader != null) leafCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
     }
 
+    // ------------------- Event wiring -------------------
     private void setupEventListeners() {
-        closeDrawerButton.setOnClickListener(v -> closeDrawer());
-
-        applyFiltersButton.setOnClickListener(v -> {
+        if (closeDrawerButton != null) closeDrawerButton.setOnClickListener(v -> closeDrawer());
+        if (applyFiltersButton != null) applyFiltersButton.setOnClickListener(v -> {
             applyFilters();
             closeDrawer();
         });
-
-        searchButton.setOnClickListener(v -> {
+        if (searchButton != null) searchButton.setOnClickListener(v -> {
             applyFilters();
-            QueryOptions currentQuery = searchViewModel.getCurrentQuery().getValue();
-            if (currentQuery != null) {
-                searchViewModel.search(currentQuery);
+            if (searchViewModel.getCurrentQuery().getValue() != null) {
+                searchViewModel.search(searchViewModel.getCurrentQuery().getValue());
             }
             closeDrawer();
         });
-
-        resetButton.setOnClickListener(v -> resetAllFilters());
-        addFieldButton.setOnClickListener(v -> addSearchFieldRow(null));
+        if (resetButton != null) resetButton.setOnClickListener(v -> resetAllFilters());
+        if (addFieldButton != null) addFieldButton.setOnClickListener(v -> addSearchFieldRow(null));
     }
 
+    // ------------------- Category system -------------------
     private void setupCategoryChipSystem() {
         populateMainCategoryChips();
         updateSelectedCategoriesSummary();
     }
 
     private void populateMainCategoryChips() {
+        if (mainCategoryChipGroup == null) return;
         mainCategoryChipGroup.removeAllViews();
 
         List<String> mainCategories = CategoryProvider.getMainCategories();
+        if (mainCategories == null) return;
 
         for (String categoryId : mainCategories) {
             String displayName = CategoryProvider.getCategoryName(categoryId);
-            Chip chip = createMainCategoryChip(displayName, categoryId);
+            Chip chip = createMainCategoryChip(displayName != null ? displayName : categoryId, categoryId);
             mainCategoryChipGroup.addView(chip);
         }
     }
@@ -189,9 +191,34 @@ public class ManageSearchFragment extends Fragment {
             updateLeafCategoriesForAllSelected();
             updateSelectedCategoriesFromUI();
             updateSelectedCategoriesSummary();
+            updateCategoryHeaderCounts();
         });
 
         return chip;
+    }
+
+    private void onCategorySubsectionToggle(View v) {
+        View content = null;
+        TextView toggle = null;
+
+        int id = v.getId();
+        if (id == R.id.mainCategoryHeader) {
+            content = mainCategoryChipGroup;
+            toggle = mainCategoryToggle;
+        } else if (id == R.id.leafCategoryHeader) {
+            content = leafCategoryChipGroup;
+            toggle = leafCategoryToggle;
+        }
+
+        if (content != null && toggle != null) {
+            if (content.getVisibility() == View.VISIBLE) {
+                content.setVisibility(View.GONE);
+                toggle.setText("▶");
+            } else {
+                content.setVisibility(View.VISIBLE);
+                toggle.setText("▼");
+            }
+        }
     }
 
     private void updateLeafCategoriesForAllSelected() {
@@ -200,132 +227,59 @@ public class ManageSearchFragment extends Fragment {
             return;
         }
 
-        showLeafCategoryRow();
-
-        // Collect ALL leaf categories from ALL selected main categories
-        Set<String> allLeafCategories = new HashSet<>();
-
+        // Build a deterministic (insertion-order) set of leaf categories
+        Set<String> allLeafCategories = new LinkedHashSet<>();
         for (String mainCategoryId : selectedMainCategories) {
-            if ("physics".equals(mainCategoryId)) {
-                // For physics, use the selected physics subjects to get leaf categories
-                if (selectedPhysicsSubjects.isEmpty()) {
-                    // If no specific physics subjects selected, show all physics leaf categories
-                    List<String> physicsLeafCats = CategoryProvider.getInstance(requireContext())
-                            .getAllLeafCategories("physics");
-                    allLeafCategories.addAll(physicsLeafCats);
-                } else {
-                    // Only show leaf categories from selected physics subjects
-                    for (String physicsSubject : selectedPhysicsSubjects) {
-                        List<String> leafCats = CategoryProvider.getInstance(requireContext())
-                                .getAllLeafCategories(physicsSubject);
-                        allLeafCategories.addAll(leafCats);
-                    }
-                }
-            } else {
-                // For non-physics categories, get all leaf categories
-                List<String> leafCats = CategoryProvider.getInstance(requireContext())
-                        .getAllLeafCategories(mainCategoryId);
-                allLeafCategories.addAll(leafCats);
-            }
+            List<String> leaves = CategoryProvider.getInstance(requireContext()).getAllLeafCategories(mainCategoryId);
+            if (leaves != null) allLeafCategories.addAll(leaves);
         }
 
         populateLeafCategoryChips(new ArrayList<>(allLeafCategories));
-    }
-
-    private void showPhysicsFilterRow() {
-        physicsFilterChipGroup.setVisibility(View.VISIBLE);
-        physicsFilterLabel.setVisibility(View.VISIBLE);
-
-        physicsFilterChipGroup.removeAllViews();
-        selectedPhysicsSubjects.clear();
-
-        List<String> expandablePhysics = getExpandablePhysicsCategories();
-
-        for (String categoryId : expandablePhysics) {
-            String displayName = CategoryProvider.getCategoryName(categoryId);
-            Chip chip = createPhysicsFilterChip(displayName, categoryId);
-            physicsFilterChipGroup.addView(chip);
-        }
-
-        // Also add standalone physics categories as options
-        List<String> standalonePhysics = getStandalonePhysicsCategories();
-        for (String categoryId : standalonePhysics) {
-            String displayName = CategoryProvider.getCategoryName(categoryId);
-            Chip chip = createPhysicsFilterChip(displayName, categoryId);
-            physicsFilterChipGroup.addView(chip);
-        }
-    }
-
-    private Chip createPhysicsFilterChip(String displayName, String categoryId) {
-        Chip chip = new Chip(requireContext());
-        chip.setText(displayName);
-        chip.setCheckable(true);
-        chip.setCheckedIconVisible(true);
-        chip.setTag(categoryId);
-
-        chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                selectedPhysicsSubjects.add(categoryId);
-            } else {
-                selectedPhysicsSubjects.remove(categoryId);
-            }
-            // Update leaf categories when physics subjects change
-            if (selectedMainCategories.contains("physics")) {
-                updateLeafCategoriesForAllSelected();
-            }
-            updateSelectedCategoriesFromUI();
-            updateSelectedCategoriesSummary();
-        });
-
-        return chip;
-    }
-
-    private List<String> getExpandablePhysicsCategories() {
-        return CategoryProvider.getInstance(requireContext()).getExpandableCategories("physics");
-    }
-
-    private List<String> getStandalonePhysicsCategories() {
-        List<String> standalone = new ArrayList<>();
-        List<String> physicsSubcats = CategoryProvider.getSubcategories("physics");
-
-        for (String subcat : physicsSubcats) {
-            List<String> subSubcats = CategoryProvider.getSubcategories(subcat);
-            if (subSubcats == null || subSubcats.isEmpty()) {
-                standalone.add(subcat);
-            }
-        }
-
-        return standalone;
+        showLeafCategoryRow();
     }
 
     private void showLeafCategoryRow() {
-        leafCategoryChipGroup.setVisibility(View.VISIBLE);
-        leafCategoryLabel.setVisibility(View.VISIBLE);
+        // Show the header (always visible when there are subcategories)
+        if (leafCategoryHeader != null) {
+            leafCategoryHeader.setVisibility(View.VISIBLE);
+        }
+
+        // Show the chip group (can be collapsed via toggle)
+        if (leafCategoryChipGroup != null) {
+            leafCategoryChipGroup.setVisibility(View.VISIBLE);
+        }
+
+        // Update toggle indicator to show expanded state
+        if (leafCategoryToggle != null) {
+            leafCategoryToggle.setText("▼");
+        }
     }
 
     private void hideLeafCategoryRow() {
-        leafCategoryChipGroup.setVisibility(View.GONE);
-        leafCategoryLabel.setVisibility(View.GONE);
-        leafCategoryChipGroup.removeAllViews();
-    }
+        // Hide the entire header section
+        if (leafCategoryHeader != null) {
+            leafCategoryHeader.setVisibility(View.GONE);
+        }
 
-    private void hidePhysicsFilterRow() {
-        physicsFilterChipGroup.setVisibility(View.GONE);
-        physicsFilterLabel.setVisibility(View.GONE);
-        physicsFilterChipGroup.removeAllViews();
-        selectedPhysicsSubjects.clear();
+        // Clear and hide the chip group
+        if (leafCategoryChipGroup != null) {
+            leafCategoryChipGroup.setVisibility(View.GONE);
+            leafCategoryChipGroup.removeAllViews();
+        }
     }
 
     private void populateLeafCategoryChips(List<String> leafCategories) {
+        if (leafCategoryChipGroup == null) return;
         leafCategoryChipGroup.removeAllViews();
 
-        // Sort categories for better UX
-        List<String> sortedCategories = new ArrayList<>(leafCategories);
-        sortedCategories.sort(String::compareTo);
+        if (leafCategories == null || leafCategories.isEmpty()) return;
 
-        for (String categoryId : sortedCategories) {
-            String displayName = getCategoryDisplayName(categoryId);
-            Chip chip = createLeafCategoryChip(displayName, categoryId);
+        List<String> sorted = new ArrayList<>(leafCategories);
+        sorted.sort(String::compareTo);
+
+        for (String id : sorted) {
+            String display = getCategoryDisplayName(id);
+            Chip chip = createLeafCategoryChip(display, id);
             leafCategoryChipGroup.addView(chip);
         }
     }
@@ -337,48 +291,49 @@ public class ManageSearchFragment extends Fragment {
         chip.setCheckedIconVisible(true);
         chip.setTag(categoryId);
 
-        // Check if already in selected categories
+        // initial checked state
         chip.setChecked(selectedCategories.contains(categoryId));
 
         chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                if (!selectedCategories.contains(categoryId)) {
-                    selectedCategories.add(categoryId);
-                }
+                if (!selectedCategories.contains(categoryId)) selectedCategories.add(categoryId);
             } else {
                 selectedCategories.remove(categoryId);
             }
             updateSelectedCategoriesSummary();
+            updateCategoryHeaderCounts();
         });
 
         return chip;
     }
 
     private void updateLeafCategoryChips() {
+        if (leafCategoryChipGroup == null) return;
         for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
-            View view = leafCategoryChipGroup.getChildAt(i);
-            if (view instanceof Chip) {
-                Chip chip = (Chip) view;
-                String categoryId = (String) chip.getTag();
-                chip.setChecked(selectedCategories.contains(categoryId));
+            View child = leafCategoryChipGroup.getChildAt(i);
+            if (child instanceof Chip) {
+                Chip c = (Chip) child;
+                String id = (String) c.getTag();
+                c.setChecked(selectedCategories.contains(id));
             }
         }
     }
 
     private void updateSelectedCategoriesFromUI() {
-        // Clear current selections and rebuild from UI state
         selectedCategories.clear();
-
-        // Add selected main categories
+        // add mains
         selectedCategories.addAll(selectedMainCategories);
 
-        // Add selected leaf categories from leafCategoryChipGroup
-        for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
-            View view = leafCategoryChipGroup.getChildAt(i);
-            if (view instanceof Chip && ((Chip) view).isChecked()) {
-                String categoryId = (String) view.getTag();
-                if (!selectedCategories.contains(categoryId)) {
-                    selectedCategories.add(categoryId);
+        // add checked leaves
+        if (leafCategoryChipGroup != null) {
+            for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
+                View v = leafCategoryChipGroup.getChildAt(i);
+                if (v instanceof Chip) {
+                    Chip c = (Chip) v;
+                    if (c.isChecked()) {
+                        String id = (String) c.getTag();
+                        if (!selectedCategories.contains(id)) selectedCategories.add(id);
+                    }
                 }
             }
         }
@@ -386,32 +341,31 @@ public class ManageSearchFragment extends Fragment {
 
     private void updateSelectedCategoriesSummary() {
         updateSelectedCategoriesFromUI();
+        int total = selectedCategories.size();
+        if (selectedCategoriesSummary == null) return;
 
-        int totalSelected = selectedCategories.size();
-        if (totalSelected == 0) {
-            selectedCategoriesSummary.setText("No categories selected");
-            selectedCategoriesSummary.setVisibility(View.VISIBLE);
-        } else if (totalSelected == 1) {
+        if (total == 0) {
+            selectedCategoriesSummary.setText(getString(R.string.no_categories_selected)); // prefer resource
+        } else if (total == 1) {
             selectedCategoriesSummary.setText("1 category selected");
-            selectedCategoriesSummary.setVisibility(View.VISIBLE);
         } else {
-            selectedCategoriesSummary.setText(totalSelected + " categories selected");
-            selectedCategoriesSummary.setVisibility(View.VISIBLE);
+            selectedCategoriesSummary.setText(total + " categories selected");
         }
+        selectedCategoriesSummary.setVisibility(View.VISIBLE);
     }
 
-    // ==================== SEARCH FIELD ROWS ====================
-
+    // ------------------- Search rows -------------------
     private void addSearchFieldRow(@Nullable SearchRow row) {
+        if (searchFieldsContainer == null) return;
+
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View rowView = inflater.inflate(R.layout.item_search_field_row, searchFieldsContainer, false);
-
         if (rowView == null) {
             Log.e("ManageSearchFragment", "Failed to inflate search field row");
             return;
         }
 
-        // Setup remove button
+        // Remove button
         ImageButton removeButton = rowView.findViewById(R.id.removeButton);
         if (removeButton != null) {
             removeButton.setOnClickListener(v -> {
@@ -422,36 +376,30 @@ public class ManageSearchFragment extends Fragment {
             });
         }
 
-        // Setup field spinner (All, Title, Author, etc.)
+        // Field spinner
         Spinner fieldSpinner = rowView.findViewById(R.id.fieldSpinner);
         if (fieldSpinner != null) {
-            ArrayAdapter<CharSequence> fieldAdapter = ArrayAdapter.createFromResource(
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                     requireContext(), R.array.search_fields, android.R.layout.simple_spinner_item);
-            fieldAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            fieldSpinner.setAdapter(fieldAdapter);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            fieldSpinner.setAdapter(adapter);
         }
 
-        // Setup boolean operator spinner (AND, OR, ANDNOT)
+        // Boolean operator spinner
         Spinner booleanOperatorSpinner = rowView.findViewById(R.id.booleanOperatorSpinner);
         if (booleanOperatorSpinner != null) {
-            ArrayAdapter<CharSequence> booleanAdapter = ArrayAdapter.createFromResource(
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                     requireContext(), R.array.boolean_operators, android.R.layout.simple_spinner_item);
-            booleanAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            booleanOperatorSpinner.setAdapter(booleanAdapter);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            booleanOperatorSpinner.setAdapter(adapter);
         }
 
-        // Populate from existing SearchRow if provided
+        // Populate existing row values
         if (row != null) {
             EditText valueField = rowView.findViewById(R.id.valueField);
-            if (valueField != null) {
-                valueField.setText(row.getValue());
-            }
-            if (fieldSpinner != null) {
-                setSpinnerSelection(fieldSpinner, row.getField());
-            }
-            if (booleanOperatorSpinner != null) {
-                setSpinnerSelection(booleanOperatorSpinner, row.getOperator());
-            }
+            if (valueField != null) valueField.setText(row.getValue());
+            if (fieldSpinner != null) setSpinnerSelection(fieldSpinner, row.getField());
+            if (booleanOperatorSpinner != null) setSpinnerSelection(booleanOperatorSpinner, row.getOperator());
         }
 
         searchFieldsContainer.addView(rowView);
@@ -459,11 +407,12 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void setSpinnerSelection(Spinner spinner, String value) {
-        if (value == null || spinner == null) return;
-
+        if (spinner == null || value == null) return;
         ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
+        if (adapter == null) return;
         for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getItem(i).toString().equalsIgnoreCase(value)) {
+            Object item = adapter.getItem(i);
+            if (item != null && value.equalsIgnoreCase(item.toString())) {
                 spinner.setSelection(i);
                 break;
             }
@@ -471,9 +420,9 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void updateRemoveButtonsVisibility() {
+        if (searchFieldsContainer == null) return;
         int childCount = searchFieldsContainer.getChildCount();
         boolean canRemove = childCount > 1;
-
         for (int i = 0; i < childCount; i++) {
             View rowView = searchFieldsContainer.getChildAt(i);
             ImageButton removeButton = rowView.findViewById(R.id.removeButton);
@@ -485,47 +434,38 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void removeEmptyRows() {
+        if (searchFieldsContainer == null) return;
         List<View> rowsToRemove = new ArrayList<>();
-        int filledRowCount = 0;
-
+        int filled = 0;
         for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
-            View rowView = searchFieldsContainer.getChildAt(i);
-            EditText valueField = rowView.findViewById(R.id.valueField);
-            if (valueField != null) {
-                String value = valueField.getText().toString().trim();
-                if (value.isEmpty()) {
-                    rowsToRemove.add(rowView);
-                } else {
-                    filledRowCount++;
-                }
+            View rv = searchFieldsContainer.getChildAt(i);
+            EditText value = rv.findViewById(R.id.valueField);
+            if (value != null) {
+                String t = value.getText().toString().trim();
+                if (t.isEmpty()) rowsToRemove.add(rv);
+                else filled++;
             }
         }
 
-        if (filledRowCount > 0) {
-            for (View rowView : rowsToRemove) {
-                searchFieldsContainer.removeView(rowView);
-            }
-        } else {
-            // Keep at least one row
-            for (int i = 1; i < rowsToRemove.size(); i++) {
-                searchFieldsContainer.removeView(rowsToRemove.get(i));
-            }
+        if (filled > 0) {
+            for (View r : rowsToRemove) searchFieldsContainer.removeView(r);
+        } else if (!rowsToRemove.isEmpty()) {
+            // keep first row
+            for (int i = 1; i < rowsToRemove.size(); i++) searchFieldsContainer.removeView(rowsToRemove.get(i));
         }
 
         updateRemoveButtonsVisibility();
     }
 
-    // ==================== DATE PICKER ====================
-
+    // ------------------- Date picker -------------------
     private void setupDatePicker() {
-        dateFromField.setOnClickListener(v -> showDatePicker(dateFromField));
-        dateToField.setOnClickListener(v -> showDatePicker(dateToField));
+        if (dateFromField != null) dateFromField.setOnClickListener(v -> showDatePicker(dateFromField));
+        if (dateToField != null) dateToField.setOnClickListener(v -> showDatePicker(dateToField));
     }
 
     private void showDatePicker(final EditText dateField) {
         Calendar calendar = Calendar.getInstance();
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
+        DatePickerDialog dp = new DatePickerDialog(
                 requireContext(),
                 (view, year, month, day) -> {
                     String date = String.format("%d-%02d-%02d", year, month + 1, day);
@@ -535,41 +475,32 @@ public class ManageSearchFragment extends Fragment {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
-        datePickerDialog.show();
+        dp.show();
     }
 
-    // ==================== COLLAPSIBLE SECTIONS ====================
-
+    // ------------------- Toggles -------------------
     private void setupToggleSections() {
-        // Search fields visible by default
-        searchFieldsContent.setVisibility(View.VISIBLE);
-        searchFieldsToggle.setText("▼");
+        if (searchFieldsContent != null) searchFieldsContent.setVisibility(View.VISIBLE);
+        if (searchFieldsToggle != null) searchFieldsToggle.setText("▼");
 
-        // Categories and date collapsed by default
-        categoriesContent.setVisibility(View.GONE);
-        categoriesToggle.setText("▶");
-        dateRangeContent.setVisibility(View.GONE);
-        dateRangeToggle.setText("▶");
+        if (categoriesContent != null) categoriesContent.setVisibility(View.GONE);
+        if (categoriesToggle != null) categoriesToggle.setText("▶");
+
+        if (dateRangeContent != null) dateRangeContent.setVisibility(View.GONE);
+        if (dateRangeToggle != null) dateRangeToggle.setText("▶");
     }
 
     private void onToggleClicked(View v) {
         View content = null;
         TextView toggle = null;
-
         int id = v.getId();
+
         if (id == R.id.searchFieldsHeader) {
             content = searchFieldsContent;
             toggle = searchFieldsToggle;
         } else if (id == R.id.categoriesHeader) {
             content = categoriesContent;
             toggle = categoriesToggle;
-
-            // Show/hide physics filter based on physics selection
-            if (content.getVisibility() == View.VISIBLE && selectedMainCategories.contains("physics")) {
-                showPhysicsFilterRow();
-            } else {
-                hidePhysicsFilterRow();
-            }
         } else if (id == R.id.dateRangeHeader) {
             content = dateRangeContent;
             toggle = dateRangeToggle;
@@ -586,8 +517,7 @@ public class ManageSearchFragment extends Fragment {
         }
     }
 
-    // ==================== APPLY/RESET FILTERS ====================
-
+    // ------------------- Apply / Reset -------------------
     private void applyFilters() {
         removeEmptyRows();
 
@@ -600,7 +530,7 @@ public class ManageSearchFragment extends Fragment {
                     .maxResults(existingQuery.getMaxResults());
         }
 
-        // Try to get basic search term from parent SearchFragment
+        // Get basic search term from parent SearchFragment
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof SearchFragment) {
             SearchFragment searchFragment = (SearchFragment) parentFragment;
@@ -608,8 +538,7 @@ public class ManageSearchFragment extends Fragment {
             String basicField = searchFragment.getCurrentSearchField();
 
             if (basicTerm != null && !basicTerm.isEmpty()) {
-                builder.searchTerm(basicTerm)
-                        .searchField(basicField);
+                builder.searchTerm(basicTerm).searchField(basicField);
             }
         } else {
             if (existingQuery != null && existingQuery.hasSearchTerm()) {
@@ -618,7 +547,7 @@ public class ManageSearchFragment extends Fragment {
             }
         }
 
-        // Collect search rows from drawer
+        // Collect search rows
         List<SearchRow> rows = new ArrayList<>();
         for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
             View rowView = searchFieldsContainer.getChildAt(i);
@@ -638,16 +567,20 @@ public class ManageSearchFragment extends Fragment {
 
         builder.rows(rows);
 
-        // Include both main categories and leaf categories in the filter
+        // Include categories
         updateSelectedCategoriesFromUI();
         builder.categories(new ArrayList<>(selectedCategories));
 
+        // NEW: Include cross-list option
+        builder.includeCrossLists(includeCrossListCheckbox.isChecked());
+
+        // Include dates
         String fromDate = dateFromField.getText().toString().trim();
         String toDate = dateToField.getText().toString().trim();
         if (!fromDate.isEmpty()) builder.dateFrom(fromDate);
         if (!toDate.isEmpty()) builder.dateTo(toDate);
 
-        builder.start(0);  // Reset to first page when applying filters
+        builder.start(0);
 
         QueryOptions newQuery = builder.build();
         searchViewModel.updateQueryOptions(newQuery);
@@ -668,16 +601,16 @@ public class ManageSearchFragment extends Fragment {
 
         // Clear category selections
         selectedMainCategories.clear();
-        selectedPhysicsSubjects.clear();
         selectedCategories.clear();
 
         // Uncheck all chips
         mainCategoryChipGroup.clearCheck();
-        physicsFilterChipGroup.clearCheck();
         leafCategoryChipGroup.clearCheck();
 
-        hidePhysicsFilterRow();
         hideLeafCategoryRow();
+
+        // NEW: Reset cross-list checkbox
+        includeCrossListCheckbox.setChecked(false);
 
         // Clear dates
         dateFromField.setText("");
@@ -694,114 +627,120 @@ public class ManageSearchFragment extends Fragment {
         Toast.makeText(requireContext(), "Advanced filters cleared", Toast.LENGTH_SHORT).show();
     }
 
-    private void restoreFiltersFromViewModel() {
-        QueryOptions currentQuery = searchViewModel.getCurrentQuery().getValue();
+    public void onDrawerClosed() {
+        removeEmptyRows();
+    }
 
-        // Clear UI
-        searchFieldsContainer.removeAllViews();
+    private void updateCategoryHeaderCounts() {
+        if (mainCategoryLabel != null) {
+            int mainCount = selectedMainCategories.size();
+            mainCategoryLabel.setText("Select Main Categories" + (mainCount > 0 ? " (" + mainCount + " selected)" : ""));
+        }
+
+        if (leafCategoryLabel != null && leafCategoryHeader != null && leafCategoryHeader.getVisibility() == View.VISIBLE) {
+            int leafCount = 0;
+            if (leafCategoryChipGroup != null) {
+                for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
+                    View v = leafCategoryChipGroup.getChildAt(i);
+                    if (v instanceof Chip && ((Chip) v).isChecked()) leafCount++;
+                }
+            }
+            leafCategoryLabel.setText("Select Specific Categories" + (leafCount > 0 ? " (" + leafCount + " selected)" : ""));
+        }
+    }
+
+    // ------------------- Restore -------------------
+    private void restoreFiltersFromViewModel() {
+        QueryOptions current = searchViewModel.getCurrentQuery().getValue();
+
+        if (searchFieldsContainer != null) searchFieldsContainer.removeAllViews();
         selectedCategories.clear();
         selectedMainCategories.clear();
-        selectedPhysicsSubjects.clear();
 
-        if (currentQuery == null) {
+        if (current == null) {
             addSearchFieldRow(null);
             return;
         }
 
-        // Restore search rows
-        if (currentQuery.getRows() != null && !currentQuery.getRows().isEmpty()) {
-            for (SearchRow row : currentQuery.getRows()) {
-                addSearchFieldRow(row);
-            }
-        } else {
-            addSearchFieldRow(null);
+        // rows
+        if (current.getRows() != null && !current.getRows().isEmpty()) {
+            for (SearchRow r : current.getRows()) addSearchFieldRow(r);
+        } else addSearchFieldRow(null);
+
+        // categories
+        if (current.getCategories() != null && !current.getCategories().isEmpty()) {
+            selectedCategories.addAll(current.getCategories());
+            restoreCategoryChipsFromList(current.getCategories());
         }
 
-        // Restore categories
-        if (currentQuery.getCategories() != null && !currentQuery.getCategories().isEmpty()) {
-            selectedCategories.addAll(currentQuery.getCategories());
-            restoreCategoryChipsFromList(currentQuery.getCategories());
+        // dates
+        if (current.getDateFrom() != null) {
+            if (dateFromField != null) dateFromField.setText(current.getDateFrom());
         }
-
-        // Restore dates
-        if (currentQuery.getDateFrom() != null && !currentQuery.getDateFrom().isEmpty()) {
-            dateFromField.setText(currentQuery.getDateFrom());
-        }
-        if (currentQuery.getDateTo() != null && !currentQuery.getDateTo().isEmpty()) {
-            dateToField.setText(currentQuery.getDateTo());
+        if (current.getDateTo() != null) {
+            if (dateToField != null) dateToField.setText(current.getDateTo());
         }
 
         updateSelectedCategoriesSummary();
+        updateCategoryHeaderCounts();
     }
 
     private void restoreCategoryChipsFromList(List<String> categories) {
-        if (categories == null || categories.isEmpty()) {
-            return;
-        }
+        if (categories == null || categories.isEmpty() || mainCategoryChipGroup == null) return;
 
-        // Restore main category chips
+        // Mark main categories
         for (String category : categories) {
-            // Check if this is a main category
             if (CategoryProvider.getInstance(requireContext()).isMainCategory(category)) {
                 selectedMainCategories.add(category);
-                // Check the corresponding chip
                 for (int i = 0; i < mainCategoryChipGroup.getChildCount(); i++) {
-                    View view = mainCategoryChipGroup.getChildAt(i);
-                    if (view instanceof Chip && category.equals(view.getTag())) {
-                        ((Chip) view).setChecked(true);
+                    View v = mainCategoryChipGroup.getChildAt(i);
+                    if (v instanceof Chip && category.equals(v.getTag())) {
+                        ((Chip) v).setChecked(true);
                         break;
                     }
                 }
             }
         }
 
-        // Update leaf categories based on selected main categories
+        // populate leaves based on mains
         updateLeafCategoriesForAllSelected();
-
-        // For leaf categories, update the leaf category chips
+        // mark leaf chips
         updateLeafCategoryChips();
     }
 
-    private String getCategoryDisplayName(String categoryCode) {
-        if (categoryCode == null || categoryCode.isEmpty()) {
-            return categoryCode;
-        }
-
-        String name = CategoryProvider.getCategoryName(categoryCode);
-        if (name != null && !name.equals(categoryCode)) {
-            return name;
-        }
-
-        return categoryCode;
+    private String getCategoryDisplayName(String code) {
+        if (code == null || code.isEmpty()) return code;
+        String name = CategoryProvider.getCategoryName(code);
+        return (name != null && !name.equals(code)) ? name : code;
     }
 
     private boolean hasAdvancedFilters() {
-        int nonEmptyRows = 0;
-        for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
-            View rowView = searchFieldsContainer.getChildAt(i);
-            EditText valueField = rowView.findViewById(R.id.valueField);
-            if (valueField != null && !valueField.getText().toString().trim().isEmpty()) {
-                nonEmptyRows++;
+        int nonEmpty = 0;
+        if (searchFieldsContainer != null) {
+            for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
+                View rv = searchFieldsContainer.getChildAt(i);
+                EditText val = rv.findViewById(R.id.valueField);
+                if (val != null && !val.getText().toString().trim().isEmpty()) nonEmpty++;
             }
         }
 
-        return nonEmptyRows > 0 ||
-                !selectedCategories.isEmpty() ||
-                !dateFromField.getText().toString().trim().isEmpty() ||
-                !dateToField.getText().toString().trim().isEmpty();
+        boolean dateSet = (dateFromField != null && !dateFromField.getText().toString().trim().isEmpty()) ||
+                (dateToField != null && !dateToField.getText().toString().trim().isEmpty());
+
+        return nonEmpty > 0 || !selectedCategories.isEmpty() || dateSet;
     }
 
     private void updateFilterButtonIndicator() {
-        Fragment parentFragment = getParentFragment();
-        if (parentFragment instanceof SearchFragment) {
-            ((SearchFragment) parentFragment).updateFilterIndicator(hasAdvancedFilters());
+        Fragment parent = getParentFragment();
+        if (parent instanceof SearchFragment) {
+            ((SearchFragment) parent).updateFilterIndicator(hasAdvancedFilters());
         }
     }
 
     private void closeDrawer() {
-        Fragment parentFragment = getParentFragment();
-        if (parentFragment instanceof SearchFragment) {
-            ((SearchFragment) parentFragment).closeDrawer();
+        Fragment parent = getParentFragment();
+        if (parent instanceof SearchFragment) {
+            ((SearchFragment) parent).closeDrawer();
         }
     }
 }

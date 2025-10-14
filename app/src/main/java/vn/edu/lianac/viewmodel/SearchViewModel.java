@@ -55,9 +55,9 @@ public class SearchViewModel extends ViewModel {
             return;
         }
 
-        // Validate wildcard searches
+        // Validate wildcard searches (only if search term exists)
         String searchTerm = options.getSearchTerm();
-        if (searchTerm != null && searchTerm.trim().startsWith("*")) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty() && searchTerm.trim().startsWith("*")) {
             errorMessage.postValue("Searches cannot start with a wildcard (*)");
             return;
         }
@@ -326,7 +326,11 @@ public class SearchViewModel extends ViewModel {
         if (current == null) return false;
 
         String term = current.getSearchTerm();
-        if (term == null) return false;
+
+        // Filter-only searches (no term) are considered specific if they have category/date filters
+        if (term == null || term.trim().isEmpty()) {
+            return !current.hasCategoryFilter() && !current.hasDateFilter();
+        }
 
         // Wildcard searches
         if (term.contains("all:*") || term.equals("*")) return true;
@@ -337,9 +341,8 @@ public class SearchViewModel extends ViewModel {
         // Generic terms
         if (term.matches("(?i).*(\\ball\\b|\\ba\\b).*")) return true;
 
-        // Date-only searches
-        if (current.hasDateFilter() &&
-                (term.equalsIgnoreCase("all") || term.trim().isEmpty())) {
+        // Date-only searches (deprecated now that we support filter-only)
+        if (current.hasDateFilter() && term.equalsIgnoreCase("all")) {
             return true;
         }
 
