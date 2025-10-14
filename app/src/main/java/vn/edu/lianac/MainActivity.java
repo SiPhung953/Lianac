@@ -1,21 +1,24 @@
 package vn.edu.lianac;
 
-import vn.edu.lianac.Download.DownloadFragment;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import vn.edu.lianac.bookmark.BookmarkListFragment;
-
-import vn.edu.lianac.ui.ArticleListingFragment;
-import vn.edu.lianac.ui.SearchFragment;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -24,16 +27,16 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
-import android.content.SharedPreferences;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatDelegate;
+import java.util.Locale;
+
+import vn.edu.lianac.Download.DownloadFragment;
+import vn.edu.lianac.bookmark.BookmarkListFragment;
+import vn.edu.lianac.ui.ArticleListingFragment;
+import vn.edu.lianac.ui.SearchFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,11 +51,41 @@ public class MainActivity extends AppCompatActivity {
     // TODO: fix janky startup animations
     // TODO: Fix sidebar icons
 
+    private static final String PREFS_NAME = "AppSettings";
+    private static final String KEY_LANGUAGE = "language";
+    private static final String KEY_THEME = "theme";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        // Apply language preference before creating the activity
+        SharedPreferences prefs = newBase.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int languagePos = prefs.getInt(KEY_LANGUAGE, 0); // 0 for 'en', 1 for 'vi'
+        String lang = (languagePos == 1) ? "vi" : "en";
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Configuration config = new Configuration(newBase.getResources().getConfiguration());
+        config.setLocale(locale);
+
+        Context context = newBase.createConfigurationContext(config);
+        super.attachBaseContext(context);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences prefs = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
-        int themeMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        // Apply theme
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int theme = prefs.getInt(KEY_THEME, 2); // Default to System
+        int themeMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        if (theme == 0) { // Light
+            themeMode = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if (theme == 1) { // Dark
+            themeMode = AppCompatDelegate.MODE_NIGHT_YES;
+        }
         AppCompatDelegate.setDefaultNightMode(themeMode);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Window setup

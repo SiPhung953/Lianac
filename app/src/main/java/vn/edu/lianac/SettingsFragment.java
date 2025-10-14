@@ -34,12 +34,15 @@ public class SettingsFragment extends Fragment {
 
     // SharedPreferences
     private SharedPreferences sharedPreferences;
-    private static final String PREF_NAME = "SettingsPrefs";
+    // FIXED: Changed to match MainActivity
+    private static final String PREF_NAME = "AppSettings";
 
     // Keys for SharedPreferences
-    private static final String KEY_THEME_MODE = "theme_mode";
+    // FIXED: Changed to match MainActivity
+    private static final String KEY_THEME_MODE = "theme";
     private static final String KEY_COMPACT_LIST = "compact_list";
     private static final String KEY_TEXT_DENSITY = "text_density";
+    // FIXED: Changed to match MainActivity
     private static final String KEY_LANGUAGE = "language";
     private static final String KEY_DEFAULT_VIEWER = "default_viewer";
     private static final String KEY_SCROLL_MODE = "scroll_mode";
@@ -127,16 +130,17 @@ public class SettingsFragment extends Fragment {
 
 
     private void loadSettings() {
-        // Load Theme Mode
-        int themeMode = sharedPreferences.getInt(KEY_THEME_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        // FIXED: Load Theme Mode with correct mapping
+        // MainActivity uses: 0=Light, 1=Dark, 2=System
+        int themeMode = sharedPreferences.getInt(KEY_THEME_MODE, 2);
         switch (themeMode) {
-            case AppCompatDelegate.MODE_NIGHT_NO:
+            case 0: // Light
                 rgThemeMode.check(R.id.rbLight);
                 break;
-            case AppCompatDelegate.MODE_NIGHT_YES:
+            case 1: // Dark
                 rgThemeMode.check(R.id.rbDark);
                 break;
-            default:
+            default: // System
                 rgThemeMode.check(R.id.rbSystem);
                 break;
         }
@@ -173,18 +177,23 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupListeners() {
-        // Theme Mode Listener
+        // FIXED: Theme Mode Listener
         rgThemeMode.setOnCheckedChangeListener((group, checkedId) -> {
             int mode;
+            int modeValue;
             if (checkedId == R.id.rbLight) {
                 mode = AppCompatDelegate.MODE_NIGHT_NO;
+                modeValue = 0; // Light
             } else if (checkedId == R.id.rbDark) {
                 mode = AppCompatDelegate.MODE_NIGHT_YES;
+                modeValue = 1; // Dark
             } else {
                 mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                modeValue = 2; // System
             }
 
-            sharedPreferences.edit().putInt(KEY_THEME_MODE, mode).apply();
+            // Save using the same format as MainActivity
+            sharedPreferences.edit().putInt(KEY_THEME_MODE, modeValue).apply();
             AppCompatDelegate.setDefaultNightMode(mode);
         });
 
@@ -271,7 +280,6 @@ public class SettingsFragment extends Fragment {
 
     private void changeLanguage(int position) {
         String languageCode = (position == 0) ? "en" : "vi";
-        sharedPreferences.edit().putString("app_language", languageCode).apply();
 
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -286,7 +294,7 @@ public class SettingsFragment extends Fragment {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
 
         // Restart Activity to apply language change
-        new Handler().postDelayed(() -> requireActivity().recreate(), 500); // 500ms delay
+        new Handler().postDelayed(() -> requireActivity().recreate(), 500);
     }
 
     public void openPDFWithExternalApp(String pdfPath) {
@@ -314,17 +322,14 @@ public class SettingsFragment extends Fragment {
             List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
             if (activities.size() > 0) {
-                // Use string resource for chooser title
                 Intent chooser = Intent.createChooser(intent, getString(R.string.open_pdf_with));
                 startActivity(chooser);
             } else {
-                // Use string resource for toast message
                 Toast.makeText(requireContext(),
                         getString(R.string.no_pdf_reader_found),
                         Toast.LENGTH_LONG).show();
             }
         } else {
-            // Use string resource for toast message
             Toast.makeText(requireContext(),
                     getString(R.string.opening_in_app_viewer),
                     Toast.LENGTH_SHORT).show();
