@@ -253,4 +253,73 @@ public class Article {
                 ", categories=" + getCategoryString() +
                 '}';
     }
+
+    /**
+     * Get a shortened version of the summary for list display
+     * @param maxLines Maximum number of lines to display
+     * @param charsPerLine Approximate characters per line
+     * @return Shortened summary with ellipsis if needed
+     */
+    public String getShortenedSummary(int maxLines, int charsPerLine) {
+        if (summary == null || summary.isEmpty()) {
+            return "";
+        }
+
+        int maxChars = maxLines * charsPerLine;
+        if (summary.length() <= maxChars) {
+            return summary;
+        }
+
+        // Find a good breaking point (space) near the limit
+        int breakPoint = maxChars;
+        for (int i = maxChars; i < Math.min(summary.length(), maxChars + 20); i++) {
+            if (Character.isWhitespace(summary.charAt(i))) {
+                breakPoint = i;
+                break;
+            }
+        }
+
+        return summary.substring(0, breakPoint).trim() + "...";
+    }
+
+    /**
+     * Get shortened summary with default parameters (2-3 lines, ~40 chars per line)
+     */
+    public String getShortenedSummary() {
+        return getShortenedSummary(3, 40);
+    }
+
+    /**
+     * Get categories as a comma-separated string (for display)
+     */
+    public String getCategoriesString() {
+        if (categories == null || categories.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < categories.size(); i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(categories.get(i).getShortName());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Check if article has a DOI
+     */
+    public boolean hasDoi() {
+        return doi != null && !doi.isEmpty();
+    }
+
+    // Add DOI field and its getter/setter if not already present
+    private String doi;
+
+    public String getDoi() {
+        return doi;
+    }
+
+    public void setDoi(String doi) {
+        this.doi = doi;
+    }
 }

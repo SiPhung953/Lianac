@@ -1,6 +1,5 @@
 package vn.edu.lianac.ui;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import java.util.List;
 
 /**
  * Adapter to display a list of articles from arXiv.
- * Added a click event to open a WebViewFragment.
+ * Now includes summary, date, and categories in the list view.
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder> {
 
@@ -50,7 +49,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         Article article = articleList.get(position);
         holder.bind(article);
 
-        // 🔹 Handle clicks on each item
+        // Handle clicks on each item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onArticleClick(article);
@@ -64,22 +63,60 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvAuthors, tvSubjects;
+        TextView tvId, tvTitle, tvAuthors, tvSummary, tvPublished, tvCategories;
 
         public ArticleViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Correct the IDs to match the item_article.xml file
+            tvId = itemView.findViewById(R.id.articleId);
             tvTitle = itemView.findViewById(R.id.articleTitle);
             tvAuthors = itemView.findViewById(R.id.articleAuthors);
-            // Temporarily using the articleId TextView to display Categories
-            tvSubjects = itemView.findViewById(R.id.articleId);
+            tvSummary = itemView.findViewById(R.id.articleSummary);
+            tvPublished = itemView.findViewById(R.id.articlePublished);
+            tvCategories = itemView.findViewById(R.id.articleCategories);
         }
 
         public void bind(Article article) {
-            tvTitle.setText(article.getTitle());
-            // Join the list of authors into a single string
-            tvAuthors.setText(TextUtils.join(", ", article.getAuthors()));
-            tvSubjects.setText(TextUtils.join(", ", article.getCategories()));
+            // Article ID
+            tvId.setText(article.getId() != null ? article.getId() : "");
+
+            // Title
+            tvTitle.setText(article.getTitle() != null ? article.getTitle() : "No title");
+
+            // Authors
+            String authorsText = article.getFormattedAuthors();
+            if (authorsText != null && !authorsText.isEmpty()) {
+                tvAuthors.setText(authorsText);
+                tvAuthors.setVisibility(View.VISIBLE);
+            } else {
+                tvAuthors.setVisibility(View.GONE);
+            }
+
+            // Summary (shortened)
+            String summary = article.getShortenedSummary();
+            if (summary != null && !summary.isEmpty()) {
+                tvSummary.setText(summary);
+                tvSummary.setVisibility(View.VISIBLE);
+            } else {
+                tvSummary.setVisibility(View.GONE);
+            }
+
+            // Published date
+            String publishedDate = article.getPublishedDateFormatted();
+            if (publishedDate != null && !publishedDate.isEmpty()) {
+                tvPublished.setText("Published: " + publishedDate);
+                tvPublished.setVisibility(View.VISIBLE);
+            } else {
+                tvPublished.setVisibility(View.GONE);
+            }
+
+            // Categories
+            String categories = article.getCategoriesString();
+            if (categories != null && !categories.isEmpty()) {
+                tvCategories.setText("Categories: " + categories);
+                tvCategories.setVisibility(View.VISIBLE);
+            } else {
+                tvCategories.setVisibility(View.GONE);
+            }
         }
     }
 }

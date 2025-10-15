@@ -22,9 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Locale;
 
-import vn.edu.lianac.ui.ArticleAdapter;
+import vn.edu.lianac.DetailFragment;
+import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
-import vn.edu.lianac.ui.WebViewFragment;
+import vn.edu.lianac.models.Article;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 public class ArticleListingFragment extends Fragment {
@@ -89,21 +90,44 @@ public class ArticleListingFragment extends Fragment {
         adapter = new ArticleAdapter();
         recyclerView.setAdapter(adapter);
 
-        // When choose 1 pdf → Open WebViewFragment
+        // UPDATED: Navigate to DetailFragment when article is clicked
         adapter.setOnArticleClickListener(article -> {
-            String url = article.getPdfUrl();
-            if (url == null || url.isEmpty()) {
-                url = article.getAbsUrl(); // fallback -> abstract if not have PDF
-            }
-            if (url != null && url.contains("arxiv.org/pdf") && !url.endsWith(".pdf")) {
-                url = url + ".pdf";
-            }
-            Log.d("ArticleListingFragment", "Opening PDF URL: " + url);//Check log print
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, WebViewFragment.newInstance(url))
-                    .addToBackStack(null)
-                    .commit();
+            Log.d("ArticleListingFragment", "Article clicked: " + article.getTitle());
+            openDetailFragment(article);
         });
+    }
+
+    /**
+     * Opens DetailFragment with the selected article's data
+     */
+    private void openDetailFragment(Article article) {
+        if (getActivity() instanceof MainActivity) {
+            DetailFragment detailFragment = new DetailFragment();
+
+            // Create bundle with article data
+            Bundle args = new Bundle();
+            args.putString("article_id", article.getId());
+            args.putString("article_title", article.getTitle());
+            args.putString("article_summary", article.getSummary());
+            args.putString("article_authors", article.getAllAuthorsString());
+            args.putString("article_published", article.getPublishedDateFormatted());
+            args.putString("article_updated", article.getUpdatedDateFormatted());
+            args.putString("article_categories", article.getCategoriesString());
+            args.putString("pdf_url", article.getPdfUrl());
+            args.putString("abs_url", article.getAbsUrl());
+            args.putString("doi", article.getDoi());
+
+            // Get primary category for breadcrumb
+            if (article.getPrimaryCategory() != null) {
+                args.putString("primary_category", article.getPrimaryCategory().getShortName());
+                args.putString("primary_category_name", article.getPrimaryCategory().getName());
+            }
+
+            detailFragment.setArguments(args);
+
+            // Navigate to detail fragment
+            ((MainActivity) getActivity()).replaceFragment(detailFragment);
+        }
     }
 
     private void setupSpinners() {

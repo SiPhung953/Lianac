@@ -1,154 +1,149 @@
 package vn.edu.lianac.models;
 
 import android.content.Context;
-import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;public class Category {
 
-    @SerializedName("id")
-    private String shortName;   // arXiv code (e.g. "cs.AI")
+/**
+ * Represents an arXiv category/subject classification
+ * Now supports hierarchical structure with sub-categories
+ */
+public class Category {
+    private String shortName;  // e.g., "cs.AI", "math.GT", "physics"
+    private String name;        // e.g., "Artificial Intelligence", "Geometric Topology"
+    private int nameResId;      // String resource ID for localization
+    private List<Category> subCategories; // Sub-categories (null if leaf node)
 
-    private String archive;     // Top-level archive (e.g. "cs" from "cs.AI")
-
-    @SerializedName("subCategories")
-    private List<Category> subCategories;
-
-    // This field is no longer populated by Gson, but can be used for caching the resolved name
-    private transient String name;
-
-    public Category() {
-        subCategories = new ArrayList<>();
+    public Category(String shortName) {
+        this.shortName = shortName;
+        this.name = shortName; // Default to shortName if full name not available
+        this.subCategories = null;
     }
 
     public Category(String shortName, String name) {
         this.shortName = shortName;
         this.name = name;
-        this.subCategories = new ArrayList<>();
-        extractArchive();
+        this.subCategories = null;
     }
 
-    // --- Getters & Setters ---
+    public Category(String shortName, int nameResId) {
+        this.shortName = shortName;
+        this.nameResId = nameResId;
+        this.subCategories = null;
+    }
 
-    /**
-     * Gets the human-readable name of the category.
-     * This method resolves the name from string resources. It requires a Context.
-     *
-     * @param context The context to access resources.
-     * @return The display name of the category.
-     */
-    public String getName(Context context) {
-        if (name == null) {
-            // Generate the resource key from the ID (e.g., "cs.AI" -> "category_cs_ai")
-            String resourceKey = "category_" + shortName.replace('.', '_').replace('-', '_').toLowerCase();
-            int resourceId = context.getResources().getIdentifier(resourceKey, "string", context.getPackageName());
-            // If the resource is found, set the name, otherwise fallback to the shortName
-            name = (resourceId != 0) ? context.getString(resourceId) : shortName;
-        }
+    // Getters and Setters
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void setName(String name) { this.name = name; }
-
-    public String getShortName() { return shortName; }
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-        extractArchive();
-    }
-
-    public String getArchive() {
-        if (archive == null) {
-            extractArchive();
+    /**
+     * Get name with Context for localization support
+     * @param context Android context for string resources
+     * @return Localized name if nameResId is set, otherwise returns name field
+     */
+    public String getName(Context context) {
+        if (nameResId != 0 && context != null) {
+            return context.getString(nameResId);
         }
-        return archive;
+        return name != null ? name : shortName;
     }
 
-    public List<Category> getSubCategories() { return subCategories; }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getNameResId() {
+        return nameResId;
+    }
+
+    public void setNameResId(int nameResId) {
+        this.nameResId = nameResId;
+    }
+
+    public List<Category> getSubCategories() {
+        return subCategories;
+    }
 
     public void setSubCategories(List<Category> subCategories) {
-        this.subCategories = subCategories != null ? subCategories : new ArrayList<>();
+        this.subCategories = subCategories;
     }
 
-    public void addSubCategory(Category subCategory) {
-        if (subCategories == null) {
-            subCategories = new ArrayList<>();
-        }
-        if (subCategory != null) subCategories.add(subCategory);
-    }
-
+    /**
+     * Check if this category has sub-categories
+     * @return true if this is a parent category with children
+     */
     public boolean hasSubCategories() {
         return subCategories != null && !subCategories.isEmpty();
     }
 
-    // --- Query Building ---
-    public String toQueryParam() {
-        return "cat:" + shortName;
-    }
-
-    // --- Utility Methods ---
-    private void extractArchive() {
-        if (shortName != null && shortName.contains(".")) {
-            archive = shortName.substring(0, shortName.indexOf("."));
-        } else {
-            archive = shortName;
+    /**
+     * Get full display name (e.g., "cs.AI - Artificial Intelligence")
+     * @param context Android context for localization
+     * @return Full formatted name
+     */
+    public String getFullName(Context context) {
+        String displayName = getName(context);
+        if (displayName.equals(shortName)) {
+            return shortName; // Don't duplicate if name is same as code
         }
+        return shortName + " - " + displayName;
     }
 
-    public boolean isArchiveLevel() {
-        return shortName != null && !shortName.contains(".");
+    /**
+     * Add a sub-category to this category
+     * @param subCategory The category to add
+     */
+    public void addSubCategory(Category subCategory) {
+        if (subCategories == null) {
+            subCategories = new ArrayList<>();
+        }
+        subCategories.add(subCategory);
     }
 
-    public boolean isSubjectLevel() {
-        return shortName != null && shortName.contains(".");
-    }
-
-    public boolean belongsToArchive(String archiveName) {
-        return getArchive() != null && getArchive().equals(archiveName);
-    }
-
-    public boolean matches(String categoryShortName) {
-        return shortName != null && shortName.equals(categoryShortName);
-    }
-
-    public boolean matchesPrefix(String prefix) {
-        return shortName != null && shortName.startsWith(prefix);
-    }
-
-    // --- Equals & HashCode for proper comparison ---
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Category)) return false;
-        Category category = (Category) o;
-        return Objects.equals(shortName, category.shortName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(shortName);
+    /**
+     * Find a sub-category by its short name (recursively)
+     * @param shortName The short name to search for
+     * @return The found category or null
+     */
+    public Category findSubCategory(String shortName) {
+        if (this.shortName.equals(shortName)) {
+            return this;
+        }
+        if (hasSubCategories()) {
+            for (Category sub : subCategories) {
+                Category found = sub.findSubCategory(shortName);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
     public String toString() {
-        return shortName != null ? shortName : "Unknown Category";
-    }
-
-    // --- Display name for UI ---
-
-    public String getDisplayName(Context context) {
-        String displayName = getName(context);
-        if (!displayName.equals(shortName)) {
-            return displayName + " (" + shortName + ")";
-        }
-        return shortName != null ? shortName : "Unknown";
-    }
-
-    public String getFullName(Context context) {
-        // Return the display name format used in your spinner
-        String displayName = getName(context);
-        if (!displayName.equals(shortName)) {
-            return shortName + " - " + displayName;
-        }
         return shortName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Category category = (Category) obj;
+        return shortName != null && shortName.equals(category.shortName);
+    }
+
+    @Override
+    public int hashCode() {
+        return shortName != null ? shortName.hashCode() : 0;
     }
 }

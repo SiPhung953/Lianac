@@ -6,6 +6,8 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -58,11 +60,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- Published date -->
+    <!-- Summary (shortened) -->
+    <TextView
+        android:id="@+id/articleSummary"
+        android:textSize="13sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginTop="6dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <!-- Published Date -->
     <TextView
         android:id="@+id/articlePublished"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorTertiary"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Categories (as text) -->
+    <TextView
+        android:id="@+id/articleCategories"
+        android:textSize="11sp"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textStyle="italic"
         android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

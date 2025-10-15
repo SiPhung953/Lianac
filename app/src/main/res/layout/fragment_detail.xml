@@ -1,144 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:fillViewport="true">
 
-    <!-- Top bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/menu_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/menu"
-            app:tint="@android:color/black" />
-
-        <TextView
-            android:id="@+id/title_detail"
-            android:layout_width="wrap_content"
+        <!-- Top bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Detail"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-    <!-- Breadcrumb Bar -->
-    <LinearLayout
-        android:id="@+id/breadcrumb_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="6dp"
-        android:paddingHorizontal="8dp"
-        android:background="#F8F8F8"
-        android:layout_marginTop="8dp">
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/menu"
+                app:tint="@android:color/black" />
 
-        <TextView
-            android:id="@+id/text_subject"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/title_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detail"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Breadcrumb Bar -->
+        <LinearLayout
+            android:id="@+id/breadcrumb_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Subject Name"
+            android:orientation="horizontal"
+            android:paddingVertical="6dp"
+            android:paddingHorizontal="8dp"
+            android:background="#F8F8F8"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subject Name"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <TextView
+                android:id="@+id/arrow_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  â–º  "
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/text_subclass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subclass"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_marginTop="4dp" />
+
+        <!-- Article ID -->
+        <TextView
+            android:id="@+id/article_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginTop="12dp" />
+
+        <!-- Paper Title -->
+        <TextView
+            android:id="@+id/paper_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paper Title"
+            android:textStyle="bold"
+            android:textSize="18sp"
             android:textColor="@android:color/black"
+            android:layout_marginTop="8dp" />
+
+        <!-- Authors -->
+        <TextView
+            android:id="@+id/paper_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Author(s): "
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Published Date -->
+        <TextView
+            android:id="@+id/paper_published"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp" />
+
+        <!-- Updated Date -->
+        <TextView
+            android:id="@+id/paper_updated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="2dp"
+            android:visibility="gone" />
+
+        <!-- Categories -->
+        <TextView
+            android:id="@+id/paper_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textStyle="italic"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp" />
+
+        <!-- DOI (clickable) -->
+        <TextView
+            android:id="@+id/paper_doi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:textStyle="italic"/>
 
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Abstract/Summary Section -->
         <TextView
-            android:id="@+id/arrow_separator"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="  ►  "
+            android:text="Abstract"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/text_subclass"
-            android:layout_width="wrap_content"
+            android:id="@+id/paper_summary"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Subclass"
-            android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@android:color/black"
+            android:layout_marginTop="8dp"
+            android:lineSpacingMultiplier="1.2" />
+
+        <!-- Icons below -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <ImageView
+                android:id="@+id/download_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/download"
+                android:layout_marginEnd="40dp"
+                app:tint="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/bookmark_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bookmark"
+                app:tint="@android:color/black" />
+        </LinearLayout>
+
+        <!-- READ button -->
+        <TextView
+            android:id="@+id/read_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="READ"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/bg_read_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true" />
+
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DDDDDD"
-        android:layout_marginTop="4dp" />
-
-    <!-- Main -->
-    <TextView
-        android:id="@+id/paper_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Paper Title"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="12dp" />
-
-    <TextView
-        android:id="@+id/paper_author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Author(s): Reza Pirayeshshirazinezhad"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="4dp" />
-
-    <!-- Icons below -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="24dp">
-
-        <ImageView
-            android:id="@+id/download_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/download"
-            android:layout_marginEnd="40dp"
-            app:tint="@android:color/black" />
-
-        <ImageView
-            android:id="@+id/bookmark_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/bookmark"
-            app:tint="@android:color/black" />
-    </LinearLayout>
-
-    <!-- READ btn -->
-    <TextView
-        android:id="@+id/read_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="READ"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="8dp"
-        android:background="@drawable/bg_read_button"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true" />
-
-</LinearLayout>
+</ScrollView>
