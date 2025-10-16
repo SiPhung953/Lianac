@@ -180,6 +180,15 @@ public class MainActivity extends AppCompatActivity {
         loadContentFragment(fragment, true);
     }
 
+    /**
+     * A temporary method to replace a fragment, used for compatibility.
+     *
+     * @param fragment The fragment to display.
+     */
+    public void replaceFragment(Fragment fragment) {
+        loadContentFragment(fragment, true);
+    }
+
     @Override
     public void onBackPressed() {
         // First, close the drawer if it's open

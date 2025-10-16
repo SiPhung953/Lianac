@@ -1,12 +1,15 @@
 package vn.edu.lianac.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Article {
+public class Article implements Parcelable {
     private String id;
     private String title;
     private String summary;
@@ -28,6 +31,57 @@ public class Article {
         this.authors = new ArrayList<>();
         this.categories = new ArrayList<>();
         this.acmMscClasses = new ArrayList<>();
+    }
+
+    // --- Parcelable Implementation ---
+    protected Article(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        summary = in.readString();
+        authors = in.createStringArrayList();
+        publishedDate = in.readString();
+        updatedDate = in.readString();
+        pdfUrl = in.readString();
+        absUrl = in.readString();
+        categories = in.createStringArrayList();
+        primaryCategory = in.readString();
+        acmMscClasses = in.createStringArrayList();
+        doi = in.readString();
+        bookmarked = in.readByte() != 0;
+    }
+
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
+        }
+
+        @Override
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(summary);
+        dest.writeStringList(authors);
+        dest.writeString(publishedDate);
+        dest.writeString(updatedDate);
+        dest.writeString(pdfUrl);
+        dest.writeString(absUrl);
+        dest.writeStringList(categories);
+        dest.writeString(primaryCategory);
+        dest.writeStringList(acmMscClasses);
+        dest.writeString(doi);
+        dest.writeByte((byte) (bookmarked ? 1 : 0));
     }
 
     // --- Getters & Setters ---
@@ -57,9 +111,12 @@ public class Article {
 
     public List<String> getCategories() { return categories; }
     public void setCategories(List<String> categories) { this.categories = categories; }
+
+    public String getPrimaryCategory() { return primaryCategory; }
     public void setPrimaryCategory(String primaryCategory) {
         this.primaryCategory = primaryCategory;
     }
+
     public List<String> getAcmMscClasses() { return acmMscClasses; }
     public void setAcmMscClasses(List<String> classes) { this.acmMscClasses = classes; }
 
@@ -123,12 +180,38 @@ public class Article {
         return "ACM/MSC: " + String.join(", ", acmMscClasses);
     }
 
-    public String getPrimaryCategory() {
+    public String getFirstCategory() {
+        return (categories != null && !categories.isEmpty()) ? categories.get(0) : "";
+    }
+
+    /**
+     * Get the main category (e.g., "cond-mat" from "cond-mat.str-el")
+     */
+    public String getMainCategory() {
+        if (primaryCategory == null || primaryCategory.isEmpty()) {
+            return "";
+        }
+        // Split by dot to get main category
+        int dotIndex = primaryCategory.indexOf('.');
+        if (dotIndex > 0) {
+            return primaryCategory.substring(0, dotIndex);
+        }
         return primaryCategory;
     }
 
-    public String getFirstCategory() {
-        return (categories != null && !categories.isEmpty()) ? categories.get(0) : "";
+    /**
+     * Get the subcategory (e.g., "str-el" from "cond-mat.str-el")
+     */
+    public String getSubCategory() {
+        if (primaryCategory == null || primaryCategory.isEmpty()) {
+            return "";
+        }
+        // Split by dot to get subcategory
+        int dotIndex = primaryCategory.indexOf('.');
+        if (dotIndex > 0 && dotIndex < primaryCategory.length() - 1) {
+            return primaryCategory.substring(dotIndex + 1);
+        }
+        return "";
     }
 
     private String getMonthAbbr(String month) {
