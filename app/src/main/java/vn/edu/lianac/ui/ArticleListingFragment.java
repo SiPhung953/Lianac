@@ -56,14 +56,12 @@ public class ArticleListingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView called");
         return inflater.inflate(R.layout.fragment_article_listing, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated called");
 
         viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
 
@@ -98,15 +96,12 @@ public class ArticleListingFragment extends Fragment {
         pageButtons[4] = view.findViewById(R.id.pageButton5);
         pageButtons[5] = view.findViewById(R.id.pageButton6);
         pageButtons[6] = view.findViewById(R.id.pageButton7);
-
-        Log.d(TAG, "Views initialized - RecyclerView: " + (recyclerView != null));
     }
 
     private void setupRecyclerView() {
         adapter = new ArticleAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        Log.d(TAG, "RecyclerView setup complete");
     }
 
     private void setupSpinners() {
@@ -123,7 +118,6 @@ public class ArticleListingFragment extends Fragment {
 
                 String[] sortFields = {"submittedDate", "lastUpdatedDate", "relevance"};
                 if (position < sortFields.length) {
-                    Log.d(TAG, "User changed sort to: " + sortFields[position]);
                     viewModel.updateSort(sortFields[position], "descending");
                 }
             }
@@ -146,7 +140,6 @@ public class ArticleListingFragment extends Fragment {
 
                 int[] sizes = {10, 25, 50, 100, 200};
                 if (position < sizes.length) {
-                    Log.d(TAG, "User changed page size to: " + sizes[position]);
                     viewModel.updatePageSize(sizes[position]);
                 }
             }
@@ -173,7 +166,6 @@ public class ArticleListingFragment extends Fragment {
                         int targetPage = Integer.parseInt(pageText);
                         goToPage(targetPage);
                     } catch (NumberFormatException e) {
-                        Log.e(TAG, "Invalid page number: " + pageText);
                     }
                 }
             });
@@ -255,26 +247,17 @@ public class ArticleListingFragment extends Fragment {
     private void observeViewModel() {
         // Articles
         viewModel.getArticles().observe(getViewLifecycleOwner(), articles -> {
-            Log.d(TAG, "Articles updated: " + (articles != null ? articles.size() : "null") + " articles");
-            if (articles != null && !articles.isEmpty()) {
-                Log.d(TAG, "First article: " + articles.get(0).getTitle());
-            }
-            adapter.submitList(articles, () -> {
-                Log.d(TAG, "submitList complete, item count: " + adapter.getItemCount());
-                updateVisibility();
-            });
+            adapter.submitList(articles, this::updateVisibility);
         });
 
         // Loading state
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            Log.d(TAG, "Loading state: " + loading);
             progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
             if (loading) errorText.setVisibility(View.GONE);
         });
 
         // Errors
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
-            Log.d(TAG, "Error message: " + error);
             if (error != null) {
                 errorText.setText(error);
                 errorText.setVisibility(View.VISIBLE);
@@ -285,18 +268,15 @@ public class ArticleListingFragment extends Fragment {
 
         // Pagination info
         viewModel.getTotalResults().observe(getViewLifecycleOwner(), total -> {
-            Log.d(TAG, "Total results: " + total);
             updatePaginationInfo();
         });
 
         viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
-            Log.d(TAG, "Current page: " + page);
             updatePaginationInfo();
             updatePaginationButtons();
         });
 
         viewModel.getTotalPages().observe(getViewLifecycleOwner(), pages -> {
-            Log.d(TAG, "Total pages: " + pages);
             updatePaginationInfo();
             updatePaginationButtons();
         });
@@ -304,7 +284,6 @@ public class ArticleListingFragment extends Fragment {
         // CRITICAL: Observe query changes to update spinners
         viewModel.getCurrentQuery().observe(getViewLifecycleOwner(), query -> {
             if (query != null) {
-                Log.d(TAG, "Query changed - updating spinners");
                 updateSpinnersFromQuery(query);
             }
         });
@@ -326,7 +305,6 @@ public class ArticleListingFragment extends Fragment {
                 if (sizes[i] == pageSize) {
                     if (pageSizeSpinner.getSelectedItemPosition() != i) {
                         pageSizeSpinner.setSelection(i, false);
-                        Log.d(TAG, "Updated page size spinner to position " + i + " (" + pageSize + ")");
                     }
                     break;
                 }
@@ -340,7 +318,6 @@ public class ArticleListingFragment extends Fragment {
                 if (sortFields[i].equals(sortBy)) {
                     if (sortSpinner.getSelectedItemPosition() != i) {
                         sortSpinner.setSelection(i, false);
-                        Log.d(TAG, "Updated sort spinner to position " + i + " (" + sortBy + ")");
                     }
                     break;
                 }
@@ -355,7 +332,7 @@ public class ArticleListingFragment extends Fragment {
         boolean hasArticles = adapter.getItemCount() > 0;
         Boolean isLoading = viewModel.getIsLoading().getValue();
 
-        Log.d(TAG, "updateVisibility - hasArticles: " + hasArticles + ", itemCount: " + adapter.getItemCount());
+
 
         if (!hasArticles && isLoading != null && !isLoading) {
             // No articles and not loading - show "No results"

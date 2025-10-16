@@ -1,7 +1,63 @@
 <resources>
+
+    <!-- ================= APP INFO ================= -->
     <string name="app_name" translatable="false">Lianac</string>
 
-    <!-- Display names for search fields -->
+    <!-- ================= GENERAL ACTIONS ================= -->
+    <string name="search">Search</string>
+    <string name="advanced_search">Advanced Search</string>
+    <string name="basic_search">Basic Search</string>
+    <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
+    <string name="close">Close</string>
+    <string name="home">Home</string>
+    <string name="next">Next ▶</string>
+    <string name="prev">◀ Prev</string>
+    <string name="menu">Menu</string>
+    <string name="remove_field">Remove field</string>
+
+    <!-- ================= PLACEHOLDERS ================= -->
+    <string name="placeholder_search">Search...</string>
+    <string name="placeholder_advanced_search">Search term...</string>
+    <string name="select_category_placeholder">Select a category</string>
+
+    <!-- ================= TOAST / MESSAGES ================= -->
+    <string name="select_valid_category_toast">Please select a valid category</string>
+    <string name="invalid_category_toast">Invalid category selected</string>
+    <string name="category_already_added_toast">Category already added</string>
+    <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="no_categories_selected">No categories selected</string>
+    <string name="one_category_selected">1 category selected</string>
+    <string name="categories_selected">%d categories selected</string>
+    <string name="include_cross_listed">Include cross-listed papers</string>
+
+    <!-- ================= ERROR MESSAGES ================= -->
+    <string name="error_no_query_url">Query URL cannot be null or empty</string>
+    <string name="error_no_response_body">Empty response body</string>
+    <string name="error_null_parser">Parser returned null</string>
+
+    <!-- ================= SEARCH UI LABELS ================= -->
+    <string name="additional_search_fields">Additional Search Fields</string>
+    <string name="add_field">+ Add Field</string>
+    <string name="categories">Categories</string>
+    <string name="select_main_categories">Select Main Categories:</string>
+    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
+    <string name="select_specific_categories">Select Specific Categories:</string>
+    <string name="date_range">Date Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="advanced_filters">Advanced filters</string>
+    <string name="subcategories">Subcategories</string>
+    <string name="popular">Popular</string>
+    <string name="recent">Recent</string>
+    <string name="newest">New</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="per_page">Per page:</string>
+    <string name="current">Current</string>
+    <string name="selected">Selected</string>
+
+    <!-- ================= SEARCH ARRAYS ================= -->
     <string-array name="search_fields">
         <item>All Fields</item>
         <item>Title</item>
@@ -14,7 +70,6 @@
         <item>ID</item>
     </string-array>
 
-    <!-- Field codes for search fields (ADD THIS) -->
     <string-array name="search_field_values">
         <item>all</item>
         <item>ti</item>
@@ -47,19 +102,7 @@
         <item>200</item>
     </string-array>
 
-    <string name="search">Search</string>
-    <string name="advanced_search">Advanced Search</string>
-    <string name="basic_search">Basic Search</string>
-    <string name="placeholder_search">Search...</string>
-    <string name="placeholder_advanced_search">Search term...</string>
-
-    <string name="select_category_placeholder">Select a category</string>
-    <string name="select_valid_category_toast">Please select a valid category</string>
-    <string name="invalid_category_toast">Invalid category selected</string>
-    <string name="category_already_added_toast">Category already added</string>
-    <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
-
-    <!-- Main Categories -->
+    <!-- ================= MAIN CATEGORIES ================= -->
     <string name="category_physics">Physics</string>
     <string name="category_math">Mathematics</string>
     <string name="category_cs">Computer Science</string>
@@ -69,7 +112,8 @@
     <string name="category_eess">Electrical Engineering and Systems Science</string>
     <string name="category_econ">Economics</string>
 
-    <!-- Sub-Categories for Physics -->
+    <!-- ================= SUBCATEGORIES ================= -->
+    <!-- ✅ Physics -->
     <string name="category_astro_ph">Astrophysics</string>
     <string name="category_astro_ph_co">Cosmology and Nongalactic Astrophysics</string>
     <string name="category_astro_ph_ep">Earth and Planetary Astrophysics</string>
@@ -128,7 +172,7 @@
     <string name="category_physics_space_ph">Space Physics</string>
     <string name="category_quant_ph">Quantum Physics</string>
 
-    <!-- Sub-Categories for Mathematics -->
+    <!-- ✅ Mathematics -->
     <string name="category_math_ag">Algebraic Geometry</string>
     <string name="category_math_at">Algebraic Topology</string>
     <string name="category_math_ap">Analysis of PDEs</string>
@@ -162,7 +206,7 @@
     <string name="category_math_st">Statistics Theory</string>
     <string name="category_math_sg">Symplectic Geometry</string>
 
-    <!-- Sub-Categories for Computer Science -->
+    <!-- ✅ Computer Science -->
     <string name="category_cs_ai">Artificial Intelligence</string>
     <string name="category_cs_cl">Computation and Language</string>
     <string name="category_cs_cc">Computational Complexity</string>
@@ -202,7 +246,7 @@
     <string name="category_cs_sc">Symbolic Computation</string>
     <string name="category_cs_sy">Systems and Control</string>
 
-    <!-- Sub-Categories for Quantitative Biology -->
+    <!-- ✅ Quantitative Biology -->
     <string name="category_q_bio_bm">Biomolecules</string>
     <string name="category_q_bio_cb">Cell Behavior</string>
     <string name="category_q_bio_gn">Genomics</string>
@@ -214,7 +258,7 @@
     <string name="category_q_bio_sc">Subcellular Processes</string>
     <string name="category_q_bio_to">Tissues and Organs</string>
 
-    <!-- Sub-Categories for Quantitative Finance -->
+    <!-- ✅ Quantitative Finance -->
     <string name="category_q_fin_cp">Computational Finance</string>
     <string name="category_q_fin_ec">Economics</string>
     <string name="category_q_fin_gn">General Finance</string>
@@ -225,7 +269,7 @@
     <string name="category_q_fin_st">Statistical Finance</string>
     <string name="category_q_fin_tr">Trading and Market Microstructure</string>
 
-    <!-- Sub-Categories for Statistics -->
+    <!-- ✅ Statistics -->
     <string name="category_stat_ap">Applications</string>
     <string name="category_stat_co">Computation</string>
     <string name="category_stat_ml">Machine Learning</string>
@@ -233,44 +277,16 @@
     <string name="category_stat_ot">Other Statistics</string>
     <string name="category_stat_th">Statistics Theory</string>
 
-    <!-- Sub-Categories for EESS -->
+    <!-- ✅ EESS -->
     <string name="category_eess_as">Audio and Speech Processing</string>
     <string name="category_eess_iv">Image and Video Processing</string>
     <string name="category_eess_sp">Signal Processing</string>
     <string name="category_eess_sy">Systems and Control</string>
 
-    <!-- Sub-Categories for Economics -->
+    <!-- ✅ Economics -->
     <string name="category_econ_em">Econometrics</string>
     <string name="category_econ_gn">General Economics</string>
     <string name="category_econ_th">Theoretical Economics</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="menu">Menu</string>
-    <string name="next">Next ▶</string>
-    <string name="prev">◀ Prev</string>
-    <string name="error_loading_data">Error loading data</string>
-    <string name="sort_by">Sort by:</string>
-    <string name="per_page">Per page:</string>
-    <string name="close">Close</string>
-    <string name="additional_search_fields">Additional Search Fields</string>
-    <string name="add_field">+ Add Field</string>
-    <string name="categories">Categories</string>
-    <string name="select_main_categories">Select Main Categories:</string>
-    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
-    <string name="select_specific_categories">Select Specific Categories:</string>
-    <string name="no_categories_selected">No categories selected</string>
-    <string name="date_range">Date Range</string>
-    <string name="from">From</string>
-    <string name="reset">Reset</string>
-    <string name="to">To</string>
-    <string name="apply">Apply</string>
-    <string name="advanced_filters">Advanced filters</string>
-    <string name="subcategories">Subcategories</string>
-    <string name="popular">Popular</string>
-    <string name="recent">Recent</string>
-    <string name="newest">New</string>
-    <string name="remove_field">Remove field</string>
-    <string name="home">Home</string>
-    <string name="current">Current</string>
-    <string name="include_cross_listed">Include cross-listed papers</string>
+
+    <!--To be sorted-->
 </resources>

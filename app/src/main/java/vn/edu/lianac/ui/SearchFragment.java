@@ -113,19 +113,13 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Perform basic search (only search term + field, no advanced filters)
-     */
-    /**
-     * Perform basic search while preserving any existing advanced filters
-     */
-    /**
      * Perform basic search while preserving any existing advanced filters
      */
     private void performBasicSearch() {
         String searchTerm = searchBox.getText().toString().trim();
         String field = getFieldCode(fieldSpinner.getSelectedItemPosition());
 
-        // Get existing query to check for advanced filters
+        // Get existing query to preserve advanced filters
         QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
 
         // Check if we have any advanced filters
@@ -143,24 +137,24 @@ public class SearchFragment extends Fragment {
 
         QueryOptions.Builder builder;
         if (currentQuery != null) {
-            // Start with existing query to preserve all filters
+            // GOOD: Start with existing query to preserve ALL advanced filters
             builder = currentQuery.toBuilder();
         } else {
-            // No existing query, create fresh builder
             builder = new QueryOptions.Builder();
         }
 
-        // Update basic search term and field (even if empty - filters will be used)
+        // Update basic search term and field
         if (!searchTerm.isEmpty()) {
             builder.searchTerm(searchTerm).searchField(field);
         } else {
-            // Clear search term if empty, let filters drive the query
+            // Clear search term if empty, let advanced filters drive the query
             builder.searchTerm(null).searchField(null);
         }
 
         builder.start(0);  // Reset to first page for new search
 
         QueryOptions query = builder.build();
+        viewModel.updateQueryOptions(query); // Update ViewModel first
         viewModel.search(query);
     }
 
@@ -244,6 +238,24 @@ public class SearchFragment extends Fragment {
             filterButton.setBackgroundResource(R.drawable.filter_button_with_indicator);
         } else {
             filterButton.setBackgroundResource(R.drawable.filter_button_normal);
+        }
+    }
+
+    public void setSearchTerm(String term) {
+        if (searchBox != null && term != null) {
+            searchBox.setText(term);
+        }
+    }
+
+    public void setSearchField(String fieldCode) {
+        if (fieldSpinner != null && fieldCode != null) {
+            String[] fields = {"all", "ti", "au", "abs", "co", "jr", "cat", "rn", "id"};
+            for (int i = 0; i < fields.length; i++) {
+                if (fields[i].equals(fieldCode)) {
+                    fieldSpinner.setSelection(i);
+                    break;
+                }
+            }
         }
     }
 }

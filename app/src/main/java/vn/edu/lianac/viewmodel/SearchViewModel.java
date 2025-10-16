@@ -68,7 +68,6 @@ public class SearchViewModel extends ViewModel {
         errorMessage.postValue(null);
 
         String queryUrl = new QueryBuilder(options).build();
-        Log.d(TAG, "Searching: " + queryUrl);
 
         apiService.fetchArticlesWithMetadata(queryUrl, new ArxivAPIService.ArxivSearchResultListener() {
             @Override
@@ -293,13 +292,11 @@ public class SearchViewModel extends ViewModel {
 
     private void updateUIState(SearchResult result) {
         if (result == null) {
-            Log.w(TAG, "Null search result");
             return;
         }
 
         // Warn about empty results
         if (result.getArticles().isEmpty() && result.getTotalResults() > 0) {
-            Log.w(TAG, "Empty articles despite total results: " + result.getTotalResults());
             errorMessage.postValue("API returned no results. Query may be too broad for deep pagination.");
         }
 
@@ -313,7 +310,6 @@ public class SearchViewModel extends ViewModel {
     }
 
     private void handleError(Exception e) {
-        Log.e(TAG, "Error loading articles", e);
 
         String message = "Failed to load articles";
 

@@ -61,7 +61,6 @@ public class ManageSearchFragment extends Fragment {
     private TextView selectedCategoriesSummary, mainCategoryLabel;
     private LinearLayout mainCategoryHeader, leafCategoryHeader;
     private TextView mainCategoryToggle, leafCategoryToggle;
-    private CheckBox includeCrossListCheckbox;
     private SearchViewModel searchViewModel;
 
     @Nullable
@@ -124,7 +123,7 @@ public class ManageSearchFragment extends Fragment {
         leafCategoryHeader = view.findViewById(R.id.leafCategoryHeader);
         leafCategoryToggle = view.findViewById(R.id.leafCategoryToggle);
 
-        includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
+        CheckBox includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
 
         // Header click listeners
         View sfh = view.findViewById(R.id.searchFieldsHeader);
@@ -338,9 +337,9 @@ public class ManageSearchFragment extends Fragment {
         if (total == 0) {
             selectedCategoriesSummary.setText(getString(R.string.no_categories_selected));
         } else if (total == 1) {
-            selectedCategoriesSummary.setText("1 category selected");
+            selectedCategoriesSummary.setText(getString(R.string.one_category_selected));
         } else {
-            selectedCategoriesSummary.setText(total + " categories selected");
+            selectedCategoriesSummary.setText(getString(R.string.categories_selected, total));
         }
         selectedCategoriesSummary.setVisibility(View.VISIBLE);
     }
@@ -352,7 +351,6 @@ public class ManageSearchFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View rowView = inflater.inflate(R.layout.item_search_field_row, searchFieldsContainer, false);
         if (rowView == null) {
-            Log.e("ManageSearchFragment", "Failed to inflate search field row");
             return;
         }
 
@@ -511,13 +509,29 @@ public class ManageSearchFragment extends Fragment {
         removeEmptyRows();
 
         QueryOptions existingQuery = searchViewModel.getCurrentQuery().getValue();
-        QueryOptions.Builder builder = new QueryOptions.Builder();
+        QueryOptions.Builder builder;
 
-        // Preserve sort settings from existing query
+        // Start from existing query to preserve sort settings and other properties
         if (existingQuery != null) {
-            builder.sortBy(existingQuery.getSortBy())
-                    .sortOrder(existingQuery.getSortOrder())
-                    .maxResults(existingQuery.getMaxResults());
+            builder = existingQuery.toBuilder();
+        } else {
+            builder = new QueryOptions.Builder();
+        }
+
+        // CRITICAL FIX: Read the ACTUAL current value from SearchFragment's UI
+        // This ensures we get the real-time value, not stale ViewModel data
+        Fragment parent = getParentFragment();
+        if (parent instanceof SearchFragment) {
+            String currentSearchTerm = ((SearchFragment) parent).getCurrentSearchTerm();
+            String currentSearchField = ((SearchFragment) parent).getCurrentSearchField();
+
+            // Update with current values from UI
+            if (currentSearchTerm != null && !currentSearchTerm.isEmpty()) {
+                builder.searchTerm(currentSearchTerm).searchField(currentSearchField);
+            } else {
+                // User cleared the search bar - clear it in query too
+                builder.searchTerm(null).searchField(null);
+            }
         }
 
         // Collect search rows from advanced filter UI
@@ -540,6 +554,7 @@ public class ManageSearchFragment extends Fragment {
             }
         }
 
+        // Update only the advanced filter fields
         builder.rows(rows);
 
         // Include categories
@@ -551,21 +566,31 @@ public class ManageSearchFragment extends Fragment {
         String toDate = dateToField != null ? dateToField.getText().toString().trim() : "";
         if (!fromDate.isEmpty()) {
             builder.dateFrom(fromDate);
+        } else {
+            builder.dateFrom(null); // Clear if empty
         }
         if (!toDate.isEmpty()) {
             builder.dateTo(toDate);
+        } else {
+            builder.dateTo(null); // Clear if empty
         }
 
-        builder.start(0);
+        builder.start(0); // Reset to first page
 
-        // VALIDATION: Check if we have at least something to search for
+        // UPDATED VALIDATION: Check the actual current search term from UI
+        String actualSearchTerm = null;
+        if (parent instanceof SearchFragment) {
+            actualSearchTerm = ((SearchFragment) parent).getCurrentSearchTerm();
+        }
+
+        boolean hasSearchTerm = actualSearchTerm != null && !actualSearchTerm.isEmpty();
         boolean hasSearchRows = !rows.isEmpty();
         boolean hasCategories = !selectedCategories.isEmpty();
         boolean hasDateRange = !fromDate.isEmpty() || !toDate.isEmpty();
 
-        if (!hasSearchRows && !hasCategories && !hasDateRange) {
+        if (!hasSearchTerm && !hasSearchRows && !hasCategories && !hasDateRange) {
             Toast.makeText(requireContext(),
-                    "Please add at least one advanced filter",
+                    "Please add a search term or at least one filter",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -615,22 +640,34 @@ public class ManageSearchFragment extends Fragment {
 
         updateSelectedCategoriesSummary();
 
-        // Reset query in ViewModel to default
-        QueryOptions defaultQuery = new QueryOptions.Builder()
-                .searchTerm("all")
-                .searchField("all")
+        // FIXED: Read current search term from SearchFragment's UI, not from stale ViewModel
+        Fragment parent = getParentFragment();
+        String currentSearchTerm = null;
+        String currentSearchField = null;
+
+        if (parent instanceof SearchFragment) {
+            currentSearchTerm = ((SearchFragment) parent).getCurrentSearchTerm();
+            currentSearchField = ((SearchFragment) parent).getCurrentSearchField();
+        }
+
+        QueryOptions.Builder builder = new QueryOptions.Builder()
                 .start(0)
                 .maxResults(10)
                 .sortBy("submittedDate")
-                .sortOrder("descending")
-                .build();
+                .sortOrder("descending");
 
-        searchViewModel.updateQueryOptions(defaultQuery);
-        searchViewModel.search(defaultQuery);
+        // Preserve basic search term and field if they exist in the UI
+        if (currentSearchTerm != null && !currentSearchTerm.isEmpty()) {
+            builder.searchTerm(currentSearchTerm).searchField(currentSearchField);
+        }
+
+        QueryOptions clearedQuery = builder.build();
+        searchViewModel.updateQueryOptions(clearedQuery);
+        searchViewModel.search(clearedQuery);
 
         updateFilterButtonIndicator();
 
-        Toast.makeText(requireContext(), "All filters cleared", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Advanced filters cleared", Toast.LENGTH_SHORT).show();
     }
 
     public void onDrawerClosed() {
@@ -638,9 +675,11 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void updateCategoryHeaderCounts() {
+        String text = "";
         if (mainCategoryLabel != null) {
             int mainCount = selectedMainCategories.size();
-            mainCategoryLabel.setText("Select Main Categories" + (mainCount > 0 ? " (" + mainCount + " selected)" : ""));
+            text = R.string.select_main_categories + (mainCount > 0 ? " (" + mainCount + R.string.selected + ")" : "");
+            mainCategoryLabel.setText(text);
         }
 
         if (leafCategoryLabel != null && leafCategoryHeader != null && leafCategoryHeader.getVisibility() == View.VISIBLE) {
@@ -651,7 +690,8 @@ public class ManageSearchFragment extends Fragment {
                     if (v instanceof Chip && ((Chip) v).isChecked()) leafCount++;
                 }
             }
-            leafCategoryLabel.setText("Select Specific Categories" + (leafCount > 0 ? " (" + leafCount + " selected)" : ""));
+            text = R.string.select_specific_categories + (leafCount > 0 ? " (" + leafCount + R.string.selected + ")" : "");
+            leafCategoryLabel.setText(text);
         }
     }
 
@@ -666,6 +706,13 @@ public class ManageSearchFragment extends Fragment {
         if (current == null) {
             addSearchFieldRow(null);
             return;
+        }
+
+        // NEW: Sync the basic search bar with what's in the query
+        Fragment parent = getParentFragment();
+        if (parent instanceof SearchFragment) {
+            ((SearchFragment) parent).setSearchTerm(current.getSearchTerm());
+            ((SearchFragment) parent).setSearchField(current.getSearchField());
         }
 
         if (current.getRows() != null && !current.getRows().isEmpty()) {

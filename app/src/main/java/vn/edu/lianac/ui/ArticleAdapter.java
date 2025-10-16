@@ -82,13 +82,11 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
     public ArticleAdapter() {
         super(DIFF_CALLBACK);
-        Log.d(TAG, "ArticleAdapter created");
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder called");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_article, parent, false);
         return new ViewHolder(view);
@@ -96,20 +94,17 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder called for position: " + position);
         holder.bind(getItem(position));
     }
 
     @Override
     public void submitList(List<Article> list) {
-        Log.d(TAG, "submitList called with " + (list != null ? list.size() : "null") + " items");
         // Force a new list instance to trigger diff calculation
         super.submitList(list != null ? new ArrayList<>(list) : null);
     }
 
     @Override
     public void submitList(List<Article> list, Runnable commitCallback) {
-        Log.d(TAG, "submitList (with callback) called with " + (list != null ? list.size() : "null") + " items");
         // Force a new list instance to trigger diff calculation
         super.submitList(list != null ? new ArrayList<>(list) : null, commitCallback);
     }
@@ -117,13 +112,11 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
     @Override
     public void onCurrentListChanged(@NonNull List<Article> previousList, @NonNull List<Article> currentList) {
         super.onCurrentListChanged(previousList, currentList);
-        Log.d(TAG, "onCurrentListChanged - previous: " + previousList.size() + ", current: " + currentList.size());
     }
 
     @Override
     public int getItemCount() {
         int count = super.getItemCount();
-        Log.d(TAG, "getItemCount returning: " + count);
         return count;
     }
 
@@ -156,16 +149,13 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
         }
 
         void bind(Article article) {
-            Log.d(TAG, "Binding article: " + article.getTitle());
 
             // Set arXiv ID
             articleId.setText(article.getId());
-            Log.d(TAG, "Article ID: " + article.getId());
 
             // Clear and populate categories
             categoriesContainer.removeAllViews();
             List<String> categories = article.getCategories();
-            Log.d(TAG, "Categories: " + (categories != null ? categories.size() : "null"));
 
             if (categories != null && !categories.isEmpty()) {
                 boolean isFirst = true;
@@ -175,17 +165,15 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
                 // Separate valid arXiv categories from ACM/MSC codes
                 for (String categoryId : categories) {
-                    // FIX: Map math.MP to math-ph
-                    String normalizedCategoryId = normalizeCategoryId(categoryId);
 
-                    String displayName = categoryProvider.getCategoryDisplayName(normalizedCategoryId);
-                    if (displayName.equals(normalizedCategoryId)) {
+                    String displayName = categoryProvider.getCategoryDisplayName(categoryId);
+                    if (displayName.equals(categoryId)) {
                         // It's an ACM/MSC code
                         acmMscClasses.add(categoryId);  // Keep original for ACM/MSC display
                     } else {
                         // It's a valid arXiv category - add only if not seen before
-                        if (seenCategories.add(normalizedCategoryId)) {
-                            validCategories.add(normalizedCategoryId);
+                        if (seenCategories.add(categoryId)) {
+                            validCategories.add(categoryId);
                         }
                     }
                 }
@@ -232,7 +220,6 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
             // FIX: Set DOI with better null/empty checks
             String doi = article.getDoi();
-            Log.d(TAG, "DOI for article " + article.getId() + ": " + doi);
 
             if (doi != null && !doi.trim().isEmpty()) {
                 doiText.setText("DOI: " + doi);
@@ -244,7 +231,6 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
                         context.startActivity(browserIntent);
                     } catch (Exception e) {
                         Toast.makeText(context, "Cannot open DOI link", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Failed to open DOI link", e);
                     }
                 });
             } else {
@@ -257,25 +243,6 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
                 // TODO: Navigate to article detail screen
             });
 
-            Log.d(TAG, "Bind complete for: " + article.getId());
-        }
-
-        /**
-         * Normalize category IDs to handle arXiv inconsistencies
-         * Example: math.MP should be math-ph
-         */
-        private String normalizeCategoryId(String categoryId) {
-            if (categoryId == null) return null;
-
-            // Handle math.MP -> math-ph mapping
-            if ("math.MP".equals(categoryId)) {
-                Log.d(TAG, "Normalizing math.MP to math-ph");
-                return "math-ph";
-            }
-
-            // Add other mappings here if needed in the future
-
-            return categoryId;
         }
 
         private TextView createCategoryBadge(String categoryId, boolean isFirst) {
@@ -284,7 +251,6 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
             // Skip if it's just the ID echoed back (no resource found)
             // This filters out MSC/ACM codes like "82-10" that aren't in strings.xml
             if (displayName.equals(categoryId)) {
-                Log.d(TAG, "Skipping unknown category: " + categoryId);
                 return null;  // Don't create badge for unknown categories
             }
 

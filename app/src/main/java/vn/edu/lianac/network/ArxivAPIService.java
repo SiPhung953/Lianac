@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import vn.edu.lianac.R;
 import vn.edu.lianac.models.Article;
 import vn.edu.lianac.models.SearchResult;
 
@@ -54,11 +55,9 @@ public class ArxivAPIService {
         }
 
         if (listener == null) {
-            Log.e(TAG, "Listener cannot be null");
             return;
         }
 
-        Log.d(TAG, "Fetching articles from: " + queryUrl);
 
         Request request = new Request.Builder()
                 .url(queryUrl)
@@ -68,7 +67,6 @@ public class ArxivAPIService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Network request failed: " + e.getMessage(), e);
                 listener.onError(new NetworkException("Network request failed", e));
             }
 
@@ -77,7 +75,6 @@ public class ArxivAPIService {
                 try {
                     handleResponse(response, listener);
                 } catch (Exception e) {
-                    Log.e(TAG, "Unexpected error handling response", e);
                     listener.onError(e);
                 } finally {
                     response.close();
@@ -99,11 +96,8 @@ public class ArxivAPIService {
         }
 
         if (listener == null) {
-            Log.e(TAG, "Listener cannot be null");
             return;
         }
-
-        Log.d(TAG, "Fetching articles with metadata from: " + queryUrl);
 
         Request request = new Request.Builder()
                 .url(queryUrl)
@@ -113,7 +107,6 @@ public class ArxivAPIService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Network request failed: " + e.getMessage(), e);
                 listener.onError(new NetworkException("Network request failed", e));
             }
 
@@ -122,7 +115,6 @@ public class ArxivAPIService {
                 try {
                     handleResponseWithMetadata(response, listener);
                 } catch (Exception e) {
-                    Log.e(TAG, "Unexpected error handling response", e);
                     listener.onError(e);
                 } finally {
                     response.close();
@@ -136,10 +128,9 @@ public class ArxivAPIService {
      */
     public List<Article> fetchArticlesSync(String queryUrl) throws IOException {
         if (queryUrl == null || queryUrl.isEmpty()) {
-            throw new IllegalArgumentException("Query URL cannot be null or empty");
+            throw new IllegalArgumentException(String.valueOf(R.string.error_no_query_url));
         }
 
-        Log.d(TAG, "Fetching articles synchronously from: " + queryUrl);
 
         Request request = new Request.Builder()
                 .url(queryUrl)
@@ -154,14 +145,13 @@ public class ArxivAPIService {
 
             ResponseBody body = response.body();
             if (body == null) {
-                throw new IOException("Empty response body");
+                throw new IOException(String.valueOf(R.string.error_no_response_body));
             }
 
             try (InputStream stream = body.byteStream()) {
                 return ArxivParser.parse(stream);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Sync fetch failed", e);
             throw new IOException("Failed to fetch and parse articles", e);
         }
     }
@@ -171,7 +161,6 @@ public class ArxivAPIService {
         if (!response.isSuccessful()) {
             String errorMsg = String.format("HTTP error: %d - %s",
                     response.code(), response.message());
-            Log.e(TAG, errorMsg);
             listener.onError(new HttpException(response.code(), errorMsg));
             return;
         }
@@ -179,8 +168,7 @@ public class ArxivAPIService {
         // Check response body
         ResponseBody body = response.body();
         if (body == null) {
-            Log.e(TAG, "Empty response body");
-            listener.onError(new IOException("Empty response body"));
+            listener.onError(new IOException(String.valueOf(R.string.error_no_response_body)));
             return;
         }
 
@@ -189,16 +177,13 @@ public class ArxivAPIService {
             List<Article> articles = ArxivParser.parse(stream);
 
             if (articles == null) {
-                Log.w(TAG, "Parser returned null");
-                listener.onError(new ParseException("Parser returned null"));
+                listener.onError(new ParseException(String.valueOf(R.string.error_null_parser)));
                 return;
             }
 
-            Log.d(TAG, "Successfully parsed " + articles.size() + " articles");
             listener.onSuccess(articles);
 
         } catch (Exception e) {
-            Log.e(TAG, "Failed to parse XML response", e);
             listener.onError(new ParseException("XML parsing failed", e));
         }
     }
@@ -208,7 +193,6 @@ public class ArxivAPIService {
         if (!response.isSuccessful()) {
             String errorMsg = String.format("HTTP error: %d - %s",
                     response.code(), response.message());
-            Log.e(TAG, errorMsg);
             listener.onError(new HttpException(response.code(), errorMsg));
             return;
         }
@@ -216,8 +200,7 @@ public class ArxivAPIService {
         // Check response body
         ResponseBody body = response.body();
         if (body == null) {
-            Log.e(TAG, "Empty response body");
-            listener.onError(new IOException("Empty response body"));
+            listener.onError(new IOException(String.valueOf(R.string.error_no_response_body)));
             return;
         }
 
@@ -226,16 +209,13 @@ public class ArxivAPIService {
             SearchResult result = ArxivParser.parseWithMetadata(stream);
 
             if (result == null) {
-                Log.w(TAG, "Parser returned null");
                 listener.onError(new ParseException("Parser returned null"));
                 return;
             }
 
-            Log.d(TAG, "Successfully parsed SearchResult: " + result.toString());
             listener.onSuccess(result);
 
         } catch (Exception e) {
-            Log.e(TAG, "Failed to parse XML response", e);
             listener.onError(new ParseException("XML parsing failed", e));
         }
     }
@@ -245,7 +225,6 @@ public class ArxivAPIService {
      */
     public void cancelAll() {
         client.dispatcher().cancelAll();
-        Log.d(TAG, "All requests cancelled");
     }
 
     /**

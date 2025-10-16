@@ -71,7 +71,6 @@ public class ArxivParser {
                         entries.add(article);
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, "Error parsing entry, skipping", e);
                     skip(parser);
                 }
             } else if (OPENSEARCH_NAMESPACE.equals(namespace)) {
@@ -95,7 +94,6 @@ public class ArxivParser {
             }
         }
 
-        Log.d(TAG, "Parsed " + entries.size() + " articles (total available: " + totalResults + ")");
         return new SearchResult(entries, totalResults, startIndex, itemsPerPage);
     }
 
@@ -105,7 +103,6 @@ public class ArxivParser {
         try {
             return Integer.parseInt(text.trim());
         } catch (NumberFormatException e) {
-            Log.w(TAG, "Failed to parse integer from: " + text, e);
             return 0;
         }
     }
@@ -134,7 +131,6 @@ public class ArxivParser {
                             String doi = readText(parser);
                             if (doi != null && !doi.trim().isEmpty()) {
                                 article.setDoi(doi.trim());
-                                Log.d(TAG, "Found DOI: " + doi.trim());
                             }
                             break;
                         case "primary_category":  // NEW: Parse primary category
@@ -191,7 +187,6 @@ public class ArxivParser {
                     }
                 }
             } catch (Exception e) {
-                Log.w(TAG, "Error parsing tag: " + tagName, e);
                 skip(parser);
             }
         }
@@ -201,7 +196,6 @@ public class ArxivParser {
 
         // Validate essential fields
         if (article.getId() == null || article.getTitle() == null) {
-            Log.w(TAG, "Article missing essential fields, skipping");
             return null;
         }
 
