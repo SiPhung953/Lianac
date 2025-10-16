@@ -1,122 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawerLayout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:id="@+id/main"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <!-- Main Content -->
-    <LinearLayout
+    <View
+        android:id="@+id/lor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary" />
 
-        <!-- App Bar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:navigationIcon="@drawable/ic_menu"
+        app:title="Home" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Content -->
+        <LinearLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/cornell_red"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:titleTextColor="@android:color/white">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+        <!-- Navigation drawer -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/drawer_menu">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textStyle="normal"
+                    android:textColor="?android:attr/textColor"
+                    android:textSize="27sp"
+                    android:layout_marginBottom="7dp"
+                    android:id="@+id/sidebar_name"
+                    android:layout_marginLeft="@dimen/mtrl_navigation_item_horizontal_padding"/>
 
-                    <ImageView
-                        android:id="@+id/hamburger_icon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/ic_menu"
-                        android:contentDescription="@string/menu"
-                        app:tint="@android:color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/version"
+                    android:layout_toRightOf="@id/sidebar_name"
+                    android:textColor="?android:attr/textColor"
+                    android:textSize="10sp"
+                    android:layout_marginBottom="6dp" />
 
-                    <TextView
-                        android:id="@+id/app_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/search_icon"
+                <ImageButton
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_search"
-                    android:contentDescription="@string/placeholder_search"
-                    app:tint="@android:color/black" />
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/about_button"
+                    app:srcCompat="@drawable/ic_info"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="?android:attr/textColor"
+                    android:layout_alignBottom="@id/sidebar_name"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginRight="@dimen/mtrl_navigation_item_horizontal_padding">
 
+                </ImageButton>
             </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.navigation.NavigationView>
 
-        <!-- Main Content Container (holds both search and results) -->
-        <FrameLayout
-            android:id="@+id/mainContentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+    </androidx.drawerlayout.widget.DrawerLayout>
 
-            <!-- This container holds swappable fragments -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <!-- Collapsible Search Container -->
-                <FrameLayout
-                    android:id="@+id/searchContainerWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:background="?android:attr/colorBackground">
-
-                    <FrameLayout
-                        android:id="@+id/searchContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <!-- SearchFragment goes here -->
-                    </FrameLayout>
-                </FrameLayout>
-
-                <!-- Results/Content Container -->
-                <FrameLayout
-                    android:id="@+id/contentContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-                    <!-- ArticleListingFragment, BookmarksFragment, DetailFragment, etc. -->
-                </FrameLayout>
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
-
-    <!-- Navigation Drawer -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigationView"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

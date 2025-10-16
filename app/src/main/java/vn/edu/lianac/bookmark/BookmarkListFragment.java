@@ -59,7 +59,7 @@ public class BookmarkListFragment extends Fragment implements BookmarkAdapter.On
 
     @Override
     public void onBookmarkClick(BookmarkItem item) {
-        //add code to go the the chosen article here
+       //add code to go the the chosen article here
     }
 
     @Override

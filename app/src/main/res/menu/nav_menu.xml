@@ -4,4 +4,7 @@
         android:id="@+id/nav_subjects"
         android:title="Subjects"
         android:icon="@android:drawable/ic_menu_agenda" />
+    <item
+        android:id="@+id/nav_math"
+        android:icon="@drawable/ic_math" android:title="@string/nav_math" />
 </menu>

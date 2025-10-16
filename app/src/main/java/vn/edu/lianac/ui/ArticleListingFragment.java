@@ -24,13 +24,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
- * Article listing fragment with enhanced pagination controls.
+ * Merged ArticleListingFragment with advanced pagination and navigation support
  */
 public class ArticleListingFragment extends Fragment {
     private static final String TAG = "ArticleListingFragment";
@@ -38,6 +39,7 @@ public class ArticleListingFragment extends Fragment {
     private SearchViewModel viewModel;
     private ArticleAdapter adapter;
 
+    // Views
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorText;
@@ -55,6 +57,12 @@ public class ArticleListingFragment extends Fragment {
     // State tracking to prevent circular updates
     private boolean isUpdatingSpinners = false;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -69,14 +77,13 @@ public class ArticleListingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated called");
 
-        viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
-
         initViews(view);
         setupRecyclerView();
         setupSpinners();
         setupPaginationButtons();
         observeViewModel();
 
+        // Load initial data AFTER all observers are set up
         viewModel.loadInitialData();
     }
 
@@ -111,6 +118,9 @@ public class ArticleListingFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         Log.d(TAG, "RecyclerView setup complete");
+
+        // NOTE: Article click navigation is now handled in ArticleAdapter
+        // which navigates to DetailFragment via MainActivity.loadContentFragment()
     }
 
     private void setupSpinners() {
@@ -125,11 +135,10 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUpdatingSpinners) return; // Prevent circular updates
 
-                String[] sortFields = {"submittedDate", "lastUpdatedDate", "relevance"};
-                if (position < sortFields.length) {
-                    Log.d(TAG, "User changed sort to: " + sortFields[position]);
-                    viewModel.updateSort(sortFields[position], "descending");
-                }
+                String sortBy = getSortByValue(position);
+                String sortOrder = getSortOrderValue(position);
+                Log.d(TAG, "User changed sort to: " + sortBy);
+                viewModel.updateSort(sortBy, sortOrder);
             }
 
             @Override
@@ -147,11 +156,9 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUpdatingSpinners) return; // Prevent circular updates
 
-                int[] sizes = {10, 25, 50, 100, 200};
-                if (position < sizes.length) {
-                    Log.d(TAG, "User changed page size to: " + sizes[position]);
-                    viewModel.updatePageSize(sizes[position]);
-                }
+                int pageSize = getPageSizeValue(position);
+                Log.d(TAG, "User changed page size to: " + pageSize);
+                viewModel.updatePageSize(pageSize);
             }
 
             @Override
@@ -231,6 +238,7 @@ public class ArticleListingFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        // Show keyboard
         input.requestFocus();
         input.postDelayed(() -> {
             android.view.inputmethod.InputMethodManager imm =
@@ -390,10 +398,10 @@ public class ArticleListingFragment extends Fragment {
                 // Get category display name
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
-                resultsInfo = String.format("Showing %,d-%,d of %,d results in %s (%s)",
+                resultsInfo = String.format(Locale.US, "Showing %,d-%,d of %,d results in %s (%s)",
                         firstResult, lastResult, total, displayName, categoryId);
             } else {
-                resultsInfo = String.format("Showing %,d-%,d of %,d results",
+                resultsInfo = String.format(Locale.US, "Showing %,d-%,d of %,d results",
                         firstResult, lastResult, total);
             }
 
@@ -401,7 +409,7 @@ public class ArticleListingFragment extends Fragment {
             resultsText.setVisibility(View.VISIBLE);
 
             if (current != null && pages != null) {
-                String pageInfo = String.format("Page %d of %,d", current, pages);
+                String pageInfo = String.format(Locale.US, "Page %d of %,d", current, pages);
                 pageTextTop.setVisibility(View.GONE);
                 pageTextBottom.setText(pageInfo);
                 bottomPaginationContainer.setVisibility(View.VISIBLE);
@@ -460,6 +468,13 @@ public class ArticleListingFragment extends Fragment {
         }
     }
 
+    /**
+     * Smart pagination algorithm that shows relevant page numbers with ellipsis
+     * Examples:
+     * - Pages 1-7 of 100: [1] [2] [3] [4] [5] [...] [100]
+     * - Page 50 of 100: [1] [...] [49] [50] [51] [...] [100]
+     * - Pages 95-100 of 100: [1] [...] [96] [97] [98] [99] [100]
+     */
     private int[] calculatePageNumbers(int current, int total) {
         int[] pages = new int[7];
 
@@ -498,5 +513,20 @@ public class ArticleListingFragment extends Fragment {
         }
 
         return pages;
+    }
+
+    // Helper methods
+    private String getSortByValue(int position) {
+        String[] values = {"submittedDate", "lastUpdatedDate", "relevance"};
+        return position >= 0 && position < values.length ? values[position] : "submittedDate";
+    }
+
+    private String getSortOrderValue(int position) {
+        return "descending";
+    }
+
+    private int getPageSizeValue(int position) {
+        int[] sizes = {10, 25, 50, 100, 200};
+        return position >= 0 && position < sizes.length ? sizes[position] : 25;
     }
 }

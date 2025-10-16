@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--App Name-->
     <string name="app_name" translatable="false">Lianac</string>
 
+    <!-- Display names for search fields -->
     <string-array name="search_fields">
         <item>All Fields</item>
         <item>Title</item>
@@ -15,6 +15,7 @@
         <item>ID</item>
     </string-array>
 
+    <!-- Field codes for search fields (ADD THIS) -->
     <string-array name="search_field_values">
         <item>all</item>
         <item>ti</item>
@@ -51,77 +52,23 @@
     <string name="advanced_search">Advanced Search</string>
     <string name="basic_search">Basic Search</string>
     <string name="placeholder_search">Search...</string>
-    <string name="placeholder_advanced_search">Search term...</string>
+    <string name="placehold_advanced_search">Search term...</string>
 
-    <!--Toast-->
+    <!--  Download  -->
+    <string name="download_title">Downloads</string>
+    <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
     <string name="select_category_placeholder">Select a category</string>
     <string name="select_valid_category_toast">Please select a valid category</string>
     <string name="invalid_category_toast">Invalid category selected</string>
     <string name="category_already_added_toast">Category already added</string>
     <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
 
-    <!--DownloadFragment-->
-    <string name="download_title">Downloads</string>
-    <string name="download_start_error">Could not start download.</string>
-    <string name="download_removed">Download removed.</string>
-
     <string name="state_queued">Queued</string>
     <string name="state_downloading">Downloading</string>
     <string name="state_completed">Completed</string>
     <string name="state_failed">Failed</string>
     <string name="state_cancelled">Cancelled</string>
-
-    <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
-
-    <!--Shared Strings-->
-    <string name="menu">Menu</string>
-    <string name="nav_subjects">Subjects</string>
-    <string name="nav_downloads">Downloads</string>
-    <string name="nav_bookmarks">Bookmarks</string>
-    <string name="nav_math">Math Demo</string>
-    <string name="nav_settings">Settings</string>
-    <string name="nav_search">Search</string>
-
-    <string name="results_per_page">Results per page:</string>
-    <string name="first">First</string>
-    <string name="last">Last</string>
-    <string name="download">Download</string>
-    <string name="bookmark">Bookmark</string>
-    <string name="bookmark_removed">Bookmark removed</string>
-    <string name="bookmarked">Bookmarked!</string>
-    <string name="loading">Loading...</string>
-    <string name="done">Done!</string>
-    <string name="error">Error!</string>
-
-    <string name="no_pdf_reader_found">No PDF reader app found. Please install one.</string>
-    <string name="no_pdf_viewer_found">No PDF viewer found</string>
-    <string name="no_pdf_link_available">No PDF link available!</string>
-    <string name="no_app_found_to_open_pdf">No app found to open PDF!</string>
-    <string name="opening_in_app_viewer">Opening with in-app viewer</string>
-    <string name="open_pdf_with">Open PDF with</string>
-
-    <!--SearchFragment-->
-    <string name="additional_search_fields">Additional Search Fields</string>
-    <string name="add_field">+ Add Field</string>
-    <string name="remove_field">Remove field</string>
-    <string name="categories">Categories</string>
-    <string name="select_main_categories">Select Main Categories:</string>
-    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
-    <string name="select_specific_categories">Select Specific Categories:</string>
-    <string name="no_categories_selected">No categories selected</string>
-    <string name="select_category_to_add">Select a category to add</string>
-    <string name="add">Add</string>
-    <string name="selected_categories">Selected Categories:</string>
-    <string name="date_range">Date Range</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
-    <string name="date_format_hint">YYYY-MM-DD</string>
-    <string name="reset">Reset</string>
-    <string name="apply">Apply</string>
-    <string name="advanced_filters">Advanced filters</string>
-    <string name="include_cross_listed">Include cross-listed papers</string>
-
-    <!--Main Categories-->
+    <!-- Main Categories -->
     <string name="category_physics">Physics</string>
     <string name="category_math">Mathematics</string>
     <string name="category_cs">Computer Science</string>
@@ -131,7 +78,9 @@
     <string name="category_eess">Electrical Engineering and Systems Science</string>
     <string name="category_econ">Economics</string>
 
-    <!--Physics Subcategories-->
+    <string name="download_start_error">Could not start download.</string>
+    <string name="download_removed">Download removed.</string>
+    <!-- Sub-Categories for Physics -->
     <string name="category_astro_ph">Astrophysics</string>
     <string name="category_astro_ph_co">Cosmology and Nongalactic Astrophysics</string>
     <string name="category_astro_ph_ep">Earth and Planetary Astrophysics</string>
@@ -139,7 +88,6 @@
     <string name="category_astro_ph_he">High Energy Astrophysical Phenomena</string>
     <string name="category_astro_ph_im">Instrumentation and Methods</string>
     <string name="category_astro_ph_sr">Solar and Stellar Astrophysics</string>
-
     <string name="category_cond_mat">Condensed Matter</string>
     <string name="category_cond_mat_dis_nn">Disordered Systems and Neural Networks</string>
     <string name="category_cond_mat_mes_hall">Mesoscale and Nanoscale Physics</string>
@@ -150,15 +98,12 @@
     <string name="category_cond_mat_stat_mech">Statistical Mechanics</string>
     <string name="category_cond_mat_str_el">Strongly Correlated Electrons</string>
     <string name="category_cond_mat_supr_con">Superconductivity</string>
-
     <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
-
     <string name="category_hep">High Energy Physics</string>
-    <string name="category_hep_ex">High Energy Physics - Experiment</string>
-    <string name="category_hep_lat">High Energy Physics - Lattice</string>
-    <string name="category_hep_ph">High Energy Physics - Phenomenology</string>
-    <string name="category_hep_th">High Energy Physics - Theory</string>
-
+    <string name="category_hep_ex">Experiment</string>
+    <string name="category_hep_lat">Lattice</string>
+    <string name="category_hep_ph">Phenomenology</string>
+    <string name="category_hep_th">Theory</string>
     <string name="category_math_ph">Mathematical Physics</string>
     <string name="category_nlin">Nonlinear Sciences</string>
     <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
@@ -166,11 +111,9 @@
     <string name="category_nlin_cg">Cellular Automata and Lattice Gases</string>
     <string name="category_nlin_ps">Pattern Formation and Solitons</string>
     <string name="category_nlin_si">Exactly Solvable and Integrable Systems</string>
-
     <string name="category_nucl">Nuclear</string>
     <string name="category_nucl_ex">Nuclear Experiment</string>
     <string name="category_nucl_th">Nuclear Theory</string>
-
     <string name="category_physics_other">Physics (Other)</string>
     <string name="category_physics_acc_ph">Accelerator Physics</string>
     <string name="category_physics_ao_ph">Atmospheric and Oceanic Physics</string>
@@ -196,7 +139,7 @@
     <string name="category_physics_space_ph">Space Physics</string>
     <string name="category_quant_ph">Quantum Physics</string>
 
-    <!--Mathematics Subcategories-->
+    <!-- Sub-Categories for Mathematics -->
     <string name="category_math_ag">Algebraic Geometry</string>
     <string name="category_math_at">Algebraic Topology</string>
     <string name="category_math_ap">Analysis of PDEs</string>
@@ -216,7 +159,7 @@
     <string name="category_math_it">Information Theory</string>
     <string name="category_math_kt">K-Theory and Homology</string>
     <string name="category_math_lo">Logic</string>
-    <string name="category_math_mp">Mathematical Physics</string>
+    <!--<string name="category_math_mp">Mathematical Physics</string>--><!-- Duplicate key, handled by math-ph -->
     <string name="category_math_mg">Metric Geometry</string>
     <string name="category_math_nt">Number Theory</string>
     <string name="category_math_na">Numerical Analysis</string>
@@ -230,27 +173,43 @@
     <string name="category_math_st">Statistics Theory</string>
     <string name="category_math_sg">Symplectic Geometry</string>
 
-    <!--Computer Science Subcategories-->
+    <!-- Appearance -->
+    <string name="appearance">Appearance</string>
+    <string name="light_dark_mode">Light/Dark mode</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+    <string name="compact_list_view">Compact list view</string>
+    <string name="text_density">Text Density</string>
+    <string name="comfortable">Comfortable</string>
+    <string name="compact">Compact</string>
+    <string name="language">Language</string>
+
+    <!-- Sub-Categories for Computer Science -->
     <string name="category_cs_ai">Artificial Intelligence</string>
     <string name="category_cs_cl">Computation and Language</string>
     <string name="category_cs_cc">Computational Complexity</string>
-    <string name="category_cs_ce">Computational Engineering, Finance, and Science</string>
+    <string name="category_cs_ce">Computational Engineering</string>
     <string name="category_cs_cg">Computational Geometry</string>
     <string name="category_cs_gt">Computer Science and Game Theory</string>
     <string name="category_cs_cv">Computer Vision and Pattern Recognition</string>
-    <string name="category_cs_cy">Cryptography and Security</string>
+    <string name="category_cs_cy">Computers and Society</string>
+    <string name="category_cs_cr">Cryptography and Security</string>
     <string name="category_cs_ds">Data Structures and Algorithms</string>
     <string name="category_cs_db">Databases</string>
-    <string name="category_cs_dl">Digital Libraries</string>
     <string name="category_cs_dm">Discrete Mathematics</string>
-    <string name="category_cs_dc">Distributed, Parallel, and Cluster Computing</string>
+    <string name="category_cs_dc">Distributed Computing</string>
+    <string name="category_cs_et">Emerging Technologies</string>
+    <string name="category_cs_fl">Formal Languages and Automata Theory</string>
     <string name="category_cs_gl">General Literature</string>
     <string name="category_cs_gr">Graphics</string>
+    <string name="category_cs_ar">Hardware Architecture</string>
     <string name="category_cs_hc">Human-Computer Interaction</string>
     <string name="category_cs_ir">Information Retrieval</string>
     <string name="category_cs_it">Information Theory</string>
     <string name="category_cs_lg">Machine Learning</string>
     <string name="category_cs_lo">Logic in Computer Science</string>
+    <string name="category_cs_ms">Mathematical Software</string>
     <string name="category_cs_ma">Multiagent Systems</string>
     <string name="category_cs_mm">Multimedia</string>
     <string name="category_cs_ni">Networking and Internet Architecture</string>
@@ -260,13 +219,28 @@
     <string name="category_cs_pf">Performance</string>
     <string name="category_cs_pl">Programming Languages</string>
     <string name="category_cs_ro">Robotics</string>
+    <string name="category_cs_si">Social and Information Networks</string>
+    <string name="category_cs_se">Software Engineering</string>
     <string name="category_cs_sd">Sound</string>
     <string name="category_cs_sc">Symbolic Computation</string>
-    <string name="category_cs_se">Software Engineering</string>
-    <string name="category_cs_si">Social and Information Networks</string>
     <string name="category_cs_sy">Systems and Control</string>
 
-    <!--Quantitative Biology Subcategories-->
+    <!-- Reading/Viewer -->
+    <string name="reading_viewer">Reading/Viewer</string>
+    <string name="default_viewer">Default Viewer</string>
+    <string name="in_app">In-app</string>
+    <string name="external_pdf_app">External PDF app</string>
+    <string name="scroll">Scroll</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
+    <string name="annotations">Annotations</string>
+    <string name="annotations_desc">Highlight, notes, exportable</string>
+    <string name="auto_save_annotations">Auto-save annotations</string>
+    <!-- Messages -->
+    <string name="language_changed_to_english">Language changed to English</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- Sub-Categories for Quantitative Biology -->
     <string name="category_q_bio_bm">Biomolecules</string>
     <string name="category_q_bio_cb">Cell Behavior</string>
     <string name="category_q_bio_gn">Genomics</string>
@@ -278,64 +252,103 @@
     <string name="category_q_bio_sc">Subcellular Processes</string>
     <string name="category_q_bio_to">Tissues and Organs</string>
 
-    <!--Quantitative Finance Subcategories-->
+    <!-- Sub-Categories for Quantitative Finance -->
     <string name="category_q_fin_cp">Computational Finance</string>
     <string name="category_q_fin_ec">Economics</string>
     <string name="category_q_fin_gn">General Finance</string>
+    <string name="category_q_fin_mf">Mathematical Finance</string>
     <string name="category_q_fin_pm">Portfolio Management</string>
     <string name="category_q_fin_pr">Pricing of Securities</string>
     <string name="category_q_fin_rm">Risk Management</string>
     <string name="category_q_fin_st">Statistical Finance</string>
+    <string name="category_q_fin_tr">Trading and Market Microstructure</string>
 
-    <!--Statistics Subcategories-->
+    <!-- Sub-Categories for Statistics -->
     <string name="category_stat_ap">Applications</string>
     <string name="category_stat_co">Computation</string>
-    <string name="category_stat_me">Methodology</string>
     <string name="category_stat_ml">Machine Learning</string>
+    <string name="category_stat_me">Methodology</string>
     <string name="category_stat_ot">Other Statistics</string>
     <string name="category_stat_th">Statistics Theory</string>
 
-    <!--Electrical Engineering and System Science (EESS) Subcategories-->
+    <!-- Sub-Categories for EESS -->
     <string name="category_eess_as">Audio and Speech Processing</string>
     <string name="category_eess_iv">Image and Video Processing</string>
     <string name="category_eess_sp">Signal Processing</string>
-    <string name="category_eess_sys">Systems and Control</string>
+    <!-- <string name="category_eess_sy">Systems and Control</string> --> <!-- Duplicate key, handled by cs.SY -->
 
-    <!--Economics Subcategories-->
+    <!-- Sub-Categories for Economics -->
     <string name="category_econ_em">Econometrics</string>
     <string name="category_econ_gn">General Economics</string>
     <string name="category_econ_th">Theoretical Economics</string>
+    <!-- other strings might be here -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!--Miscellaneous Subcategories-->
-    <string name="open_pdf">Open PDF</string>
-    <string name="view_pdf_in_browser">View PDF in Browser</string>
-    <string name="download_pdf">Download PDF</string>
-    <string name="view_details">View Details</string>
-    <string name="error_occurred">An error occurred</string>
-    <string name="retry">Retry</string>
-    <string name="no_results">No results found</string>
-    <string name="search_results">Search Results</string>
-    <string name="total_results">Total Results: %1$d</string>
-    <string name="download_complete">Download complete</string>
-    <string name="downloading">Downloading...</string>
-    <string name="download_failed">Download failed</string>
-    <string name="cancel_download">Cancel</string>
-    <string name="delete_download">Delete</string>
-    <string name="open_download">Open</string>
-    <string name="confirm_delete_download">Delete this file?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <!-- Settings Screen Options -->
+    <string-array name="text_density_options">
+        <item>@string/comfortable</item>
+        <item>@string/compact</item>
+    </string-array>
+    <string-array name="language_options">
+        <item>English (EN)</item>
+        <item>Tiếng Việt (VN)</item>
+    </string-array>
+    <string-array name="viewer_options">
+        <item>@string/in_app</item>
+        <item>@string/external_pdf_app</item>
+    </string-array>
 
-    <string name="next">Next ▶</string>
-    <string name="prev">◀ Prev</string>
-    <string name="error_loading_data">Error loading data</string>
+    <!-- Toasts and Dialogs -->
+    <string name="no_pdf_reader_found">No PDF reader app found. Please install one.</string>
+    <string name="opening_in_app_viewer">Opening with in-app viewer</string>
+    <string name="open_pdf_with">Open PDF with</string>
+    <string name="language_changed_to_vietnamese">Ngôn ngữ đã đổi sang Tiếng Việt</string>
+    <string name="bookmark_removed">Bookmark removed</string>
+    <string name="bookmarked">Bookmarked!</string>
+    <string name="loading">Loading...</string>
+    <string name="done">Done!</string>
+    <string name="error">Error!</string>
+    <string name="menu_clicked">Menu clicked</string>
+    <string name="no_pdf_link_available">No PDF link available!</string>
+    <string name="no_app_found_to_open_pdf">No app found to open PDF!</string>
+    <string name="no_pdf_viewer_found">No PDF viewer found</string>
+
+    <!-- Drawer Menu -->
+    <string name="nav_subjects">Subjects</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_bookmarks">Bookmarks</string>
+    <string name="nav_math">Math Demo</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_search">Search</string>
+
+    <!-- Article Listing -->
     <string name="sort_by">Sort by:</string>
-    <string name="per_page">Per page:</string>
+    <string name="results_per_page">Results per page:</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="first">First</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="last">Last</string>
+
+    <!-- Advanced Search -->
     <string name="close">Close</string>
-    <string name="subcategories">Subcategories</string>
-    <string name="popular">Popular</string>
-    <string name="recent">Recent</string>
-    <string name="newest">New</string>
-    <string name="home">Home</string>
-    <string name="current">Current</string>
+    <string name="additional_search_fields">Additional Search Fields</string>
+    <string name="add_field">+ Add Field</string>
+    <string name="categories">Categories</string>
+    <string name="select_category_to_add">Select a category to add</string>
+    <string name="add">Add</string>
+    <string name="selected_categories">Selected Categories:</string>
+    <string name="date_range">Date Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="date_format_hint">YYYY-MM-DD</string>
+    <string name="reset">Reset</string>
+    <string name="apply">Apply</string>
+    <string name="advanced_filters">Advanced filters</string>
+
+    <!-- General Actions -->
+    <string name="download">Download</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="menu">Menu</string>
+    <string name="desc_about">Made with love by USTH students</string>
 </resources>

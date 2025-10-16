@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- Filter/Sort Controls -->
+    <!-- Filter/Sort Controls (inline style from search) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,6 +67,7 @@
         android:paddingBottom="6dp"
         android:visibility="gone"/>
 
+    <!-- Loading indicator -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
@@ -75,6 +76,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <!-- Error text -->
     <TextView
         android:id="@+id/errorText"
         android:layout_width="match_parent"
@@ -84,13 +86,14 @@
         android:visibility="gone"
         android:text="@string/error_loading_data" />
 
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom Pagination Controls -->
+    <!-- Bottom Pagination Controls (advanced from search) -->
     <LinearLayout
         android:id="@+id/bottomPaginationContainer"
         android:layout_width="match_parent"
@@ -100,6 +103,7 @@
         android:paddingBottom="8dp"
         android:visibility="gone">
 
+        <!-- Prev/Next with Page Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,8 +147,7 @@
                 style="?android:attr/buttonBarButtonStyle"/>
         </LinearLayout>
 
-
-        <!-- Main Navigation Row -->
+        <!-- Page Number Buttons (7 buttons with ellipsis support) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -152,7 +155,6 @@
             android:gravity="center"
             android:paddingBottom="8dp">
 
-            <!-- Page Number Buttons (7 buttons) -->
             <Button
                 android:id="@+id/pageButton1"
                 android:layout_width="44dp"

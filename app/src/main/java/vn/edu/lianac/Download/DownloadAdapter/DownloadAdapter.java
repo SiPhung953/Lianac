@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import vn.edu.lianac.R;
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
+import vn.edu.lianac.Download.DownloadState.DownloadState;
 
 public class DownloadAdapter extends ListAdapter<DownloadItem, DownloadAdapter.DownloadViewHolder> {
 

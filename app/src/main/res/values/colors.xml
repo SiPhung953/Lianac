@@ -12,5 +12,7 @@
     <color name="repo_brown">#FF1c1a17</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="dark_background">#121212</color>
     <color name="breadcrumb_background">#F5F5F5</color>
 </resources>
