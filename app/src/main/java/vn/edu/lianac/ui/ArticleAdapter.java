@@ -29,6 +29,56 @@ import vn.edu.lianac.utils.CategoryProvider;
  */
 public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHolder> {
     private static final String TAG = "ArticleAdapter";
+    private static final DiffUtil.ItemCallback<Article> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull Article old, @NonNull Article newItem) {
+                    if (old.getId() == null || newItem.getId() == null) {
+                        return false;
+                    }
+                    return old.getId().equals(newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull Article old, @NonNull Article newItem) {
+                    // Compare title
+                    if (!safeEquals(old.getTitle(), newItem.getTitle())) {
+                        return false;
+                    }
+
+                    // Compare published date
+                    if (!safeEquals(old.getPublishedDate(), newItem.getPublishedDate())) {
+                        return false;
+                    }
+
+                    // Compare DOI
+                    if (!safeEquals(old.getDoi(), newItem.getDoi())) {
+                        return false;
+                    }
+
+                    // Compare categories
+                    List<String> oldCats = old.getCategories();
+                    List<String> newCats = newItem.getCategories();
+
+                    if (oldCats == null && newCats == null) {
+                        return true;
+                    }
+                    if (oldCats == null || newCats == null) {
+                        return false;
+                    }
+                    if (oldCats.size() != newCats.size()) {
+                        return false;
+                    }
+
+                    return oldCats.equals(newCats);
+                }
+
+                private boolean safeEquals(String str1, String str2) {
+                    if (str1 == null && str2 == null) return true;
+                    if (str1 == null || str2 == null) return false;
+                    return str1.equals(str2);
+                }
+            };
 
     public ArticleAdapter() {
         super(DIFF_CALLBACK);
@@ -246,8 +296,7 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
             if (isFirst) {
                 badge.setTextColor(context.getResources().getColor(android.R.color.white));
                 badge.setBackgroundResource(R.drawable.category_first_badge_background);
-            }
-            else {
+            } else {
                 badge.setTextColor(context.getResources().getColor(android.R.color.black));
                 badge.setBackgroundResource(R.drawable.category_normal_badge_background);
             }
@@ -276,55 +325,4 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
             return Math.round(dp * density);
         }
     }
-
-    private static final DiffUtil.ItemCallback<Article> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull Article old, @NonNull Article newItem) {
-                    if (old.getId() == null || newItem.getId() == null) {
-                        return false;
-                    }
-                    return old.getId().equals(newItem.getId());
-                }
-
-                @Override
-                public boolean areContentsTheSame(@NonNull Article old, @NonNull Article newItem) {
-                    // Compare title
-                    if (!safeEquals(old.getTitle(), newItem.getTitle())) {
-                        return false;
-                    }
-
-                    // Compare published date
-                    if (!safeEquals(old.getPublishedDate(), newItem.getPublishedDate())) {
-                        return false;
-                    }
-
-                    // Compare DOI
-                    if (!safeEquals(old.getDoi(), newItem.getDoi())) {
-                        return false;
-                    }
-
-                    // Compare categories
-                    List<String> oldCats = old.getCategories();
-                    List<String> newCats = newItem.getCategories();
-
-                    if (oldCats == null && newCats == null) {
-                        return true;
-                    }
-                    if (oldCats == null || newCats == null) {
-                        return false;
-                    }
-                    if (oldCats.size() != newCats.size()) {
-                        return false;
-                    }
-
-                    return oldCats.equals(newCats);
-                }
-
-                private boolean safeEquals(String str1, String str2) {
-                    if (str1 == null && str2 == null) return true;
-                    if (str1 == null || str2 == null) return false;
-                    return str1.equals(str2);
-                }
-            };
 }

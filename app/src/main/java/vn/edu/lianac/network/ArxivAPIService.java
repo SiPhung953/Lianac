@@ -21,9 +21,8 @@ public class ArxivAPIService {
     private static final int CONNECT_TIMEOUT = 30; // seconds
     private static final int READ_TIMEOUT = 30; // seconds
     private static final int WRITE_TIMEOUT = 30; // seconds
-
-    private final OkHttpClient client;
     private static ArxivAPIService instance;
+    private final OkHttpClient client;
 
     public ArxivAPIService() {
         this.client = new OkHttpClient.Builder()
@@ -44,6 +43,7 @@ public class ArxivAPIService {
 
     /**
      * Fetches articles from arXiv API asynchronously
+     *
      * @param queryUrl Complete arXiv API URL with query parameters
      * @param listener Callback for success/failure
      */
@@ -88,6 +88,7 @@ public class ArxivAPIService {
 
     /**
      * Fetches articles with full metadata from arXiv API asynchronously
+     *
      * @param queryUrl Complete arXiv API URL with query parameters
      * @param listener Callback for success/failure with SearchResult
      */
@@ -265,11 +266,13 @@ public class ArxivAPIService {
 
     public interface ArxivResponseListener {
         void onSuccess(List<Article> articles);
+
         void onError(Exception e);
     }
 
     public interface ArxivSearchResultListener {
         void onSuccess(SearchResult result);
+
         void onError(Exception e);
     }
 

@@ -10,12 +10,15 @@ import vn.edu.lianac.models.SearchRow;
 
 /**
  * Query builder for arXiv API supporting both basic and advanced searches.
- *
+ * <p>
  * Basic search: single search term + field
  * Example: all:quantum or ti:"machine learning"
- *
+ * <p>
  * Advanced search: multiple search rows with boolean operators
  * Example: ti:quantum AND au:einstein OR abs:relativity
+ * <p>
+ * Filter-only search: categories and/or date ranges without search terms
+ * Example: cat:cs.AI AND submittedDate:[20200101 TO 20231231]
  */
 public class QueryBuilder {
     private static final String BASE_URL = "https://export.arxiv.org/api/query";
@@ -23,6 +26,13 @@ public class QueryBuilder {
 
     public QueryBuilder(QueryOptions options) {
         this.options = options;
+    }
+
+    /**
+     * Static convenience method
+     */
+    public static String buildUrl(QueryOptions options) {
+        return new QueryBuilder(options).build();
     }
 
     public String build() {
@@ -42,32 +52,32 @@ public class QueryBuilder {
 
         // Build the main search query (basic term + advanced rows combined)
         String mainSearchQuery = buildCombinedSearchQuery();
-        if (mainSearchQuery != null && !mainSearchQuery.isEmpty()) {
+        if (mainSearchQuery != null && !mainSearchQuery.trim().isEmpty()) {
             queryParts.add(mainSearchQuery);
         }
 
         // Add category filter
         if (options.hasCategoryFilter()) {
             String categoryQuery = buildCategoryQuery();
-            if (categoryQuery != null) {
-                queryParts.add("(" + categoryQuery + ")");
+            if (categoryQuery != null && !categoryQuery.trim().isEmpty()) {
+                queryParts.add(categoryQuery);
             }
         }
 
         // Add date filter
         if (options.hasDateFilter()) {
             String dateQuery = buildDateQuery();
-            if (dateQuery != null) {
+            if (dateQuery != null && !dateQuery.trim().isEmpty()) {
                 queryParts.add(dateQuery);
             }
         }
 
-        // If no query parts, return wildcard
+        // If nothing was built, return wildcard
         if (queryParts.isEmpty()) {
             return "all:*";
         }
 
-        // Join with AND
+        // Join all parts with AND
         return String.join(" AND ", queryParts);
     }
 
@@ -80,28 +90,28 @@ public class QueryBuilder {
         // Add basic search term first (if exists)
         if (options.hasSearchTerm()) {
             String basicQuery = buildBasicSearchQuery();
-            if (basicQuery != null && !basicQuery.isEmpty()) {
+            if (basicQuery != null && !basicQuery.trim().isEmpty()) {
                 parts.add(basicQuery);
             }
         }
 
         // Add advanced search rows
-        if (options.hasRows()) {
+        if (options.hasRows() && options.getRows() != null && !options.getRows().isEmpty()) {
             String advancedQuery = buildAdvancedSearchQuery();
-            if (advancedQuery != null && !advancedQuery.isEmpty()) {
-                // If we have a basic term, we need to connect it with the first row's operator
+            if (advancedQuery != null && !advancedQuery.trim().isEmpty()) {
+                // If we have a basic term, connect with appropriate operator
                 if (!parts.isEmpty()) {
                     List<SearchRow> rows = options.getRows();
                     if (rows != null && !rows.isEmpty()) {
                         String firstOperator = rows.get(0).getOperator();
-                        if (firstOperator != null && !firstOperator.isEmpty()) {
-                            if ("ANDNOT".equalsIgnoreCase(firstOperator)) {
+                        if (firstOperator != null && !firstOperator.trim().isEmpty()) {
+                            if ("NOT".equalsIgnoreCase(firstOperator)) {
                                 parts.add("AND NOT");
                             } else {
                                 parts.add(firstOperator.toUpperCase());
                             }
                         } else {
-                            parts.add("AND");  // Default to AND if no operator specified
+                            parts.add("AND");
                         }
                     }
                 }
@@ -109,17 +119,14 @@ public class QueryBuilder {
             }
         }
 
+        // Return null if nothing was built (let buildSearchQuery handle it)
         if (parts.isEmpty()) {
             return null;
         }
 
-        // If we have multiple parts, wrap the whole thing in parentheses
-        if (parts.size() > 1) {
-            return String.join(" ", parts);
-        }
-
-        return parts.get(0);
+        return String.join(" ", parts);
     }
+
 
     /**
      * Build basic search query: single search term + field
@@ -160,11 +167,12 @@ public class QueryBuilder {
         }
 
         List<String> rowQueries = new ArrayList<>();
+        int addedCount = 0;
 
         for (SearchRow row : rows) {
             String value = row.getValue();
             if (value == null || value.trim().isEmpty()) {
-                continue;
+                continue; // Skip empty rows
             }
 
             value = value.trim();
@@ -175,28 +183,32 @@ public class QueryBuilder {
             }
 
             String fieldCode = mapFieldCode(row.getField());
-            String fieldQuery;
+            String fieldQuery = fieldCode + ":" + value;
 
-            fieldQuery = fieldCode + ":" + value;
-
-            // Add boolean operator (AND, OR, ANDNOT)
-            String operator = row.getOperator();
-            if (operator != null && !operator.isEmpty() && !rowQueries.isEmpty()) {
-                // Convert "ANDNOT" to "AND NOT" for arXiv API
-                if ("NOT".equalsIgnoreCase(operator)) {
-                    operator = "AND NOT";
+            // Add boolean operator BEFORE this term (except for the first non-empty term)
+            if (addedCount > 0) {
+                String operator = row.getOperator();
+                if (operator != null && !operator.trim().isEmpty()) {
+                    if ("NOT".equalsIgnoreCase(operator)) {
+                        rowQueries.add("AND NOT");
+                    } else if ("NOT".equalsIgnoreCase(operator)) {
+                        rowQueries.add("AND NOT");
+                    } else {
+                        rowQueries.add(operator.toUpperCase());
+                    }
+                } else {
+                    rowQueries.add("AND"); // Default operator
                 }
-                rowQueries.add(operator.toUpperCase());
             }
 
             rowQueries.add(fieldQuery);
+            addedCount++;
         }
 
         if (rowQueries.isEmpty()) {
             return null;
         }
 
-        // Join all parts
         return String.join(" ", rowQueries);
     }
 
@@ -226,13 +238,18 @@ public class QueryBuilder {
         String from = formatDate(options.getDateFrom());
         String to = formatDate(options.getDateTo());
 
-        if (from != null && to != null) {
+        // Validate that at least one date was successfully formatted
+        if ((from == null || from.isEmpty()) && (to == null || to.isEmpty())) {
+            return null;
+        }
+
+        if (from != null && !from.isEmpty() && to != null && !to.isEmpty()) {
             return "submittedDate:[" + from + " TO " + to + "]";
         }
-        if (from != null) {
+        if (from != null && !from.isEmpty()) {
             return "submittedDate:[" + from + " TO *]";
         }
-        if (to != null) {
+        if (to != null && !to.isEmpty()) {
             return "submittedDate:[* TO " + to + "]";
         }
 
@@ -246,9 +263,16 @@ public class QueryBuilder {
         if (date == null || date.trim().isEmpty()) {
             return null;
         }
-        // Remove all non-digits and take first 8 chars (YYYYMMDD)
+
+        // Remove all non-digits
         String cleaned = date.replaceAll("[^0-9]", "");
-        return cleaned.length() >= 8 ? cleaned.substring(0, 8) : cleaned;
+
+        // Validate we have at least 8 digits (YYYYMMDD)
+        if (cleaned.length() < 8) {
+            return null; // Invalid date format
+        }
+
+        return cleaned.substring(0, 8);
     }
 
     /**
@@ -258,15 +282,23 @@ public class QueryBuilder {
         if (field == null) return "all";
 
         switch (field.toLowerCase()) {
-            case "title": return "ti";
-            case "author": return "au";
-            case "abstract": return "abs";
-            case "comment": return "co";
+            case "title":
+                return "ti";
+            case "author":
+                return "au";
+            case "abstract":
+                return "abs";
+            case "comment":
+                return "co";
             case "journal":
-            case "journal reference": return "jr";
-            case "category": return "cat";
-            case "report number": return "rn";
-            case "id": return "id";
+            case "journal reference":
+                return "jr";
+            case "category":
+                return "cat";
+            case "report number":
+                return "rn";
+            case "id":
+                return "id";
             case "all":
             default:
                 return "all";
@@ -291,12 +323,5 @@ public class QueryBuilder {
         } catch (Exception e) {
             return str;
         }
-    }
-
-    /**
-     * Static convenience method
-     */
-    public static String buildUrl(QueryOptions options) {
-        return new QueryBuilder(options).build();
     }
 }

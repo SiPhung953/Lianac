@@ -45,6 +45,10 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
         return subjects.size();
     }
 
+    public interface OnSubjectClickListener {
+        void onSubjectClick(String categoryId, String displayName);
+    }
+
     class SubjectViewHolder extends RecyclerView.ViewHolder {
         private final TextView subjectName;
         private final TextView subjectDescription;
@@ -86,9 +90,5 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
             // Fallback description - FIXED: use the displayName parameter
             return String.format("Research papers and preprints in %s", displayName);
         }
-    }
-
-    public interface OnSubjectClickListener {
-        void onSubjectClick(String categoryId, String displayName);
     }
 }

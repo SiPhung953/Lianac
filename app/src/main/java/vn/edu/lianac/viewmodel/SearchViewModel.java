@@ -1,6 +1,7 @@
 package vn.edu.lianac.viewmodel;
 
 import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.models.Article;
+import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchResult;
 import vn.edu.lianac.network.ArxivAPIService;
 import vn.edu.lianac.utils.QueryBuilder;
-import vn.edu.lianac.models.QueryOptions;
 
 /**
  * ViewModel for arXiv article search with integrated repository logic.
@@ -252,15 +253,41 @@ public class SearchViewModel extends ViewModel {
 
     // ============= LIVEDATA GETTERS =============
 
-    public LiveData<List<Article>> getArticles() { return articles; }
-    public LiveData<Boolean> getIsLoading() { return isLoading; }
-    public LiveData<String> getErrorMessage() { return errorMessage; }
-    public LiveData<Integer> getTotalResults() { return totalResults; }
-    public LiveData<Integer> getCurrentPage() { return currentPage; }
-    public LiveData<Integer> getTotalPages() { return totalPages; }
-    public LiveData<String> getResultRangeText() { return resultRangeText; }
-    public LiveData<Boolean> getHasNextPage() { return hasNextPage; }
-    public LiveData<Boolean> getHasPreviousPage() { return hasPreviousPage; }
+    public LiveData<List<Article>> getArticles() {
+        return articles;
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public LiveData<Integer> getTotalResults() {
+        return totalResults;
+    }
+
+    public LiveData<Integer> getCurrentPage() {
+        return currentPage;
+    }
+
+    public LiveData<Integer> getTotalPages() {
+        return totalPages;
+    }
+
+    public LiveData<String> getResultRangeText() {
+        return resultRangeText;
+    }
+
+    public LiveData<Boolean> getHasNextPage() {
+        return hasNextPage;
+    }
+
+    public LiveData<Boolean> getHasPreviousPage() {
+        return hasPreviousPage;
+    }
 
     // ============= HELPER METHODS =============
 

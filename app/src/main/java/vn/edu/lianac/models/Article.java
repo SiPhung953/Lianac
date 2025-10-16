@@ -2,11 +2,12 @@ package vn.edu.lianac.models;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class Article {
+    private static final SimpleDateFormat DISPLAY_FORMAT =
+            new SimpleDateFormat("MMM dd, yyyy", Locale.US);
     private String id;
     private String title;
     private String summary;
@@ -21,9 +22,6 @@ public class Article {
     private String doi;
     private boolean bookmarked;
 
-    private static final SimpleDateFormat DISPLAY_FORMAT =
-            new SimpleDateFormat("MMM dd, yyyy", Locale.US);
-
     public Article() {
         this.authors = new ArrayList<>();
         this.categories = new ArrayList<>();
@@ -31,43 +29,101 @@ public class Article {
     }
 
     // --- Getters & Setters ---
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getSummary() { return summary; }
-    public void setSummary(String summary) { this.summary = summary; }
-
-    public List<String> getAuthors() { return authors; }
-    public void setAuthors(List<String> authors) { this.authors = authors; }
-
-    public String getPublishedDate() { return publishedDate; }
-    public void setPublishedDate(String date) { this.publishedDate = date; }
-
-    public String getUpdatedDate() { return updatedDate; }
-    public void setUpdatedDate(String date) { this.updatedDate = date; }
-
-    public String getPdfUrl() { return pdfUrl; }
-    public void setPdfUrl(String url) { this.pdfUrl = url; }
-
-    public String getAbsUrl() { return absUrl; }
-    public void setAbsUrl(String url) { this.absUrl = url; }
-
-    public List<String> getCategories() { return categories; }
-    public void setCategories(List<String> categories) { this.categories = categories; }
-    public void setPrimaryCategory(String primaryCategory) {
-        this.primaryCategory = primaryCategory;
+    public String getId() {
+        return id;
     }
-    public List<String> getAcmMscClasses() { return acmMscClasses; }
-    public void setAcmMscClasses(List<String> classes) { this.acmMscClasses = classes; }
 
-    public String getDoi() { return doi; }
-    public void setDoi(String doi) { this.doi = doi; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public boolean isBookmarked() { return bookmarked; }
-    public void setBookmarked(boolean bookmarked) { this.bookmarked = bookmarked; }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String date) {
+        this.publishedDate = date;
+    }
+
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(String date) {
+        this.updatedDate = date;
+    }
+
+    public String getPdfUrl() {
+        return pdfUrl;
+    }
+
+    public void setPdfUrl(String url) {
+        this.pdfUrl = url;
+    }
+
+    public String getAbsUrl() {
+        return absUrl;
+    }
+
+    public void setAbsUrl(String url) {
+        this.absUrl = url;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public List<String> getAcmMscClasses() {
+        return acmMscClasses;
+    }
+
+    public void setAcmMscClasses(List<String> classes) {
+        this.acmMscClasses = classes;
+    }
+
+    public String getDoi() {
+        return doi;
+    }
+
+    public void setDoi(String doi) {
+        this.doi = doi;
+    }
+
+    public boolean isBookmarked() {
+        return bookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        this.bookmarked = bookmarked;
+    }
 
     // --- Display Methods ---
     public String getFormattedDate() {
@@ -125,6 +181,10 @@ public class Article {
 
     public String getPrimaryCategory() {
         return primaryCategory;
+    }
+
+    public void setPrimaryCategory(String primaryCategory) {
+        this.primaryCategory = primaryCategory;
     }
 
     public String getFirstCategory() {

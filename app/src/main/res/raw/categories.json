@@ -1,220 +1,526 @@
 [
-    {
-      "id": "astro-ph",
-      "subCategories": [
-        { "id": "astro-ph.CO" },
-        { "id": "astro-ph.EP" },
-        { "id": "astro-ph.GA" },
-        { "id": "astro-ph.HE" },
-        { "id": "astro-ph.IM" },
-        { "id": "astro-ph.SR" }
-      ]
-    },
-    {
-      "id": "cond-mat",
-      "subCategories": [
-        { "id": "cond-mat.dis-nn" },
-        { "id": "cond-mat.mes-hall" },
-        { "id": "cond-mat.mtrl-sci" },
-        { "id": "cond-mat.other" },
-        { "id": "cond-mat.quant-gas" },
-        { "id": "cond-mat.soft" },
-        { "id": "cond-mat.stat-mech" },
-        { "id": "cond-mat.str-el" },
-        { "id": "cond-mat.supr-con" }
-      ]
-    },
-    { "id": "gr-qc" },
-    {
-      "id": "hep",
-      "subCategories": [
-        { "id": "hep-ex" },
-        { "id": "hep-lat" },
-        { "id": "hep-ph" },
-        { "id": "hep-th" }
-      ]
-    },
-    { "id": "math-ph" },
-    {
-      "id": "nlin",
-      "subCategories": [
-        { "id": "nlin.AO" },
-        { "id": "nlin.CD" },
-        { "id": "nlin.CG" },
-        { "id": "nlin.PS" },
-        { "id": "nlin.SI" }
-      ]
-    },
-    {
-      "id": "nucl",
-      "subCategories": [
-        { "id": "nucl-ex" },
-        { "id": "nucl-th" }
-      ]
-    },
-    {
-      "id": "physics",
-      "subCategories": [
-        { "id": "physics.acc-ph" },
-        { "id": "physics.ao-ph" },
-        { "id": "physics.app-ph" },
-        { "id": "physics.atm-clus" },
-        { "id": "physics.atom-ph" },
-        { "id": "physics.bio-ph" },
-        { "id": "physics.chem-ph" },
-        { "id": "physics.class-ph" },
-        { "id": "physics.comp-ph" },
-        { "id": "physics.data-an" },
-        { "id": "physics.ed-ph" },
-        { "id": "physics.flu-dyn" },
-        { "id": "physics.gen-ph" },
-        { "id": "physics.geo-ph" },
-        { "id": "physics.hist-ph" },
-        { "id": "physics.ins-det" },
-        { "id": "physics.med-ph" },
-        { "id": "physics.optics" },
-        { "id": "physics.plasm-ph" },
-        { "id": "physics.pop-ph" },
-        { "id": "physics.soc-ph" },
-        { "id": "physics.space-ph" }
-      ]
-    },
-    { "id": "quant-ph" },
+  {
+    "id": "astro-ph",
+    "subCategories": [
+      {
+        "id": "astro-ph.CO"
+      },
+      {
+        "id": "astro-ph.EP"
+      },
+      {
+        "id": "astro-ph.GA"
+      },
+      {
+        "id": "astro-ph.HE"
+      },
+      {
+        "id": "astro-ph.IM"
+      },
+      {
+        "id": "astro-ph.SR"
+      }
+    ]
+  },
+  {
+    "id": "cond-mat",
+    "subCategories": [
+      {
+        "id": "cond-mat.dis-nn"
+      },
+      {
+        "id": "cond-mat.mes-hall"
+      },
+      {
+        "id": "cond-mat.mtrl-sci"
+      },
+      {
+        "id": "cond-mat.other"
+      },
+      {
+        "id": "cond-mat.quant-gas"
+      },
+      {
+        "id": "cond-mat.soft"
+      },
+      {
+        "id": "cond-mat.stat-mech"
+      },
+      {
+        "id": "cond-mat.str-el"
+      },
+      {
+        "id": "cond-mat.supr-con"
+      }
+    ]
+  },
+  {
+    "id": "gr-qc"
+  },
+  {
+    "id": "hep",
+    "subCategories": [
+      {
+        "id": "hep-ex"
+      },
+      {
+        "id": "hep-lat"
+      },
+      {
+        "id": "hep-ph"
+      },
+      {
+        "id": "hep-th"
+      }
+    ]
+  },
+  {
+    "id": "math-ph"
+  },
+  {
+    "id": "nlin",
+    "subCategories": [
+      {
+        "id": "nlin.AO"
+      },
+      {
+        "id": "nlin.CD"
+      },
+      {
+        "id": "nlin.CG"
+      },
+      {
+        "id": "nlin.PS"
+      },
+      {
+        "id": "nlin.SI"
+      }
+    ]
+  },
+  {
+    "id": "nucl",
+    "subCategories": [
+      {
+        "id": "nucl-ex"
+      },
+      {
+        "id": "nucl-th"
+      }
+    ]
+  },
+  {
+    "id": "physics",
+    "subCategories": [
+      {
+        "id": "physics.acc-ph"
+      },
+      {
+        "id": "physics.ao-ph"
+      },
+      {
+        "id": "physics.app-ph"
+      },
+      {
+        "id": "physics.atm-clus"
+      },
+      {
+        "id": "physics.atom-ph"
+      },
+      {
+        "id": "physics.bio-ph"
+      },
+      {
+        "id": "physics.chem-ph"
+      },
+      {
+        "id": "physics.class-ph"
+      },
+      {
+        "id": "physics.comp-ph"
+      },
+      {
+        "id": "physics.data-an"
+      },
+      {
+        "id": "physics.ed-ph"
+      },
+      {
+        "id": "physics.flu-dyn"
+      },
+      {
+        "id": "physics.gen-ph"
+      },
+      {
+        "id": "physics.geo-ph"
+      },
+      {
+        "id": "physics.hist-ph"
+      },
+      {
+        "id": "physics.ins-det"
+      },
+      {
+        "id": "physics.med-ph"
+      },
+      {
+        "id": "physics.optics"
+      },
+      {
+        "id": "physics.plasm-ph"
+      },
+      {
+        "id": "physics.pop-ph"
+      },
+      {
+        "id": "physics.soc-ph"
+      },
+      {
+        "id": "physics.space-ph"
+      }
+    ]
+  },
+  {
+    "id": "quant-ph"
+  },
   {
     "id": "math",
     "subCategories": [
-      { "id": "math.AG" },
-      { "id": "math.AT" },
-      { "id": "math.AP" },
-      { "id": "math.CT" },
-      { "id": "math.CA" },
-      { "id": "math.CO" },
-      { "id": "math.AC" },
-      { "id": "math.CV" },
-      { "id": "math.DG" },
-      { "id": "math.DS" },
-      { "id": "math.FA" },
-      { "id": "math.GM" },
-      { "id": "math.GN" },
-      { "id": "math.GT" },
-      { "id": "math.GR" },
-      { "id": "math.HO" },
-      { "id": "math.IT" },
-      { "id": "math.KT" },
-      { "id": "math.LO" },
-      { "id": "math.MP" },
-      { "id": "math.MG" },
-      { "id": "math.NT" },
-      { "id": "math.NA" },
-      { "id": "math.OA" },
-      { "id": "math.OC" },
-      { "id": "math.PR" },
-      { "id": "math.QA" },
-      { "id": "math.RT" },
-      { "id": "math.RA" },
-      { "id": "math.SP" },
-      { "id": "math.ST" },
-      { "id": "math.SG" }
+      {
+        "id": "math.AG"
+      },
+      {
+        "id": "math.AT"
+      },
+      {
+        "id": "math.AP"
+      },
+      {
+        "id": "math.CT"
+      },
+      {
+        "id": "math.CA"
+      },
+      {
+        "id": "math.CO"
+      },
+      {
+        "id": "math.AC"
+      },
+      {
+        "id": "math.CV"
+      },
+      {
+        "id": "math.DG"
+      },
+      {
+        "id": "math.DS"
+      },
+      {
+        "id": "math.FA"
+      },
+      {
+        "id": "math.GM"
+      },
+      {
+        "id": "math.GN"
+      },
+      {
+        "id": "math.GT"
+      },
+      {
+        "id": "math.GR"
+      },
+      {
+        "id": "math.HO"
+      },
+      {
+        "id": "math.IT"
+      },
+      {
+        "id": "math.KT"
+      },
+      {
+        "id": "math.LO"
+      },
+      {
+        "id": "math.MP"
+      },
+      {
+        "id": "math.MG"
+      },
+      {
+        "id": "math.NT"
+      },
+      {
+        "id": "math.NA"
+      },
+      {
+        "id": "math.OA"
+      },
+      {
+        "id": "math.OC"
+      },
+      {
+        "id": "math.PR"
+      },
+      {
+        "id": "math.QA"
+      },
+      {
+        "id": "math.RT"
+      },
+      {
+        "id": "math.RA"
+      },
+      {
+        "id": "math.SP"
+      },
+      {
+        "id": "math.ST"
+      },
+      {
+        "id": "math.SG"
+      }
     ]
   },
   {
     "id": "cs",
     "subCategories": [
-      { "id": "cs.AI" },
-      { "id": "cs.CL" },
-      { "id": "cs.CC" },
-      { "id": "cs.CE" },
-      { "id": "cs.CG" },
-      { "id": "cs.GT" },
-      { "id": "cs.CV" },
-      { "id": "cs.CY" },
-      { "id": "cs.CR" },
-      { "id": "cs.DS" },
-      { "id": "cs.DB" },
-      { "id": "cs.DM" },
-      { "id": "cs.DC" },
-      { "id": "cs.ET" },
-      { "id": "cs.FL" },
-      { "id": "cs.GL" },
-      { "id": "cs.GR" },
-      { "id": "cs.AR" },
-      { "id": "cs.HC" },
-      { "id": "cs.IR" },
-      { "id": "cs.IT" },
-      { "id": "cs.LG" },
-      { "id": "cs.LO" },
-      { "id": "cs.MS" },
-      { "id": "cs.MA" },
-      { "id": "cs.MM" },
-      { "id": "cs.NI" },
-      { "id": "cs.NE" },
-      { "id": "cs.NA" },
-      { "id": "cs.OS" },
-      { "id": "cs.PF" },
-      { "id": "cs.PL" },
-      { "id": "cs.RO" },
-      { "id": "cs.SI" },
-      { "id": "cs.SE" },
-      { "id": "cs.SD" },
-      { "id": "cs.SC" },
-      { "id": "cs.SY" }
+      {
+        "id": "cs.AI"
+      },
+      {
+        "id": "cs.CL"
+      },
+      {
+        "id": "cs.CC"
+      },
+      {
+        "id": "cs.CE"
+      },
+      {
+        "id": "cs.CG"
+      },
+      {
+        "id": "cs.GT"
+      },
+      {
+        "id": "cs.CV"
+      },
+      {
+        "id": "cs.CY"
+      },
+      {
+        "id": "cs.CR"
+      },
+      {
+        "id": "cs.DS"
+      },
+      {
+        "id": "cs.DB"
+      },
+      {
+        "id": "cs.DM"
+      },
+      {
+        "id": "cs.DC"
+      },
+      {
+        "id": "cs.ET"
+      },
+      {
+        "id": "cs.FL"
+      },
+      {
+        "id": "cs.GL"
+      },
+      {
+        "id": "cs.GR"
+      },
+      {
+        "id": "cs.AR"
+      },
+      {
+        "id": "cs.HC"
+      },
+      {
+        "id": "cs.IR"
+      },
+      {
+        "id": "cs.IT"
+      },
+      {
+        "id": "cs.LG"
+      },
+      {
+        "id": "cs.LO"
+      },
+      {
+        "id": "cs.MS"
+      },
+      {
+        "id": "cs.MA"
+      },
+      {
+        "id": "cs.MM"
+      },
+      {
+        "id": "cs.NI"
+      },
+      {
+        "id": "cs.NE"
+      },
+      {
+        "id": "cs.NA"
+      },
+      {
+        "id": "cs.OS"
+      },
+      {
+        "id": "cs.PF"
+      },
+      {
+        "id": "cs.PL"
+      },
+      {
+        "id": "cs.RO"
+      },
+      {
+        "id": "cs.SI"
+      },
+      {
+        "id": "cs.SE"
+      },
+      {
+        "id": "cs.SD"
+      },
+      {
+        "id": "cs.SC"
+      },
+      {
+        "id": "cs.SY"
+      }
     ]
   },
   {
     "id": "q-bio",
     "subCategories": [
-      { "id": "q-bio.BM" },
-      { "id": "q-bio.CB" },
-      { "id": "q-bio.GN" },
-      { "id": "q-bio.MN" },
-      { "id": "q-bio.NC" },
-      { "id": "q-bio.OT" },
-      { "id": "q-bio.PE" },
-      { "id": "q-bio.QM" },
-      { "id": "q-bio.SC" },
-      { "id": "q-bio.TO" }
+      {
+        "id": "q-bio.BM"
+      },
+      {
+        "id": "q-bio.CB"
+      },
+      {
+        "id": "q-bio.GN"
+      },
+      {
+        "id": "q-bio.MN"
+      },
+      {
+        "id": "q-bio.NC"
+      },
+      {
+        "id": "q-bio.OT"
+      },
+      {
+        "id": "q-bio.PE"
+      },
+      {
+        "id": "q-bio.QM"
+      },
+      {
+        "id": "q-bio.SC"
+      },
+      {
+        "id": "q-bio.TO"
+      }
     ]
   },
   {
     "id": "q-fin",
     "subCategories": [
-      { "id": "q-fin.CP" },
-      { "id": "q-fin.EC" },
-      { "id": "q-fin.GN" },
-      { "id": "q-fin.MF" },
-      { "id": "q-fin.PM" },
-      { "id": "q-fin.PR" },
-      { "id": "q-fin.RM" },
-      { "id": "q-fin.ST" },
-      { "id": "q-fin.TR" }
+      {
+        "id": "q-fin.CP"
+      },
+      {
+        "id": "q-fin.EC"
+      },
+      {
+        "id": "q-fin.GN"
+      },
+      {
+        "id": "q-fin.MF"
+      },
+      {
+        "id": "q-fin.PM"
+      },
+      {
+        "id": "q-fin.PR"
+      },
+      {
+        "id": "q-fin.RM"
+      },
+      {
+        "id": "q-fin.ST"
+      },
+      {
+        "id": "q-fin.TR"
+      }
     ]
   },
   {
     "id": "stat",
     "subCategories": [
-      { "id": "stat.AP" },
-      { "id": "stat.CO" },
-      { "id": "stat.ML" },
-      { "id": "stat.ME" },
-      { "id": "stat.OT" },
-      { "id": "stat.TH" }
+      {
+        "id": "stat.AP"
+      },
+      {
+        "id": "stat.CO"
+      },
+      {
+        "id": "stat.ML"
+      },
+      {
+        "id": "stat.ME"
+      },
+      {
+        "id": "stat.OT"
+      },
+      {
+        "id": "stat.TH"
+      }
     ]
   },
   {
     "id": "eess",
     "subCategories": [
-      { "id": "eess.AS" },
-      { "id": "eess.IV" },
-      { "id": "eess.SP" },
-      { "id": "eess.SY" }
+      {
+        "id": "eess.AS"
+      },
+      {
+        "id": "eess.IV"
+      },
+      {
+        "id": "eess.SP"
+      },
+      {
+        "id": "eess.SY"
+      }
     ]
   },
   {
     "id": "econ",
     "subCategories": [
-      { "id": "econ.EM" },
-      { "id": "econ.GN" },
-      { "id": "econ.TH" }
+      {
+        "id": "econ.EM"
+      },
+      {
+        "id": "econ.GN"
+      },
+      {
+        "id": "econ.TH"
+      }
     ]
   }
 ]

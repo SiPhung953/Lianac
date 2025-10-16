@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -332,10 +331,22 @@ public class SubjectDetailFragment extends Fragment {
             ((MainActivity) getActivity()).navigateToContent(new ArticleListingFragment());
         }
     }
+
     /**
      * Parcelable class to store breadcrumb information
      */
     public static class BreadcrumbItem implements android.os.Parcelable {
+        public static final Creator<BreadcrumbItem> CREATOR = new Creator<BreadcrumbItem>() {
+            @Override
+            public BreadcrumbItem createFromParcel(android.os.Parcel in) {
+                return new BreadcrumbItem(in);
+            }
+
+            @Override
+            public BreadcrumbItem[] newArray(int size) {
+                return new BreadcrumbItem[size];
+            }
+        };
         public final String categoryId;
         public final String name;
 
@@ -359,17 +370,5 @@ public class SubjectDetailFragment extends Fragment {
         public int describeContents() {
             return 0;
         }
-
-        public static final Creator<BreadcrumbItem> CREATOR = new Creator<BreadcrumbItem>() {
-            @Override
-            public BreadcrumbItem createFromParcel(android.os.Parcel in) {
-                return new BreadcrumbItem(in);
-            }
-
-            @Override
-            public BreadcrumbItem[] newArray(int size) {
-                return new BreadcrumbItem[size];
-            }
-        };
     }
 }

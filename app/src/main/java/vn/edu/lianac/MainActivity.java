@@ -1,6 +1,5 @@
 package vn.edu.lianac;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
      * Load a fragment into the content container.
      * This is the main navigation method for switching between different screens.
      *
-     * @param fragment The fragment to display
+     * @param fragment       The fragment to display
      * @param addToBackStack Whether to add this transaction to the back stack
      */
     public void loadContentFragment(Fragment fragment, boolean addToBackStack) {

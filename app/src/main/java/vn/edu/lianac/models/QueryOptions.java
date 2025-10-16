@@ -36,17 +36,49 @@ public class QueryOptions {
 
     // ==================== GETTERS ====================
 
-    public String getSearchTerm() { return searchTerm; }
-    public String getSearchField() { return searchField; }
-    public List<SearchRow> getRows() { return rows; }
-    public int getStart() { return start; }
-    public int getMaxResults() { return maxResults; }
-    public String getSortBy() { return sortBy; }
-    public String getSortOrder() { return sortOrder; }
-    public List<String> getCategories() { return categories; }
-    public boolean isIncludeCrossLists() { return includeCrossLists; }
-    public String getDateFrom() { return dateFrom; }
-    public String getDateTo() { return dateTo; }
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public String getSearchField() {
+        return searchField;
+    }
+
+    public List<SearchRow> getRows() {
+        return rows;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getMaxResults() {
+        return maxResults;
+    }
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public boolean isIncludeCrossLists() {
+        return includeCrossLists;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
 
     // ==================== QUERY HELPERS ====================
 

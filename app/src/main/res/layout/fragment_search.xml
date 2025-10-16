@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,18 +9,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
         android:orientation="vertical"
-        android:padding="8dp"
-        android:background="?android:attr/colorBackground">
+        android:padding="8dp">
 
         <!-- Compact search bar with filter icon -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:background="?android:attr/selectableItemBackground"
             android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="4dp">
 
             <EditText
@@ -29,33 +28,33 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:background="@android:color/transparent"
                 android:hint="@string/placeholder_search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingStart="12dp"
-                android:paddingEnd="8dp"
                 android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:background="@android:color/transparent" />
+                android:paddingEnd="8dp"
+                android:paddingBottom="12dp" />
 
             <Spinner
                 android:id="@+id/fieldSpinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="4dp"
+                android:layout_weight="2" />
 
             <ImageButton
                 android:id="@+id/filterButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_filter"
                 android:background="@drawable/filter_button_normal"
                 android:contentDescription="@string/advanced_filters"
                 android:scaleType="centerInside"
+                android:src="@drawable/ic_filter"
                 app:tint="?android:attr/textColorPrimary" />
         </LinearLayout>
     </LinearLayout>
@@ -66,9 +65,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#80000000"
-        android:visibility="gone"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:visibility="gone" />
 
     <!-- Advanced Search Drawer -->
     <FrameLayout
@@ -78,8 +77,8 @@
         android:layout_alignParentEnd="true"
         android:background="@android:color/white"
         android:elevation="24dp"
-        android:visibility="gone"
-        android:translationX="320dp">
+        android:translationX="320dp"
+        android:visibility="gone">
         <!-- ManageSearchFragment will be placed here -->
     </FrameLayout>
 

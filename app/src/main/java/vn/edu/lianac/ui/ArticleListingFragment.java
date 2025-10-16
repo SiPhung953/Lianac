@@ -34,10 +34,9 @@ import vn.edu.lianac.viewmodel.SearchViewModel;
  */
 public class ArticleListingFragment extends Fragment {
     private static final String TAG = "ArticleListingFragment";
-
+    private final Button[] pageButtons = new Button[7];
     private SearchViewModel viewModel;
     private ArticleAdapter adapter;
-
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorText;
@@ -47,11 +46,8 @@ public class ArticleListingFragment extends Fragment {
     private Spinner sortSpinner;
     private Spinner pageSizeSpinner;
     private LinearLayout bottomPaginationContainer;
-
     // Pagination buttons
     private Button prevBtn, nextBtn;
-    private final Button[] pageButtons = new Button[7];
-
     // State tracking to prevent circular updates
     private boolean isUpdatingSpinners = false;
 
@@ -133,7 +129,8 @@ public class ArticleListingFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         // Page size spinner
@@ -155,7 +152,8 @@ public class ArticleListingFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 

@@ -31,15 +31,20 @@ import java.util.List;
 import java.util.Set;
 
 import vn.edu.lianac.R;
-import vn.edu.lianac.models.SearchRow;
 import vn.edu.lianac.models.QueryOptions;
+import vn.edu.lianac.models.SearchRow;
 import vn.edu.lianac.utils.CategoryProvider;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
  * Advanced search filters fragment - cleaned & refactored.
+ * Removed basic search display section - focuses purely on advanced filters.
  */
 public class ManageSearchFragment extends Fragment {
+
+    // State
+    private final List<String> selectedCategories = new ArrayList<>();
+    private final Set<String> selectedMainCategories = new LinkedHashSet<>();
 
     // UI Components
     private ImageButton closeDrawerButton;
@@ -57,10 +62,6 @@ public class ManageSearchFragment extends Fragment {
     private LinearLayout mainCategoryHeader, leafCategoryHeader;
     private TextView mainCategoryToggle, leafCategoryToggle;
     private CheckBox includeCrossListCheckbox;
-
-    // State
-    private final List<String> selectedCategories = new ArrayList<>();
-    private final Set<String> selectedMainCategories = new LinkedHashSet<>();
     private SearchViewModel searchViewModel;
 
     @Nullable
@@ -133,23 +134,24 @@ public class ManageSearchFragment extends Fragment {
         if (ch != null) ch.setOnClickListener(this::onToggleClicked);
         if (drh != null) drh.setOnClickListener(this::onToggleClicked);
 
-        if (mainCategoryHeader != null) mainCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
-        if (leafCategoryHeader != null) leafCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
+        if (mainCategoryHeader != null)
+            mainCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
+        if (leafCategoryHeader != null)
+            leafCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
     }
 
     // ------------------- Event wiring -------------------
     private void setupEventListeners() {
         if (closeDrawerButton != null) closeDrawerButton.setOnClickListener(v -> closeDrawer());
         if (applyFiltersButton != null) applyFiltersButton.setOnClickListener(v -> {
-            applyFilters();
-            closeDrawer();
+            if (applyFilters()) {
+                closeDrawer();
+            }
         });
         if (searchButton != null) searchButton.setOnClickListener(v -> {
-            applyFilters();
-            if (searchViewModel.getCurrentQuery().getValue() != null) {
-                searchViewModel.search(searchViewModel.getCurrentQuery().getValue());
+            if (applyFilters()) {
+                closeDrawer();
             }
-            closeDrawer();
         });
         if (resetButton != null) resetButton.setOnClickListener(v -> resetAllFilters());
         if (addFieldButton != null) addFieldButton.setOnClickListener(v -> addSearchFieldRow(null));
@@ -239,29 +241,21 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void showLeafCategoryRow() {
-        // Show the header (always visible when there are subcategories)
         if (leafCategoryHeader != null) {
             leafCategoryHeader.setVisibility(View.VISIBLE);
         }
-
-        // Show the chip group (can be collapsed via toggle)
         if (leafCategoryChipGroup != null) {
             leafCategoryChipGroup.setVisibility(View.VISIBLE);
         }
-
-        // Update toggle indicator to show expanded state
         if (leafCategoryToggle != null) {
             leafCategoryToggle.setText("▼");
         }
     }
 
     private void hideLeafCategoryRow() {
-        // Hide the entire header section
         if (leafCategoryHeader != null) {
             leafCategoryHeader.setVisibility(View.GONE);
         }
-
-        // Clear and hide the chip group
         if (leafCategoryChipGroup != null) {
             leafCategoryChipGroup.setVisibility(View.GONE);
             leafCategoryChipGroup.removeAllViews();
@@ -291,7 +285,6 @@ public class ManageSearchFragment extends Fragment {
         chip.setCheckedIconVisible(true);
         chip.setTag(categoryId);
 
-        // initial checked state
         chip.setChecked(selectedCategories.contains(categoryId));
 
         chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -321,10 +314,8 @@ public class ManageSearchFragment extends Fragment {
 
     private void updateSelectedCategoriesFromUI() {
         selectedCategories.clear();
-        // add mains
         selectedCategories.addAll(selectedMainCategories);
 
-        // add checked leaves
         if (leafCategoryChipGroup != null) {
             for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
                 View v = leafCategoryChipGroup.getChildAt(i);
@@ -345,7 +336,7 @@ public class ManageSearchFragment extends Fragment {
         if (selectedCategoriesSummary == null) return;
 
         if (total == 0) {
-            selectedCategoriesSummary.setText(getString(R.string.no_categories_selected)); // prefer resource
+            selectedCategoriesSummary.setText(getString(R.string.no_categories_selected));
         } else if (total == 1) {
             selectedCategoriesSummary.setText("1 category selected");
         } else {
@@ -365,7 +356,6 @@ public class ManageSearchFragment extends Fragment {
             return;
         }
 
-        // Remove button
         ImageButton removeButton = rowView.findViewById(R.id.removeButton);
         if (removeButton != null) {
             removeButton.setOnClickListener(v -> {
@@ -376,7 +366,6 @@ public class ManageSearchFragment extends Fragment {
             });
         }
 
-        // Field spinner
         Spinner fieldSpinner = rowView.findViewById(R.id.fieldSpinner);
         if (fieldSpinner != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -385,7 +374,6 @@ public class ManageSearchFragment extends Fragment {
             fieldSpinner.setAdapter(adapter);
         }
 
-        // Boolean operator spinner
         Spinner booleanOperatorSpinner = rowView.findViewById(R.id.booleanOperatorSpinner);
         if (booleanOperatorSpinner != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -394,12 +382,12 @@ public class ManageSearchFragment extends Fragment {
             booleanOperatorSpinner.setAdapter(adapter);
         }
 
-        // Populate existing row values
         if (row != null) {
             EditText valueField = rowView.findViewById(R.id.valueField);
             if (valueField != null) valueField.setText(row.getValue());
             if (fieldSpinner != null) setSpinnerSelection(fieldSpinner, row.getField());
-            if (booleanOperatorSpinner != null) setSpinnerSelection(booleanOperatorSpinner, row.getOperator());
+            if (booleanOperatorSpinner != null)
+                setSpinnerSelection(booleanOperatorSpinner, row.getOperator());
         }
 
         searchFieldsContainer.addView(rowView);
@@ -450,8 +438,8 @@ public class ManageSearchFragment extends Fragment {
         if (filled > 0) {
             for (View r : rowsToRemove) searchFieldsContainer.removeView(r);
         } else if (!rowsToRemove.isEmpty()) {
-            // keep first row
-            for (int i = 1; i < rowsToRemove.size(); i++) searchFieldsContainer.removeView(rowsToRemove.get(i));
+            for (int i = 1; i < rowsToRemove.size(); i++)
+                searchFieldsContainer.removeView(rowsToRemove.get(i));
         }
 
         updateRemoveButtonsVisibility();
@@ -459,7 +447,8 @@ public class ManageSearchFragment extends Fragment {
 
     // ------------------- Date picker -------------------
     private void setupDatePicker() {
-        if (dateFromField != null) dateFromField.setOnClickListener(v -> showDatePicker(dateFromField));
+        if (dateFromField != null)
+            dateFromField.setOnClickListener(v -> showDatePicker(dateFromField));
         if (dateToField != null) dateToField.setOnClickListener(v -> showDatePicker(dateToField));
     }
 
@@ -518,49 +507,35 @@ public class ManageSearchFragment extends Fragment {
     }
 
     // ------------------- Apply / Reset -------------------
-    private void applyFilters() {
+    private boolean applyFilters() {
         removeEmptyRows();
 
         QueryOptions existingQuery = searchViewModel.getCurrentQuery().getValue();
         QueryOptions.Builder builder = new QueryOptions.Builder();
 
+        // Preserve sort settings from existing query
         if (existingQuery != null) {
             builder.sortBy(existingQuery.getSortBy())
                     .sortOrder(existingQuery.getSortOrder())
                     .maxResults(existingQuery.getMaxResults());
         }
 
-        // Get basic search term from parent SearchFragment
-        Fragment parentFragment = getParentFragment();
-        if (parentFragment instanceof SearchFragment) {
-            SearchFragment searchFragment = (SearchFragment) parentFragment;
-            String basicTerm = searchFragment.getCurrentSearchTerm();
-            String basicField = searchFragment.getCurrentSearchField();
-
-            if (basicTerm != null && !basicTerm.isEmpty()) {
-                builder.searchTerm(basicTerm).searchField(basicField);
-            }
-        } else {
-            if (existingQuery != null && existingQuery.hasSearchTerm()) {
-                builder.searchTerm(existingQuery.getSearchTerm())
-                        .searchField(existingQuery.getSearchField());
-            }
-        }
-
-        // Collect search rows
+        // Collect search rows from advanced filter UI
         List<SearchRow> rows = new ArrayList<>();
-        for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
-            View rowView = searchFieldsContainer.getChildAt(i);
-            EditText valueField = rowView.findViewById(R.id.valueField);
-            Spinner fieldSpinner = rowView.findViewById(R.id.fieldSpinner);
-            Spinner booleanSpinner = rowView.findViewById(R.id.booleanOperatorSpinner);
+        if (searchFieldsContainer != null) {
+            for (int i = 0; i < searchFieldsContainer.getChildCount(); i++) {
+                View rowView = searchFieldsContainer.getChildAt(i);
+                EditText valueField = rowView.findViewById(R.id.valueField);
+                Spinner fieldSpinner = rowView.findViewById(R.id.fieldSpinner);
+                Spinner booleanSpinner = rowView.findViewById(R.id.booleanOperatorSpinner);
 
-            if (valueField != null && fieldSpinner != null && booleanSpinner != null) {
-                String value = valueField.getText().toString().trim();
-                if (!value.isEmpty()) {
-                    String field = getFieldValue(fieldSpinner.getSelectedItemPosition());
-                    String operator = booleanSpinner.getSelectedItem().toString();
-                    rows.add(new SearchRow(field, value, operator));
+                if (valueField != null && fieldSpinner != null && booleanSpinner != null) {
+                    String value = valueField.getText().toString().trim();
+                    if (!value.isEmpty()) {
+                        String field = getFieldValue(fieldSpinner.getSelectedItemPosition());
+                        String operator = booleanSpinner.getSelectedItem().toString();
+                        rows.add(new SearchRow(field, value, operator));
+                    }
                 }
             }
         }
@@ -571,22 +546,38 @@ public class ManageSearchFragment extends Fragment {
         updateSelectedCategoriesFromUI();
         builder.categories(new ArrayList<>(selectedCategories));
 
-        // NEW: Include cross-list option
-        builder.includeCrossLists(includeCrossListCheckbox.isChecked());
-
         // Include dates
-        String fromDate = dateFromField.getText().toString().trim();
-        String toDate = dateToField.getText().toString().trim();
-        if (!fromDate.isEmpty()) builder.dateFrom(fromDate);
-        if (!toDate.isEmpty()) builder.dateTo(toDate);
+        String fromDate = dateFromField != null ? dateFromField.getText().toString().trim() : "";
+        String toDate = dateToField != null ? dateToField.getText().toString().trim() : "";
+        if (!fromDate.isEmpty()) {
+            builder.dateFrom(fromDate);
+        }
+        if (!toDate.isEmpty()) {
+            builder.dateTo(toDate);
+        }
 
         builder.start(0);
 
+        // VALIDATION: Check if we have at least something to search for
+        boolean hasSearchRows = !rows.isEmpty();
+        boolean hasCategories = !selectedCategories.isEmpty();
+        boolean hasDateRange = !fromDate.isEmpty() || !toDate.isEmpty();
+
+        if (!hasSearchRows && !hasCategories && !hasDateRange) {
+            Toast.makeText(requireContext(),
+                    "Please add at least one advanced filter",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         QueryOptions newQuery = builder.build();
         searchViewModel.updateQueryOptions(newQuery);
+        searchViewModel.search(newQuery);
+
         updateFilterButtonIndicator();
 
         Toast.makeText(requireContext(), "Filters applied", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     private String getFieldValue(int position) {
@@ -596,35 +587,50 @@ public class ManageSearchFragment extends Fragment {
 
     private void resetAllFilters() {
         // Clear search rows
-        searchFieldsContainer.removeAllViews();
-        addSearchFieldRow(null);
+        if (searchFieldsContainer != null) {
+            searchFieldsContainer.removeAllViews();
+            addSearchFieldRow(null);
+        }
 
         // Clear category selections
         selectedMainCategories.clear();
         selectedCategories.clear();
 
-        // Uncheck all chips
-        mainCategoryChipGroup.clearCheck();
-        leafCategoryChipGroup.clearCheck();
+        if (mainCategoryChipGroup != null) {
+            mainCategoryChipGroup.clearCheck();
+        }
+        if (leafCategoryChipGroup != null) {
+            leafCategoryChipGroup.clearCheck();
+        }
 
         hideLeafCategoryRow();
 
-        // NEW: Reset cross-list checkbox
-        includeCrossListCheckbox.setChecked(false);
-
         // Clear dates
-        dateFromField.setText("");
-        dateToField.setText("");
+        if (dateFromField != null) {
+            dateFromField.setText("");
+        }
+        if (dateToField != null) {
+            dateToField.setText("");
+        }
 
-        // Update summary
         updateSelectedCategoriesSummary();
 
-        // Reset query in ViewModel
-        QueryOptions basicQuery = new QueryOptions.Builder().start(0).build();
-        searchViewModel.updateQueryOptions(basicQuery);
+        // Reset query in ViewModel to default
+        QueryOptions defaultQuery = new QueryOptions.Builder()
+                .searchTerm("all")
+                .searchField("all")
+                .start(0)
+                .maxResults(10)
+                .sortBy("submittedDate")
+                .sortOrder("descending")
+                .build();
+
+        searchViewModel.updateQueryOptions(defaultQuery);
+        searchViewModel.search(defaultQuery);
+
         updateFilterButtonIndicator();
 
-        Toast.makeText(requireContext(), "Advanced filters cleared", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "All filters cleared", Toast.LENGTH_SHORT).show();
     }
 
     public void onDrawerClosed() {
@@ -662,18 +668,15 @@ public class ManageSearchFragment extends Fragment {
             return;
         }
 
-        // rows
         if (current.getRows() != null && !current.getRows().isEmpty()) {
             for (SearchRow r : current.getRows()) addSearchFieldRow(r);
         } else addSearchFieldRow(null);
 
-        // categories
         if (current.getCategories() != null && !current.getCategories().isEmpty()) {
             selectedCategories.addAll(current.getCategories());
             restoreCategoryChipsFromList(current.getCategories());
         }
 
-        // dates
         if (current.getDateFrom() != null) {
             if (dateFromField != null) dateFromField.setText(current.getDateFrom());
         }
@@ -688,7 +691,6 @@ public class ManageSearchFragment extends Fragment {
     private void restoreCategoryChipsFromList(List<String> categories) {
         if (categories == null || categories.isEmpty() || mainCategoryChipGroup == null) return;
 
-        // Mark main categories
         for (String category : categories) {
             if (CategoryProvider.getInstance(requireContext()).isMainCategory(category)) {
                 selectedMainCategories.add(category);
@@ -702,9 +704,7 @@ public class ManageSearchFragment extends Fragment {
             }
         }
 
-        // populate leaves based on mains
         updateLeafCategoriesForAllSelected();
-        // mark leaf chips
         updateLeafCategoryChips();
     }
 

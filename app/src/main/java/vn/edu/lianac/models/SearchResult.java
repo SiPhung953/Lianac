@@ -16,10 +16,21 @@ public class SearchResult {
         this.itemsPerPage = Math.max(0, itemsPerPage);
     }
 
-    public List<Article> getArticles() { return articles; }
-    public int getTotalResults() { return totalResults; }
-    public int getStartIndex() { return startIndex; }
-    public int getItemsPerPage() { return itemsPerPage; }
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public int getTotalResults() {
+        return totalResults;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public int getItemsPerPage() {
+        return itemsPerPage;
+    }
 
     public boolean hasMoreResults() {
         return startIndex + articles.size() < totalResults;
