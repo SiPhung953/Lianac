@@ -345,7 +345,7 @@ public class ManageSearchFragment extends Fragment {
         if (selectedCategoriesSummary == null) return;
 
         if (total == 0) {
-            selectedCategoriesSummary.setText(getString(R.string.no_categories_selected)); // prefer resource
+            selectedCategoriesSummary.setText("asd"); // prefer resource
         } else if (total == 1) {
             selectedCategoriesSummary.setText("1 category selected");
         } else {

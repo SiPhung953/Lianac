@@ -196,7 +196,7 @@ public class SubjectDetailFragment extends Fragment {
     private void navigateToHome() {
         // Navigate back to SubjectsFragment (main categories list)
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigateToContent(new SubjectsFragment());
+            ((MainActivity) getActivity()).replaceFragment(new SubjectsFragment());
         }
     }
 
@@ -214,7 +214,7 @@ public class SubjectDetailFragment extends Fragment {
         );
 
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).loadContentFragment(fragment, false);
+            ((MainActivity) getActivity()).replaceFragment(fragment);
         }
     }
 
@@ -301,7 +301,7 @@ public class SubjectDetailFragment extends Fragment {
             );
 
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).navigateToContent(fragment);
+                ((MainActivity) getActivity()).replaceFragment(fragment);
             }
         });
     }
@@ -329,7 +329,7 @@ public class SubjectDetailFragment extends Fragment {
             viewModel.searchByCategory(categoryId, sortBy);
 
             // Navigate to ArticleListingFragment
-            ((MainActivity) getActivity()).navigateToContent(new ArticleListingFragment());
+            ((MainActivity) getActivity()).replaceFragment(new ArticleListingFragment());
         }
     }
     /**

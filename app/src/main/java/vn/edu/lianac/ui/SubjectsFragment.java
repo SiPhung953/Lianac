@@ -82,7 +82,7 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
     public void onSubjectClick(String categoryId, String displayName) {
         // Navigate to SubjectDetailFragment
         SubjectDetailFragment detailFragment = SubjectDetailFragment.newInstance(categoryId, displayName);
-        ((MainActivity) requireActivity()).navigateToContent(detailFragment);
+        ((MainActivity) requireActivity()).replaceFragment(detailFragment);
     }
 
     private void showEmptyState() {

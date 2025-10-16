@@ -153,7 +153,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/select_main_categories"
+                    android:text="asd"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -192,7 +192,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/select_specific_categories"
+                    android:text="asd"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -210,7 +210,7 @@
                 android:id="@+id/includeCrossListCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/include_cross_listed"
+                android:text="asd"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp" />
 
@@ -218,7 +218,7 @@
                 android:id="@+id/selectedCategoriesSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/no_categories_selected"
+                android:text="asd"
                 android:textSize="12sp"
                 android:textColor="#666666"
                 android:layout_marginTop="4dp"

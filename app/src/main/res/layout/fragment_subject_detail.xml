@@ -81,7 +81,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/newest"
+                    android:text="asd"
                     android:layout_marginEnd="8dp" />
 
                 <Button
@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/recent"
+                    android:text="asd"
                     android:layout_marginEnd="8dp" />
 
                 <Button
@@ -97,7 +97,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/popular" />
+                    android:text="asd" />
             </LinearLayout>
 
             <!-- Subcategories Section -->
@@ -105,7 +105,7 @@
                 android:id="@+id/subcategoriesTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/subcategories"
+                android:text="asd"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"

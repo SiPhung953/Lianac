@@ -544,7 +544,7 @@ public class DetailFragment extends Fragment {
 
         if (getActivity() instanceof MainActivity) {
             try {
-                ((MainActivity) getActivity()).loadContentFragment(pdfFragment, true);
+                ((MainActivity) getActivity()).replaceFragment(pdfFragment);
             } catch (NoSuchMethodError e) {
                 try {
                     ((MainActivity) getActivity()).replaceFragment(pdfFragment);
