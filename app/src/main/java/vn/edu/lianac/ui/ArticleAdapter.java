@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.lianac.DetailFragment;
+import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.Article;
 import vn.edu.lianac.utils.CategoryProvider;
@@ -201,13 +204,45 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
                 doiText.setVisibility(View.GONE);
             }
 
-            // Make entire item clickable
+            // Make item clickable to open DetailFragment
             itemView.setOnClickListener(v -> {
-                Toast.makeText(context, "Opening article: " + article.getId(), Toast.LENGTH_SHORT).show();
-                // TODO: Navigate to article detail screen
+                Log.d(TAG, "Item clicked: " + article.getId());
+                navigateToDetail(article);
             });
 
             Log.d(TAG, "Bind complete for: " + article.getId());
+        }
+
+        /**
+         * Navigate to DetailFragment with the selected article
+         */
+        private void navigateToDetail(Article article) {
+            if (context instanceof FragmentActivity) {
+                FragmentActivity activity = (FragmentActivity) context;
+
+                // Check which MainActivity version we're using
+                if (activity instanceof MainActivity) {
+                    android.os.Bundle args = new android.os.Bundle();
+                    args.putParcelable("article", article);
+
+                    DetailFragment fragment = new DetailFragment();
+                    fragment.setArguments(args);
+
+                    // Use the appropriate navigation method
+                    try {
+                        // Try MainActivity_search style first
+                        ((MainActivity) activity).loadContentFragment(fragment, true);
+                    } catch (NoSuchMethodError e) {
+                        // Fallback to MainActivity_detail style
+                        try {
+                            ((MainActivity) activity).replaceFragment(fragment);
+                        } catch (Exception ex) {
+                            Log.e(TAG, "Failed to navigate to detail", ex);
+                            Toast.makeText(context, "Error opening article details", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
         }
 
         /**
