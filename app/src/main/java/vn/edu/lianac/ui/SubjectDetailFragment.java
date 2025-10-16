@@ -112,7 +112,7 @@ public class SubjectDetailFragment extends Fragment {
         breadcrumbContainer.removeAllViews();
 
         // Add "Lianac" home link
-        TextView homeLink = createBreadcrumbLink("Lianac", null);
+        TextView homeLink = createBreadcrumbLink(getString(R.string.app_name), null);
         homeLink.setOnClickListener(v -> navigateToHome());
         breadcrumbContainer.addView(homeLink);
 
@@ -245,9 +245,7 @@ public class SubjectDetailFragment extends Fragment {
         }
 
         // Fallback description
-        return String.format("Comprehensive collection of research papers, preprints, and publications in %s. " +
-                        "Browse the latest research, explore subfields, and discover cutting-edge developments in this field.",
-                categoryName);
+        return getString(R.string.category_description, categoryName);
     }
 
     private void loadSubcategories() {
@@ -315,7 +313,7 @@ public class SubjectDetailFragment extends Fragment {
         }
 
         // Fallback description for subcategories
-        return String.format("Research papers and preprints in %s", displayName);
+        return getString(R.string.category_short_description, displayName);
     }
 
     private void showPapers(String sortBy) {

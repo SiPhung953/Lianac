@@ -50,7 +50,7 @@ public class ArxivAPIService {
      */
     public void fetchArticles(String queryUrl, ArxivResponseListener listener) {
         if (queryUrl == null || queryUrl.isEmpty()) {
-            listener.onError(new IllegalArgumentException("Query URL cannot be null or empty"));
+            listener.onError(new IllegalArgumentException(String.valueOf(R.string.error_no_query_url)));
             return;
         }
 
@@ -67,7 +67,7 @@ public class ArxivAPIService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                listener.onError(new NetworkException("Network request failed", e));
+                listener.onError(new NetworkException(String.valueOf(R.string.error_network_request), e));
             }
 
             @Override
@@ -91,7 +91,7 @@ public class ArxivAPIService {
      */
     public void fetchArticlesWithMetadata(String queryUrl, ArxivSearchResultListener listener) {
         if (queryUrl == null || queryUrl.isEmpty()) {
-            listener.onError(new IllegalArgumentException("Query URL cannot be null or empty"));
+            listener.onError(new IllegalArgumentException(String.valueOf(R.string.error_no_query_url)));
             return;
         }
 
@@ -107,7 +107,7 @@ public class ArxivAPIService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                listener.onError(new NetworkException("Network request failed", e));
+                listener.onError(new NetworkException(String.valueOf(R.string.error_network_request), e));
             }
 
             @Override
@@ -139,8 +139,7 @@ public class ArxivAPIService {
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new IOException("HTTP error code: " + response.code() +
-                        " - " + response.message());
+                throw new IOException(String.format(String.valueOf(R.string.error_http), response.code(), response.message()));
             }
 
             ResponseBody body = response.body();
@@ -152,15 +151,14 @@ public class ArxivAPIService {
                 return ArxivParser.parse(stream);
             }
         } catch (Exception e) {
-            throw new IOException("Failed to fetch and parse articles", e);
+            throw new IOException(String.valueOf(R.string.error_fetch_parse), e);
         }
     }
 
     private void handleResponse(Response response, ArxivResponseListener listener) {
         // Check HTTP status
         if (!response.isSuccessful()) {
-            String errorMsg = String.format("HTTP error: %d - %s",
-                    response.code(), response.message());
+            String errorMsg = String.format(String.valueOf(R.string.error_http), response.code(), response.message());
             listener.onError(new HttpException(response.code(), errorMsg));
             return;
         }
@@ -184,15 +182,15 @@ public class ArxivAPIService {
             listener.onSuccess(articles);
 
         } catch (Exception e) {
-            listener.onError(new ParseException("XML parsing failed", e));
+            listener.onError(new ParseException(String.valueOf(R.string.error_xml_parsing), e));
         }
     }
 
     private void handleResponseWithMetadata(Response response, ArxivSearchResultListener listener) {
         // Check HTTP status
         if (!response.isSuccessful()) {
-            String errorMsg = String.format("HTTP error: %d - %s",
-                    response.code(), response.message());
+            String errorMsg = String.format(String.valueOf(R.string.error_http), response.code(), response.message());
+
             listener.onError(new HttpException(response.code(), errorMsg));
             return;
         }
@@ -209,14 +207,14 @@ public class ArxivAPIService {
             SearchResult result = ArxivParser.parseWithMetadata(stream);
 
             if (result == null) {
-                listener.onError(new ParseException("Parser returned null"));
+                listener.onError(new ParseException(String.valueOf(R.string.error_null_parser)));
                 return;
             }
 
             listener.onSuccess(result);
 
         } catch (Exception e) {
-            listener.onError(new ParseException("XML parsing failed", e));
+            listener.onError(new ParseException(String.valueOf(R.string.error_xml_parsing), e));
         }
     }
 

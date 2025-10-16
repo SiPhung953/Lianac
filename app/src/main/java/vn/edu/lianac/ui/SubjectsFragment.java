@@ -74,7 +74,7 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {
-            showError("Failed to load subjects");
+            showError(getString(R.string.error_failed_load_subjects));
         }
     }
 
@@ -87,7 +87,8 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
 
     private void showEmptyState() {
         // You can add an empty state view here if needed
-        Toast.makeText(requireContext(), "No subjects available", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.no_subjects_available), Toast.LENGTH_SHORT).show();
+
     }
 
     private void showError(String message) {

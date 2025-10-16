@@ -78,7 +78,6 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
         }
 
         private String getSubjectDescription(String categoryId, String displayName) {
-            // Get description from string resources
             String resourceName = "category_desc_" + categoryId.toLowerCase().replace(".", "_").replace("-", "_");
             int resId = itemView.getContext().getResources().getIdentifier(
                     resourceName, "string", itemView.getContext().getPackageName());
@@ -87,8 +86,9 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
                 return itemView.getContext().getString(resId);
             }
 
-            // Fallback description - FIXED: use the displayName parameter
-            return String.format("Research papers and preprints in %s", displayName);
+            // ✅ Use Android string resource fallback
+            return itemView.getContext().getString(R.string.category_short_description, displayName);
         }
+
     }
 }

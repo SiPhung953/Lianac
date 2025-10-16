@@ -13,7 +13,7 @@
     <string name="home">Home</string>
     <string name="next">Next ▶</string>
     <string name="prev">◀ Prev</string>
-    <string name="menu">Menu</string>
+    <string name="menu" translatable="false">Menu</string>
     <string name="remove_field">Remove field</string>
 
     <!-- ================= PLACEHOLDERS ================= -->
@@ -28,22 +28,61 @@
     <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
     <string name="error_loading_data">Error loading data</string>
     <string name="no_categories_selected">No categories selected</string>
-    <string name="one_category_selected">1 category selected</string>
-    <string name="categories_selected">%d categories selected</string>
+    <string name="select_main_categories">Select Main Categories</string>
+    <string name="select_specific_categories">Select Specific Categories</string>
+    <string name="category_header_with_count">%1$s (%2$d selected)</string>
     <string name="include_cross_listed">Include cross-listed papers</string>
+    <string name="error_doi">Cannot open DOI link</string>
+    <string name="open_article">Opening article: </string>
+    <string name="results_info">Showing %1$,d-%2$,d of %3$,d results in %4$s (%5$s)</string>
+    <string name="results_info_simple">Showing %1$,d-%2$,d of %3$,d results</string>
+    <string name="page_info">Page %1$d of %2$,d</string>
+    <string name="date_format">%1$d-%2$02d-%3$02d</string>
+    <string name="validation_no_search_term">Please enter a search term or add filters</string>
+    <string name="toggle_collapsed" translatable="false">▶</string>
+    <string name="toggle_expanded" translatable="false">▼</string>
+
 
     <!-- ================= ERROR MESSAGES ================= -->
     <string name="error_no_query_url">Query URL cannot be null or empty</string>
     <string name="error_no_response_body">Empty response body</string>
     <string name="error_null_parser">Parser returned null</string>
+    <string name="error_http">HTTP error: %1$d - %2$s</string>
+    <string name="error_xml_parsing">XML parsing failed</string>
+    <string name="error_fetch_parse">Failed to fetch and parse articles</string>
+    <string name="error_network_request">Network request failed</string>
+    <string name="error_no_results">No results found</string>
+    <string name="error_failed_load_subjects">Failed to load subjects</string>
+    <string name="no_subjects_available">No subjects available</string>
+    <string name="filters_applied">Filters applied</string>
+    <string name="cleared_filter">Filters cleared</string>
+    <plurals name="selected_categories">
+        <item quantity="one">1 category selected</item>
+        <item quantity="other">%d categories selected</item>
+    </plurals>
+    <string name="validation_no_filters">Please add a search term or at least one filter</string>
+
+    <string name="category_description">
+    Comprehensive collection of research papers, preprints, and publications in %1$s.
+    Browse the latest research, explore subfields, and discover cutting-edge developments in this field.
+    </string>
+    <string name="category_short_description">Research papers and preprints in %1$s</string>
+
+
+    <!--Article sth-->
+    <string name="label_submitted">Submitted: %1$s</string>
+    <string name="label_announced">Originally announced: %1$s</string>
+    <string name="label_et_al">et al.</string>
+    <string name="label_acm_msc" translatable="false">ACM/MSC: %1$s</string>
+    <string name="date_format_mmm_d_yyyy">MMM dd, yyyy</string>
+
 
     <!-- ================= SEARCH UI LABELS ================= -->
-    <string name="additional_search_fields">Additional Search Fields</string>
-    <string name="add_field">+ Add Field</string>
+    <string name="additional_search_fields">Additional Search Boxes</string>
+    <string name="add_field">+ Add Box</string>
     <string name="categories">Categories</string>
-    <string name="select_main_categories">Select Main Categories:</string>
-    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
-    <string name="select_specific_categories">Select Specific Categories:</string>
+    <string name="selected_suffix">selected</string>
+
     <string name="date_range">Date Range</string>
     <string name="from">From</string>
     <string name="to">To</string>
@@ -287,6 +326,4 @@
     <string name="category_econ_em">Econometrics</string>
     <string name="category_econ_gn">General Economics</string>
     <string name="category_econ_th">Theoretical Economics</string>
-
-    <!--To be sorted-->
 </resources>

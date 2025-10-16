@@ -33,6 +33,7 @@ import vn.edu.lianac.viewmodel.SearchViewModel;
 public class SearchFragment extends Fragment {
 
     // Basic search views
+    private String[] fieldCodes;
     private EditText searchBox;
     private Spinner fieldSpinner;
     private ImageButton filterButton;
@@ -62,6 +63,7 @@ public class SearchFragment extends Fragment {
         initViews(view);
         setupBasicSearch();
         loadManageSearchFragment();
+        initFieldCodes();
     }
 
     private void initViews(View view) {
@@ -131,7 +133,7 @@ public class SearchFragment extends Fragment {
 
         // If no search term AND no advanced filters, show error
         if (searchTerm.isEmpty() && !hasAdvancedFilters) {
-            Toast.makeText(getContext(), "Please enter a search term or add filters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.validation_no_search_term, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -224,20 +226,17 @@ public class SearchFragment extends Fragment {
 
     // ==================== HELPERS ====================
 
-    private String getFieldCode(int position) {
-        String[] fields = {"all", "ti", "au", "abs", "co", "jr", "cat", "rn", "id"};
-        return (position >= 0 && position < fields.length) ? fields[position] : "all";
-    }
-
     public boolean isDrawerOpen() {
         return isDrawerOpen;
     }
 
     public void updateFilterIndicator(boolean hasFilters) {
-        if (hasFilters) {
-            filterButton.setBackgroundResource(R.drawable.filter_button_with_indicator);
-        } else {
-            filterButton.setBackgroundResource(R.drawable.filter_button_normal);
+        if (filterButton != null) {
+            if (hasFilters) {
+                filterButton.setBackgroundResource(R.drawable.filter_button_with_indicator);
+            } else {
+                filterButton.setBackgroundResource(R.drawable.filter_button_normal);
+            }
         }
     }
 
@@ -249,13 +248,23 @@ public class SearchFragment extends Fragment {
 
     public void setSearchField(String fieldCode) {
         if (fieldSpinner != null && fieldCode != null) {
-            String[] fields = {"all", "ti", "au", "abs", "co", "jr", "cat", "rn", "id"};
-            for (int i = 0; i < fields.length; i++) {
-                if (fields[i].equals(fieldCode)) {
+            if (fieldCodes == null) initFieldCodes();
+            for (int i = 0; i < fieldCodes.length; i++) {
+                if (fieldCodes[i].equalsIgnoreCase(fieldCode)) {
                     fieldSpinner.setSelection(i);
-                    break;
+                    return;
                 }
             }
+            fieldSpinner.setSelection(0); // default fallback
         }
+    }
+
+    private void initFieldCodes() {
+        fieldCodes = requireContext().getResources().getStringArray(R.array.search_field_values);
+    }
+
+    private String getFieldCode(int position) {
+        if (fieldCodes == null) initFieldCodes();
+        return (position >= 0 && position < fieldCodes.length) ? fieldCodes[position] : fieldCodes[0];
     }
 }

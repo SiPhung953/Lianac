@@ -230,7 +230,7 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
                     try {
                         context.startActivity(browserIntent);
                     } catch (Exception e) {
-                        Toast.makeText(context, "Cannot open DOI link", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, String.valueOf(R.string.error_doi), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
@@ -239,7 +239,7 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
             // Make entire item clickable
             itemView.setOnClickListener(v -> {
-                Toast.makeText(context, "Opening article: " + article.getId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.open_article + article.getId(), Toast.LENGTH_SHORT).show();
                 // TODO: Navigate to article detail screen
             });
 

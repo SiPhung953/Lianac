@@ -122,6 +122,7 @@ public class ManageSearchFragment extends Fragment {
         mainCategoryLabel = view.findViewById(R.id.mainCategoryLabel);
         leafCategoryHeader = view.findViewById(R.id.leafCategoryHeader);
         leafCategoryToggle = view.findViewById(R.id.leafCategoryToggle);
+        leafCategoryLabel = view.findViewById(R.id.leafCategoryLabel);
 
         CheckBox includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
 
@@ -214,10 +215,10 @@ public class ManageSearchFragment extends Fragment {
         if (content != null && toggle != null) {
             if (content.getVisibility() == View.VISIBLE) {
                 content.setVisibility(View.GONE);
-                toggle.setText("▶");
+                toggle.setText(R.string.toggle_collapsed);
             } else {
                 content.setVisibility(View.VISIBLE);
-                toggle.setText("▼");
+                toggle.setText(R.string.toggle_expanded);
             }
         }
     }
@@ -247,7 +248,7 @@ public class ManageSearchFragment extends Fragment {
             leafCategoryChipGroup.setVisibility(View.VISIBLE);
         }
         if (leafCategoryToggle != null) {
-            leafCategoryToggle.setText("▼");
+            leafCategoryToggle.setText(R.string.toggle_expanded);
         }
     }
 
@@ -330,19 +331,21 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void updateSelectedCategoriesSummary() {
-        updateSelectedCategoriesFromUI();
-        int total = selectedCategories.size();
         if (selectedCategoriesSummary == null) return;
 
-        if (total == 0) {
-            selectedCategoriesSummary.setText(getString(R.string.no_categories_selected));
-        } else if (total == 1) {
-            selectedCategoriesSummary.setText(getString(R.string.one_category_selected));
-        } else {
-            selectedCategoriesSummary.setText(getString(R.string.categories_selected, total));
-        }
+        updateSelectedCategoriesFromUI();
+        int total = selectedCategories.size();
         selectedCategoriesSummary.setVisibility(View.VISIBLE);
+
+        if (total == 0) {
+            selectedCategoriesSummary.setText(R.string.no_categories_selected);
+        } else {
+            selectedCategoriesSummary.setText(
+                    getResources().getQuantityString(R.plurals.selected_categories, total, total)
+            );
+        }
     }
+
 
     // ------------------- Search rows -------------------
     private void addSearchFieldRow(@Nullable SearchRow row) {
@@ -455,7 +458,7 @@ public class ManageSearchFragment extends Fragment {
         DatePickerDialog dp = new DatePickerDialog(
                 requireContext(),
                 (view, year, month, day) -> {
-                    String date = String.format("%d-%02d-%02d", year, month + 1, day);
+                    String date = getString(R.string.date_format, year, month + 1, day);
                     dateField.setText(date);
                 },
                 calendar.get(Calendar.YEAR),
@@ -468,13 +471,13 @@ public class ManageSearchFragment extends Fragment {
     // ------------------- Toggles -------------------
     private void setupToggleSections() {
         if (searchFieldsContent != null) searchFieldsContent.setVisibility(View.VISIBLE);
-        if (searchFieldsToggle != null) searchFieldsToggle.setText("▼");
+        if (searchFieldsToggle != null) searchFieldsToggle.setText(R.string.toggle_expanded);
 
         if (categoriesContent != null) categoriesContent.setVisibility(View.GONE);
-        if (categoriesToggle != null) categoriesToggle.setText("▶");
+        if (categoriesToggle != null) categoriesToggle.setText(R.string.toggle_collapsed);
 
         if (dateRangeContent != null) dateRangeContent.setVisibility(View.GONE);
-        if (dateRangeToggle != null) dateRangeToggle.setText("▶");
+        if (dateRangeToggle != null) dateRangeToggle.setText(R.string.toggle_collapsed);
     }
 
     private void onToggleClicked(View v) {
@@ -496,10 +499,10 @@ public class ManageSearchFragment extends Fragment {
         if (content != null && toggle != null) {
             if (content.getVisibility() == View.VISIBLE) {
                 content.setVisibility(View.GONE);
-                toggle.setText("▶");
+                toggle.setText(R.string.toggle_collapsed);
             } else {
                 content.setVisibility(View.VISIBLE);
-                toggle.setText("▼");
+                toggle.setText(R.string.toggle_expanded);
             }
         }
     }
@@ -590,7 +593,7 @@ public class ManageSearchFragment extends Fragment {
 
         if (!hasSearchTerm && !hasSearchRows && !hasCategories && !hasDateRange) {
             Toast.makeText(requireContext(),
-                    "Please add a search term or at least one filter",
+                    R.string.validation_no_filters,
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -601,7 +604,7 @@ public class ManageSearchFragment extends Fragment {
 
         updateFilterButtonIndicator();
 
-        Toast.makeText(requireContext(), "Filters applied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.filters_applied, Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -667,7 +670,7 @@ public class ManageSearchFragment extends Fragment {
 
         updateFilterButtonIndicator();
 
-        Toast.makeText(requireContext(), "Advanced filters cleared", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.cleared_filter, Toast.LENGTH_SHORT).show();
     }
 
     public void onDrawerClosed() {
@@ -675,25 +678,44 @@ public class ManageSearchFragment extends Fragment {
     }
 
     private void updateCategoryHeaderCounts() {
-        String text = "";
         if (mainCategoryLabel != null) {
             int mainCount = selectedMainCategories.size();
-            text = R.string.select_main_categories + (mainCount > 0 ? " (" + mainCount + R.string.selected + ")" : "");
-            mainCategoryLabel.setText(text);
+            if (mainCount > 0) {
+                String text = getString(R.string.category_header_with_count,
+                        getString(R.string.select_main_categories),
+                        mainCount
+                );
+                mainCategoryLabel.setText(text);
+            } else {
+                mainCategoryLabel.setText(R.string.select_main_categories);
+            }
         }
 
-        if (leafCategoryLabel != null && leafCategoryHeader != null && leafCategoryHeader.getVisibility() == View.VISIBLE) {
+        // FIXED: Remove visibility check - update the label regardless of visibility
+        // The label should be updated even when the section is hidden
+        if (leafCategoryLabel != null) {
             int leafCount = 0;
             if (leafCategoryChipGroup != null) {
                 for (int i = 0; i < leafCategoryChipGroup.getChildCount(); i++) {
                     View v = leafCategoryChipGroup.getChildAt(i);
-                    if (v instanceof Chip && ((Chip) v).isChecked()) leafCount++;
+                    if (v instanceof Chip && ((Chip) v).isChecked()) {
+                        leafCount++;
+                    }
                 }
             }
-            text = R.string.select_specific_categories + (leafCount > 0 ? " (" + leafCount + R.string.selected + ")" : "");
-            leafCategoryLabel.setText(text);
+
+            if (leafCount > 0) {
+                String text = getString(R.string.category_header_with_count,
+                        getString(R.string.select_specific_categories),
+                        leafCount
+                );
+                leafCategoryLabel.setText(text);
+            } else {
+                leafCategoryLabel.setText(R.string.select_specific_categories);
+            }
         }
     }
+
 
     // ------------------- Restore -------------------
     private void restoreFiltersFromViewModel() {

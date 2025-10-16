@@ -1,56 +1,92 @@
 <resources>
 
     <!-- ================= APP INFO ================= -->
-    <string name="app_name" translatable="false">Lianac</string>
 
     <!-- ================= GENERAL ACTIONS ================= -->
-    <string name="search">Search</string>
-    <string name="advanced_search">Advanced Search</string>
+    <string name="search">Tìm Kiếm</string>
+    <string name="advanced_search">Tìm Kiếm Nâng Cao</string>
     <string name="basic_search">Basic Search</string>
     <string name="apply">Apply</string>
     <string name="reset">Reset</string>
-    <string name="close">Close</string>
+    <string name="close">Đóng</string>
     <string name="home">Home</string>
-    <string name="next">Next ▶</string>
-    <string name="prev">◀ Prev</string>
-    <string name="menu">Menu</string>
+    <string name="next">Tiếp ▶</string>
+    <string name="prev">◀ Trước</string>
     <string name="remove_field">Remove field</string>
 
     <!-- ================= PLACEHOLDERS ================= -->
-    <string name="placeholder_search">Search...</string>
-    <string name="placeholder_advanced_search">Search term...</string>
-    <string name="select_category_placeholder">Select a category</string>
+    <string name="placeholder_search">Tìm...</string>
+    <string name="placeholder_advanced_search">Tìm cụm...</string>
+    <string name="select_category_placeholder">Chọn một mục</string>
 
     <!-- ================= TOAST / MESSAGES ================= -->
-    <string name="select_valid_category_toast">Please select a valid category</string>
-    <string name="invalid_category_toast">Invalid category selected</string>
+    <string name="select_valid_category_toast">Hãy chọn một mục hợp lệ</string>
+    <string name="invalid_category_toast">Đã chọn mục không hợp lệ</string>
     <string name="category_already_added_toast">Category already added</string>
     <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
-    <string name="error_loading_data">Error loading data</string>
-    <string name="no_categories_selected">No categories selected</string>
-    <string name="one_category_selected">1 category selected</string>
-    <string name="categories_selected">%d categories selected</string>
-    <string name="include_cross_listed">Include cross-listed papers</string>
+    <string name="error_loading_data">Lỗi tải dữ liệu</string>
+    <string name="no_categories_selected">Không có mục nào được chọn</string>
+    <string name="select_main_categories">Chọn mục chính</string>
+    <string name="select_specific_categories">Chọn mục cụ thể</string>
+    <string name="category_header_with_count">%1$s (%2$d đã chọn)</string>
+    <string name="include_cross_listed">Bao gồm các bài được liệt kê chéo</string>
+    <string name="error_doi">Không thể mở đường dẫn DOI</string>
+    <string name="open_article">"Mở bài báo: "</string>
+    <string name="results_info">Hiện %1$,d-%2$,d trong %3$,d kết quả trong %4$s (%5$s)</string>
+    <string name="results_info_simple">Hiện %1$,d-%2$,d trong %3$,d kết quả</string>
+    <string name="page_info">Trang %1$d trong %2$,d</string>
+    <string name="date_format">%1$d-%2$02d-%3$02d</string>
+    <string name="validation_no_search_term">Vui lòng nhập một từ hoặc thêm bộ lọc</string>
+
+
+    <!-- ================= ERROR MESSAGES ================= -->
+    <string name="error_no_query_url">URL truy vấn không thể rỗng hoặc trống</string>
+    <string name="error_no_response_body">Nội dung phản hồi trống</string>
+    <string name="error_null_parser">Trình phân tích cú pháp trả về không</string>
+    <string name="error_http">Lỗi HTTP: %1$d - %2$s</string>
+    <string name="error_xml_parsing">Phân tích cú pháp XML không thành công</string>
+    <string name="error_fetch_parse">Không thể tìm nạp và phân tích các bài</string>
+    <string name="error_network_request">Yêu cầu mạng không thành công</string>
+    <string name="error_no_results">Không tìm thấy kết quả</string>
+    <string name="error_failed_load_subjects">Không tải được môn học</string>
+    <string name="no_subjects_available">Không có môn học nào</string>
+    <string name="filters_applied">Đã áp dụng bộ lọc</string>
+    <string name="cleared_filter">Đã xóa bộ lọc</string>
+    <plurals name="selected_categories">
+        <item quantity="one">1 category selected</item>
+        <item quantity="other">%d categories selected</item>
+    </plurals>
+    <string name="validation_no_filters">Vui lòng thêm một thuật ngữ tìm kiếm hoặc ít nhất một bộ lọc</string>
+
+    <string name="category_description">Bộ sưu tập toàn diện các bài báo nghiên cứu, bản in trước và ấn phẩm trong %1$s. Duyệt qua các nghiên cứu mới nhất, khám phá các lĩnh vực phụ và khám phá những phát triển tiên tiến trong lĩnh vực này.</string>
+    <string name="category_short_description">Research papers and preprints in %1$s</string>
+
+
+    <!--Article sth-->
+    <string name="label_submitted">Submitted: %1$s</string>
+    <string name="label_announced">Originally announced: %1$s</string>
+    <string name="label_et_al">nnk.</string>
+    <string name="date_format_mmm_d_yyyy">MMM dd, yyyy</string>
+
 
     <!-- ================= SEARCH UI LABELS ================= -->
-    <string name="additional_search_fields">Additional Search Fields</string>
-    <string name="add_field">+ Add Field</string>
-    <string name="categories">Categories</string>
-    <string name="select_main_categories">Select Main Categories:</string>
-    <string name="select_physics_subjects_to_expand">Select Physics Subjects to Expand:</string>
-    <string name="select_specific_categories">Select Specific Categories:</string>
-    <string name="date_range">Date Range</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
-    <string name="advanced_filters">Advanced filters</string>
-    <string name="subcategories">Subcategories</string>
-    <string name="popular">Popular</string>
-    <string name="recent">Recent</string>
-    <string name="newest">New</string>
-    <string name="sort_by">Sort by:</string>
-    <string name="per_page">Per page:</string>
-    <string name="current">Current</string>
-    <string name="selected">Selected</string>
+    <string name="additional_search_fields">Các ô tìm kiếm bổ sung</string>
+    <string name="add_field">+ Thêm ô</string>
+    <string name="categories">Mục</string>
+    <string name="selected_suffix">đã chọn</string>
+
+    <string name="date_range">Phạm vi ngày</string>
+    <string name="from">Từ</string>
+    <string name="to">Đến</string>
+    <string name="advanced_filters">Bộ lọc Nâng Cao</string>
+    <string name="subcategories">Mục con</string>
+    <string name="popular">Phổ biến</string>
+    <string name="recent">Gần đây</string>
+    <string name="newest">Mới</string>
+    <string name="sort_by">Sắp xếp theo:</string>
+    <string name="per_page">Mỗi trang:</string>
+    <string name="current">Hiện tại</string>
+    <string name="selected">Đã chọn</string>
 
     <!-- ================= SEARCH ARRAYS ================= -->
     <string-array name="search_fields">
@@ -98,190 +134,188 @@
     </string-array>
 
     <!-- ================= MAIN CATEGORIES ================= -->
-    <string name="category_physics">Physics</string>
-    <string name="category_math">Mathematics</string>
-    <string name="category_cs">Computer Science</string>
-    <string name="category_q_bio">Quantitative Biology</string>
-    <string name="category_q_fin">Quantitative Finance</string>
-    <string name="category_stat">Statistics</string>
-    <string name="category_eess">Electrical Engineering and Systems Science</string>
-    <string name="category_econ">Economics</string>
+    <string name="category_physics">Vật lý</string>
+    <string name="category_math">Toán học</string>
+    <string name="category_cs">Khoa học Máy tính</string>
+    <string name="category_q_bio">Sinh học Định lượng</string>
+    <string name="category_q_fin">Tài chính Định lượng</string>
+    <string name="category_stat">Thống kê</string>
+    <string name="category_eess">Kỹ thuật điện và Khoa học hệ thống</string>
+    <string name="category_econ">Kinh tế học</string>
 
     <!-- ================= SUBCATEGORIES ================= -->
     <!-- ✅ Physics -->
-    <string name="category_astro_ph">Astrophysics</string>
-    <string name="category_astro_ph_co">Cosmology and Nongalactic Astrophysics</string>
-    <string name="category_astro_ph_ep">Earth and Planetary Astrophysics</string>
-    <string name="category_astro_ph_ga">Astrophysics of Galaxies</string>
-    <string name="category_astro_ph_he">High Energy Astrophysical Phenomena</string>
-    <string name="category_astro_ph_im">Instrumentation and Methods</string>
-    <string name="category_astro_ph_sr">Solar and Stellar Astrophysics</string>
-    <string name="category_cond_mat">Condensed Matter</string>
-    <string name="category_cond_mat_dis_nn">Disordered Systems and Neural Networks</string>
-    <string name="category_cond_mat_mes_hall">Mesoscale and Nanoscale Physics</string>
-    <string name="category_cond_mat_mtrl_sci">Materials Science</string>
-    <string name="category_cond_mat_other">Other Condensed Matter</string>
-    <string name="category_cond_mat_quant_gas">Quantum Gases</string>
-    <string name="category_cond_mat_soft">Soft Condensed Matter</string>
-    <string name="category_cond_mat_stat_mech">Statistical Mechanics</string>
-    <string name="category_cond_mat_str_el">Strongly Correlated Electrons</string>
-    <string name="category_cond_mat_supr_con">Superconductivity</string>
-    <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
-    <string name="category_hep">High Energy Physics</string>
-    <string name="category_hep_ex">High Energy Physics - Experiment</string>
-    <string name="category_hep_lat">High Energy Physics - Lattice</string>
-    <string name="category_hep_ph">High Energy Physics - Phenomenology</string>
-    <string name="category_hep_th">High Energy Physics - Theory</string>
-    <string name="category_math_ph">Mathematical Physics</string>
-    <string name="category_nlin">Nonlinear Sciences</string>
-    <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
-    <string name="category_nlin_cd">Chaotic Dynamics</string>
-    <string name="category_nlin_cg">Cellular Automata and Lattice Gases</string>
-    <string name="category_nlin_ps">Pattern Formation and Solitons</string>
-    <string name="category_nlin_si">Exactly Solvable and Integrable Systems</string>
-    <string name="category_nucl">Nuclear</string>
-    <string name="category_nucl_ex">Nuclear Experiment</string>
-    <string name="category_nucl_th">Nuclear Theory</string>
-    <string name="category_physics_other">Physics (Other)</string>
-    <string name="category_physics_acc_ph">Accelerator Physics</string>
-    <string name="category_physics_ao_ph">Atmospheric and Oceanic Physics</string>
-    <string name="category_physics_app_ph">Applied Physics</string>
-    <string name="category_physics_atm_clus">Atomic and Molecular Clusters</string>
-    <string name="category_physics_atom_ph">Atomic Physics</string>
-    <string name="category_physics_bio_ph">Biological Physics</string>
-    <string name="category_physics_chem_ph">Chemical Physics</string>
-    <string name="category_physics_class_ph">Classical Physics</string>
-    <string name="category_physics_comp_ph">Computational Physics</string>
-    <string name="category_physics_data_an">Data Analysis, Statistics and Probability</string>
-    <string name="category_physics_ed_ph">Physics Education</string>
-    <string name="category_physics_flu_dyn">Fluid Dynamics</string>
-    <string name="category_physics_gen_ph">General Physics</string>
-    <string name="category_physics_geo_ph">Geophysics</string>
-    <string name="category_physics_hist_ph">History and Philosophy of Physics</string>
-    <string name="category_physics_ins_det">Instrumentation and Detectors</string>
-    <string name="category_physics_med_ph">Medical Physics</string>
-    <string name="category_physics_optics">Optics</string>
-    <string name="category_physics_plasm_ph">Plasma Physics</string>
-    <string name="category_physics_pop_ph">Popular Physics</string>
-    <string name="category_physics_soc_ph">Physics and Society</string>
-    <string name="category_physics_space_ph">Space Physics</string>
-    <string name="category_quant_ph">Quantum Physics</string>
+    <string name="category_astro_ph">Vật lý thiên văn</string>
+    <string name="category_astro_ph_co">Vũ trụ học và Vật lý thiên văn phi thiên hà</string>
+    <string name="category_astro_ph_ep">Vật lý thiên văn Trái Đất và Hành tinh</string>
+    <string name="category_astro_ph_ga">Thiên văn học thiên hà</string>
+    <string name="category_astro_ph_he">Vật lý thiên văn năng lượng cao</string>
+    <string name="category_astro_ph_im">Thiết bị và phương pháp quan sát</string>
+    <string name="category_astro_ph_sr">Vật lý thiên văn Mặt Trời và sao</string>
+    <string name="category_cond_mat">Vật chất ngưng tụ</string>
+    <string name="category_cond_mat_dis_nn">Hệ thống rối loạn và mạng lưới thần kinh</string>
+    <string name="category_cond_mat_mes_hall">Vật lý meso và nano</string>
+    <string name="category_cond_mat_mtrl_sci">Khoa học Vật liệu</string>
+    <string name="category_cond_mat_other">Vật chất ngưng tụ khác</string>
+    <string name="category_cond_mat_quant_gas">Khí lượng tử</string>
+    <string name="category_cond_mat_soft">Vật chất ngưng tụ mềm</string>
+    <string name="category_cond_mat_stat_mech">Cơ học thống kê</string>
+    <string name="category_cond_mat_str_el">Điện tử tương quan mạnh</string>
+    <string name="category_cond_mat_supr_con">Tính siêu dẫn</string>
+    <string name="category_gr_qc">Thuyết tương đối rộng và Vũ trụ học lượng tử</string>
+    <string name="category_hep">Vật lý năng lượng cao</string>
+    <string name="category_hep_ex">Vật lý năng lượng cao – Thực nghiệm</string>
+    <string name="category_hep_lat">Vật lý năng lượng cao – Mạng tinh thể</string>
+    <string name="category_hep_ph">Vật lý năng lượng cao – Hiện tượng học</string>
+    <string name="category_hep_th">Vật lý năng lượng cao – Lý thuyết</string>
+    <string name="category_math_ph">Vật lý toán</string>
+    <string name="category_nlin">Khoa học phi tuyến tính</string>
+    <string name="category_nlin_ao">Hệ thích nghi và tự tổ chức</string>
+    <string name="category_nlin_cd">Động lực học hỗn loạn</string>
+    <string name="category_nlin_cg">Tự động tế bào và khí mạng tinh thể</string>
+    <string name="category_nlin_ps">Hình thành mẫu và soliton</string>
+    <string name="category_nlin_si">Hệ tích phân và giải được chính xác</string>
+    <string name="category_nucl">Vật lý hạt nhân</string>
+    <string name="category_nucl_ex">Vật lý hạt nhân – Thực nghiệm</string>
+    <string name="category_nucl_th">Lý thuyết vật lí hạt nhân</string>
+    <string name="category_physics_other">Vật lý (khác)</string>
+    <string name="category_physics_acc_ph">Vật lý máy gia tốc</string>
+    <string name="category_physics_ao_ph">Vật lý khí quyển và đại dương</string>
+    <string name="category_physics_app_ph">Vật lý ứng dụng</string>
+    <string name="category_physics_atm_clus">Cụm nguyên tử và phân tử</string>
+    <string name="category_physics_atom_ph">Vật lý nguyên tử</string>
+    <string name="category_physics_bio_ph">Vật lý sinh học</string>
+    <string name="category_physics_chem_ph">Vật lý hóa học</string>
+    <string name="category_physics_class_ph">Vật lý cổ điển</string>
+    <string name="category_physics_comp_ph">Vật lý tính toán</string>
+    <string name="category_physics_data_an">Phân tích dữ liệu, Thống kê và Xác suất</string>
+    <string name="category_physics_ed_ph">Giáo dục vật lý</string>
+    <string name="category_physics_flu_dyn">Động lực học chất lưu</string>
+    <string name="category_physics_gen_ph">Vật lý đại cương</string>
+    <string name="category_physics_geo_ph">Địa vật lý</string>
+    <string name="category_physics_hist_ph">Lịch sử và Triết học vật lý</string>
+    <string name="category_physics_ins_det">Thiết bị đo và cảm biến</string>
+    <string name="category_physics_med_ph">Vật lý y sinh</string>
+    <string name="category_physics_optics">Quang học</string>
+    <string name="category_physics_plasm_ph">"Vật lí Plasma "</string>
+    <string name="category_physics_pop_ph">Vật lý phổ thông</string>
+    <string name="category_physics_soc_ph">Vật lý và xã hội</string>
+    <string name="category_physics_space_ph">Vật lý không gian</string>
+    <string name="category_quant_ph">Vật lý lượng tử</string>
 
     <!-- ✅ Mathematics -->
-    <string name="category_math_ag">Algebraic Geometry</string>
-    <string name="category_math_at">Algebraic Topology</string>
-    <string name="category_math_ap">Analysis of PDEs</string>
-    <string name="category_math_ct">Category Theory</string>
-    <string name="category_math_ca">Classical Analysis and ODEs</string>
-    <string name="category_math_co">Combinatorics</string>
-    <string name="category_math_ac">Commutative Algebra</string>
-    <string name="category_math_cv">Complex Variables</string>
-    <string name="category_math_dg">Differential Geometry</string>
-    <string name="category_math_ds">Dynamical Systems</string>
-    <string name="category_math_fa">Functional Analysis</string>
-    <string name="category_math_gm">General Mathematics</string>
-    <string name="category_math_gn">General Topology</string>
-    <string name="category_math_gt">Geometric Topology</string>
-    <string name="category_math_gr">Group Theory</string>
-    <string name="category_math_ho">History and Overview</string>
-    <string name="category_math_it">Information Theory</string>
-    <string name="category_math_kt">K-Theory and Homology</string>
-    <string name="category_math_lo">Logic</string>
-    <string name="category_math_mp">Mathematical Physics</string>
-    <string name="category_math_mg">Metric Geometry</string>
-    <string name="category_math_nt">Number Theory</string>
-    <string name="category_math_na">Numerical Analysis</string>
-    <string name="category_math_oa">Operator Algebras</string>
-    <string name="category_math_oc">Optimization and Control</string>
-    <string name="category_math_pr">Probability</string>
-    <string name="category_math_qa">Quantum Algebra</string>
-    <string name="category_math_rt">Representation Theory</string>
-    <string name="category_math_ra">Rings and Algebras</string>
-    <string name="category_math_sp">Spectral Theory</string>
-    <string name="category_math_st">Statistics Theory</string>
-    <string name="category_math_sg">Symplectic Geometry</string>
+    <string name="category_math_ag">Hình học đại số</string>
+    <string name="category_math_at">Tô pô đại số</string>
+    <string name="category_math_ap">Giải tích phương trình đạo hàm riêng</string>
+    <string name="category_math_ct">Lý thuyết phạm trù</string>
+    <string name="category_math_ca">Giải tích cổ điển và phương trình vi phân thường</string>
+    <string name="category_math_co">Tổ hợp</string>
+    <string name="category_math_ac">Đại số giao hoán</string>
+    <string name="category_math_cv">Hàm biến phức</string>
+    <string name="category_math_dg">Hình học vi phân</string>
+    <string name="category_math_ds">Hệ động lực</string>
+    <string name="category_math_fa">Giải tích hàm</string>
+    <string name="category_math_gm">Toán học tổng quát</string>
+    <string name="category_math_gn">Tô pô tổng quát</string>
+    <string name="category_math_gt">Tô pô hình học</string>
+    <string name="category_math_gr">Lý thuyết nhóm</string>
+    <string name="category_math_ho">Lịch sử và Tổng quan</string>
+    <string name="category_math_it">Lý thuyết thông tin</string>
+    <string name="category_math_kt">Lý thuyết K và Đồng điều</string>
+    <string name="category_math_lo">Lôgic học</string>
+    <string name="category_math_mp">Vật lý toán</string>
+    <string name="category_math_mg">Hình học metric</string>
+    <string name="category_math_nt">Số học</string>
+    <string name="category_math_na">Giải tích số</string>
+    <string name="category_math_oa">Đại số toán tử</string>
+    <string name="category_math_oc">Tối ưu hóa và Điều khiển</string>
+    <string name="category_math_pr">Xác suất</string>
+    <string name="category_math_qa">Đại số lượng tử</string>
+    <string name="category_math_rt">Lý thuyết biểu diễn</string>
+    <string name="category_math_ra">Vành và Đại số</string>
+    <string name="category_math_sp">Lý thuyết phổ</string>
+    <string name="category_math_st">Lý thuyết thống kê</string>
+    <string name="category_math_sg">Hình học symplectic</string>
 
     <!-- ✅ Computer Science -->
-    <string name="category_cs_ai">Artificial Intelligence</string>
-    <string name="category_cs_cl">Computation and Language</string>
-    <string name="category_cs_cc">Computational Complexity</string>
-    <string name="category_cs_ce">Computational Engineering</string>
-    <string name="category_cs_cg">Computational Geometry</string>
-    <string name="category_cs_gt">Computer Science and Game Theory</string>
-    <string name="category_cs_cv">Computer Vision and Pattern Recognition</string>
-    <string name="category_cs_cy">Computers and Society</string>
-    <string name="category_cs_cr">Cryptography and Security</string>
-    <string name="category_cs_ds">Data Structures and Algorithms</string>
-    <string name="category_cs_db">Databases</string>
-    <string name="category_cs_dm">Discrete Mathematics</string>
-    <string name="category_cs_dc">Distributed Computing</string>
-    <string name="category_cs_et">Emerging Technologies</string>
-    <string name="category_cs_fl">Formal Languages and Automata Theory</string>
-    <string name="category_cs_gl">General Literature</string>
-    <string name="category_cs_gr">Graphics</string>
-    <string name="category_cs_ar">Hardware Architecture</string>
-    <string name="category_cs_hc">Human-Computer Interaction</string>
-    <string name="category_cs_ir">Information Retrieval</string>
-    <string name="category_cs_it">Information Theory</string>
-    <string name="category_cs_lg">Machine Learning</string>
-    <string name="category_cs_lo">Logic in Computer Science</string>
-    <string name="category_cs_ms">Mathematical Software</string>
-    <string name="category_cs_ma">Multiagent Systems</string>
-    <string name="category_cs_mm">Multimedia</string>
-    <string name="category_cs_ni">Networking and Internet Architecture</string>
-    <string name="category_cs_ne">Neural and Evolutionary Computing</string>
-    <string name="category_cs_na">Numerical Analysis</string>
-    <string name="category_cs_os">Operating Systems</string>
-    <string name="category_cs_pf">Performance</string>
-    <string name="category_cs_pl">Programming Languages</string>
-    <string name="category_cs_ro">Robotics</string>
-    <string name="category_cs_si">Social and Information Networks</string>
-    <string name="category_cs_se">Software Engineering</string>
-    <string name="category_cs_sd">Sound</string>
-    <string name="category_cs_sc">Symbolic Computation</string>
-    <string name="category_cs_sy">Systems and Control</string>
+    <string name="category_cs_ai">Trí tuệ nhân tạo</string>
+    <string name="category_cs_cl">Tính toán và Ngôn ngữ</string>
+    <string name="category_cs_cc">Độ phức tạp tính toán</string>
+    <string name="category_cs_ce">Kỹ thuật tính toán</string>
+    <string name="category_cs_cg">Hình học tính toán</string>
+    <string name="category_cs_gt">Khoa học máy tính và Lý thuyết trò chơi</string>
+    <string name="category_cs_cv">Thị giác máy tính và Nhận dạng mẫu</string>
+    <string name="category_cs_cy">Máy tính và Xã hội</string>
+    <string name="category_cs_cr">Mật mã và An ninh</string>
+    <string name="category_cs_ds">Cấu trúc dữ liệu và Giải thuật</string>
+    <string name="category_cs_db">Cơ sở dữ liệu</string>
+    <string name="category_cs_dm">Toán rời rạc</string>
+    <string name="category_cs_dc">Tính toán phân tán</string>
+    <string name="category_cs_et">Công nghệ mới nổi</string>
+    <string name="category_cs_fl">Ngôn ngữ hình thức và Tự động học</string>
+    <string name="category_cs_gl">Tài liệu tổng quát</string>
+    <string name="category_cs_gr">Đồ họa</string>
+    <string name="category_cs_ar">Kiến trúc phần cứng</string>
+    <string name="category_cs_hc">Tương tác người–máy</string>
+    <string name="category_cs_ir">Truy hồi thông tin</string>
+    <string name="category_cs_it">Lý thuyết thông tin</string>
+    <string name="category_cs_lg">Học máy</string>
+    <string name="category_cs_lo">Lôgic trong khoa học máy tính</string>
+    <string name="category_cs_ms">Phần mềm toán học</string>
+    <string name="category_cs_ma">Hệ thống đa tác nhân</string>
+    <string name="category_cs_mm">Đa phương tiện</string>
+    <string name="category_cs_ni">Kiến trúc mạng và Internet</string>
+    <string name="category_cs_ne">Máy tính thần kinh và tiến hóa</string>
+    <string name="category_cs_na">Phân tích số</string>
+    <string name="category_cs_os">Hệ điều hành</string>
+    <string name="category_cs_pf">Hiệu năng</string>
+    <string name="category_cs_pl">Ngôn ngữ lập trình</string>
+    <string name="category_cs_ro">Robot học</string>
+    <string name="category_cs_si">Mạng xã hội và thông tin</string>
+    <string name="category_cs_se">Kỹ thuật phần mềm</string>
+    <string name="category_cs_sd">Âm thanh</string>
+    <string name="category_cs_sc">Tính toán tượng trưng</string>
+    <string name="category_cs_sy">Hệ thống và Kiểm soát</string>
 
     <!-- ✅ Quantitative Biology -->
-    <string name="category_q_bio_bm">Biomolecules</string>
-    <string name="category_q_bio_cb">Cell Behavior</string>
-    <string name="category_q_bio_gn">Genomics</string>
-    <string name="category_q_bio_mn">Molecular Networks</string>
-    <string name="category_q_bio_nc">Neurons and Cognition</string>
-    <string name="category_q_bio_ot">Other Quantitative Biology</string>
-    <string name="category_q_bio_pe">Populations and Evolution</string>
-    <string name="category_q_bio_qm">Quantitative Methods</string>
-    <string name="category_q_bio_sc">Subcellular Processes</string>
-    <string name="category_q_bio_to">Tissues and Organs</string>
+    <string name="category_q_bio_bm">Phân tử sinh học</string>
+    <string name="category_q_bio_cb">Hành vi tế bào</string>
+    <string name="category_q_bio_gn">Bộ gen</string>
+    <string name="category_q_bio_mn">Mạng lưới phân tử</string>
+    <string name="category_q_bio_nc">Nơ-ron và Nhận thức</string>
+    <string name="category_q_bio_ot">Sinh học định lượng khác</string>
+    <string name="category_q_bio_pe">Dân số và tiến hóa</string>
+    <string name="category_q_bio_qm">Phương pháp định lượng</string>
+    <string name="category_q_bio_sc">Quá trình dưới tế bào</string>
+    <string name="category_q_bio_to">Mô và Cơ quan</string>
 
     <!-- ✅ Quantitative Finance -->
-    <string name="category_q_fin_cp">Computational Finance</string>
-    <string name="category_q_fin_ec">Economics</string>
-    <string name="category_q_fin_gn">General Finance</string>
-    <string name="category_q_fin_mf">Mathematical Finance</string>
-    <string name="category_q_fin_pm">Portfolio Management</string>
-    <string name="category_q_fin_pr">Pricing of Securities</string>
-    <string name="category_q_fin_rm">Risk Management</string>
-    <string name="category_q_fin_st">Statistical Finance</string>
-    <string name="category_q_fin_tr">Trading and Market Microstructure</string>
+    <string name="category_q_fin_cp">Tài chính tính toán</string>
+    <string name="category_q_fin_ec">Kinh tế học</string>
+    <string name="category_q_fin_gn">Tài chính tổng hợp</string>
+    <string name="category_q_fin_mf">Tài chính toán học</string>
+    <string name="category_q_fin_pm">Quản lý danh mục đầu tư</string>
+    <string name="category_q_fin_pr">Định giá chứng khoán</string>
+    <string name="category_q_fin_rm">Quản lý rủi ro</string>
+    <string name="category_q_fin_st">Tài chính thống kê</string>
+    <string name="category_q_fin_tr">Cơ cấu vi mô thị trường và thương mại</string>
 
     <!-- ✅ Statistics -->
-    <string name="category_stat_ap">Applications</string>
-    <string name="category_stat_co">Computation</string>
-    <string name="category_stat_ml">Machine Learning</string>
-    <string name="category_stat_me">Methodology</string>
-    <string name="category_stat_ot">Other Statistics</string>
-    <string name="category_stat_th">Statistics Theory</string>
+    <string name="category_stat_ap">Ứng dụng</string>
+    <string name="category_stat_co">Tính toán</string>
+    <string name="category_stat_ml">Học máy</string>
+    <string name="category_stat_me">Phương pháp luận</string>
+    <string name="category_stat_ot">Thống kê khác</string>
+    <string name="category_stat_th">Thuyết thống kê</string>
 
     <!-- ✅ EESS -->
-    <string name="category_eess_as">Audio and Speech Processing</string>
-    <string name="category_eess_iv">Image and Video Processing</string>
-    <string name="category_eess_sp">Signal Processing</string>
+    <string name="category_eess_as">Xử lý âm thanh và giọng nói</string>
+    <string name="category_eess_iv">Xử lý hình ảnh và video</string>
+    <string name="category_eess_sp">Xử lí tín hiệu</string>
     <string name="category_eess_sy">Systems and Control</string>
 
     <!-- ✅ Economics -->
-    <string name="category_econ_em">Econometrics</string>
-    <string name="category_econ_gn">General Economics</string>
-    <string name="category_econ_th">Theoretical Economics</string>
-
-    <!--To be sorted-->
+    <string name="category_econ_em">Kinh tế lượng</string>
+    <string name="category_econ_gn">Tổng quan Kinh tế Học</string>
+    <string name="category_econ_th">Kinh tế lý thuyết</string>
 </resources>

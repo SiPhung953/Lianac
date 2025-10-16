@@ -336,7 +336,7 @@ public class ArticleListingFragment extends Fragment {
 
         if (!hasArticles && isLoading != null && !isLoading) {
             // No articles and not loading - show "No results"
-            errorText.setText("No results found");
+            errorText.setText(R.string.error_no_results);
             errorText.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -361,22 +361,20 @@ public class ArticleListingFragment extends Fragment {
             // Check if category filter is active
             String resultsInfo;
             List<String> categories = currentQuery.getCategories();
-            if (categories != null && !categories.isEmpty()) {
+            if (categories != null && categories.size() == 1) {
                 // Get category display name
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
-                resultsInfo = String.format("Showing %,d-%,d of %,d results in %s (%s)",
-                        firstResult, lastResult, total, displayName, categoryId);
+                resultsInfo = getString(R.string.results_info, firstResult, lastResult, total, displayName, categoryId);
             } else {
-                resultsInfo = String.format("Showing %,d-%,d of %,d results",
-                        firstResult, lastResult, total);
+                resultsInfo = getString(R.string.results_info_simple, firstResult, lastResult, total);
             }
 
             resultsText.setText(resultsInfo);
             resultsText.setVisibility(View.VISIBLE);
 
             if (current != null && pages != null) {
-                String pageInfo = String.format("Page %d of %,d", current, pages);
+                String pageInfo = getString(R.string.page_info, current, pages);
                 pageTextTop.setVisibility(View.GONE);
                 pageTextBottom.setText(pageInfo);
                 bottomPaginationContainer.setVisibility(View.VISIBLE);
