@@ -48,7 +48,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
 
     // Room Persistence Library
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.8.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
