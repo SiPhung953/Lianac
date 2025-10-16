@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.lianac.R;
+import vn.edu.lianac.DetailFragment;
+import vn.edu.lianac.MainActivity;
+import vn.edu.lianac.models.Article;
 
 public class BookmarkListFragment extends Fragment implements BookmarkAdapter.OnBookmarkClickListener {
     private RecyclerView recyclerView;
@@ -59,13 +64,19 @@ public class BookmarkListFragment extends Fragment implements BookmarkAdapter.On
 
     @Override
     public void onBookmarkClick(BookmarkItem item) {
-       //add code to go the the chosen article here
+        if (!item.hasArticle()) {
+            Toast.makeText(requireContext(), "Article Data not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Go to Article Detail with data
+        navigateToDetail(item.getArticle());
     }
 
     @Override
     public void onBookmarkRemove(BookmarkItem item) {
         bookmarkManager.removeBookmark(item.getId());
         loadBookmarks();
+        Toast.makeText(requireContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
     }
 
     @Override

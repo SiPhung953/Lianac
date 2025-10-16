@@ -204,7 +204,7 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
                 doiText.setVisibility(View.GONE);
             }
 
-            // Make item clickable to open DetailFragment
+            // Make item clickable to open DetailFragment 
             itemView.setOnClickListener(v -> {
                 Log.d(TAG, "Item clicked: " + article.getId());
                 navigateToDetail(article);

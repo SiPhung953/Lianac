@@ -51,6 +51,7 @@ public class DetailFragment extends Fragment {
     private CategoryProvider categoryProvider;
     private DownloadViewModel downloadViewModel;
 
+    // TODO: Possible removal (We only need an icon change to shown whether download is completed)
     // Download state tracking
     private DownloadItem currentDownloadItem;
     private DownloadResultReceiver progressReceiver;
@@ -509,12 +510,7 @@ public class DetailFragment extends Fragment {
             bookmarkManager.removeBookmark(articleId);
             Toast.makeText(requireContext(), R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
         } else {
-            BookmarkItem item = new BookmarkItem(
-                    articleId,
-                    article.getTitle(),
-                    System.currentTimeMillis()
-            );
-            bookmarkManager.addBookmark(item);
+            bookmarkManager.addBookmark(article);
             Toast.makeText(requireContext(), R.string.bookmarked, Toast.LENGTH_SHORT).show();
         }
     }
