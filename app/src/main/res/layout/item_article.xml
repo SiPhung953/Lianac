@@ -6,6 +6,8 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -58,13 +60,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- Published date -->
+    <!-- Submitted Date -->
     <TextView
-        android:id="@+id/articlePublished"
+        android:id="@+id/articleSubmitted"
         android:textSize="12sp"
         android:textColor="?android:attr/textColorSecondary"
         android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <!-- Originally Announced Date -->
+    <TextView
+        android:id="@+id/articleAnnounced"
+        android:textSize="12sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <!-- ACM/MSC Classes -->
+    <TextView
+        android:id="@+id/articleClasses"
+        android:textSize="11sp"
+        android:textColor="?android:attr/textColorTertiary"
+        android:layout_marginTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <!-- DOI (clickable) -->
+    <TextView
+        android:id="@+id/articleDoi"
+        android:textSize="12sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:textStyle="italic"/>
 
 </LinearLayout>

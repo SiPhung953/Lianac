@@ -22,7 +22,7 @@ import vn.edu.lianac.Download.db.DownloadRepository;
 
 public class DownloadViewModel extends AndroidViewModel {
 
-    private final DownloadRepository mRepository;
+    public final DownloadRepository mRepository;
     public final LiveData<List<DownloadItem>> downloadList;
 
     private final MutableLiveData<DownloadItem> _startDownloadEvent = new MutableLiveData<>();

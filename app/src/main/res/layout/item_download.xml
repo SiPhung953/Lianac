@@ -8,7 +8,7 @@
     android:paddingBottom="12dp">
 
     <TextView
-        android:id="@+id/tv_research_name"
+        android:id="@+id/tv_paper_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
@@ -63,8 +63,7 @@
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Action button for download item"
-            tools:src="@drawable/cancel_download_fill" />
+            tools:src="@drawable/ic_cancel_fill" />
 
         <ImageButton
             android:id="@+id/btn_delete"
@@ -72,8 +71,7 @@
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/delete_download_fill"
-            android:contentDescription="Delete button for download item"
+            android:src="@drawable/ic_delete"
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>

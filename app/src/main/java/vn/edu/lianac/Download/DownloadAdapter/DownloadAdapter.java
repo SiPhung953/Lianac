@@ -55,21 +55,21 @@ public class DownloadAdapter extends ListAdapter<DownloadItem, DownloadAdapter.D
             case QUEUED:
             case DOWNLOADING:
                 progressColor = Color.BLACK;
-                actionIconId = R.drawable.cancel_download_fill;
+                actionIconId = R.drawable.ic_cancel;
                 break;
             case FAILED:
                 progressColor = Color.RED;
-                actionIconId = R.drawable.retry_download_fill;
+                actionIconId = R.drawable.ic_retry;
                 deleteButtonVisible = true;
                 break;
             case COMPLETED:
                 progressColor = Color.GREEN;
-                actionIconId = R.drawable.downloaddone_download_fill;
+                actionIconId = R.drawable.ic_downloaddone;
                 deleteButtonVisible = true;
                 break;
             default: // AKA NOT_DOWNLOADED
                 progressColor = Color.GRAY;
-                actionIconId = R.drawable.downloadstart_download_fill;
+                actionIconId = R.drawable.ic_download;
         }
 
         holder.progressBar.getProgressDrawable().setColorFilter(progressColor, android.graphics.PorterDuff.Mode.SRC_IN);
@@ -88,7 +88,7 @@ public class DownloadAdapter extends ListAdapter<DownloadItem, DownloadAdapter.D
 
         public DownloadViewHolder(View view) {
             super(view);
-            tvTitle = view.findViewById(R.id.tv_research_name);
+            tvTitle = view.findViewById(R.id.tv_paper_title);
             tvFileSize = view.findViewById(R.id.tv_file_size);
             progressBar = view.findViewById(R.id.progress_bar_download);
             tvPercentage = view.findViewById(R.id.tv_download_percentage);

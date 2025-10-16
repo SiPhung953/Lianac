@@ -13,7 +13,6 @@
         android:layout_height="wrap_content">
     </FrameLayout>
 
-
     <!-- Results Container -->
     <FrameLayout
         android:id="@+id/resultsContainer"

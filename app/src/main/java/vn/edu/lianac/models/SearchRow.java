@@ -1,21 +1,34 @@
 package vn.edu.lianac.models;
 
+/**
+ * Represents a single search field row in advanced search.
+ * Contains a field type, search value, and boolean operator.
+ *
+ * Example:
+ * - field: "ti" (title)
+ * - value: "quantum computing"
+ * - operator: "AND"
+ *
+ * This creates: ti:"quantum computing" AND
+ */
 public class SearchRow {
-    private final String operator;
-    private final String field;
-    private final String value;
+    private final String field;      // e.g., "all", "ti", "au", "abs"
+    private final String value;      // search term
+    private final String operator;   // "AND", "OR", "ANDNOT"
 
-    // FIXED: Changed parameter order to (field, value, operator)
+    /**
+     * Constructor for SearchRow
+     * @param field The search field (all, ti, au, abs, etc.)
+     * @param value The search term
+     * @param operator The boolean operator (AND, OR, ANDNOT)
+     */
     public SearchRow(String field, String value, String operator) {
-        this.operator = operator != null ? operator : "AND";
         this.field = field != null ? field : "all";
         this.value = value != null ? value : "";
+        this.operator = operator != null ? operator : "AND";
     }
 
-    public String getOperator() {
-        return operator;
-    }
-
+    // Getters
     public String getField() {
         return field;
     }
@@ -24,35 +37,21 @@ public class SearchRow {
         return value;
     }
 
-    public boolean isValid() {
-        return value != null && !value.trim().isEmpty();
+    public String getOperator() {
+        return operator;
     }
 
-    public String toQueryString() {
-        if (!isValid()) {
-            return "";
-        }
-
-        String term = value.trim();
-
-        if (term.contains(" ") && !term.startsWith("\"")) {
-            term = "\"" + term + "\"";
-        }
-
-        if ("all".equals(field)) {
-            return term;
-        }
-
-        return field + ":" + term;
+    /**
+     * Check if this row has a valid value
+     */
+    public boolean hasValue() {
+        return value != null && !value.trim().isEmpty();
     }
 
     @Override
     public String toString() {
-        return "SearchRow{" +
-                "operator='" + operator + '\'' +
-                ", field='" + field + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+        return String.format("SearchRow{field='%s', value='%s', operator='%s'}",
+                field, value, operator);
     }
 
     @Override
@@ -62,16 +61,16 @@ public class SearchRow {
 
         SearchRow searchRow = (SearchRow) o;
 
-        if (!operator.equals(searchRow.operator)) return false;
         if (!field.equals(searchRow.field)) return false;
-        return value.equals(searchRow.value);
+        if (!value.equals(searchRow.value)) return false;
+        return operator.equals(searchRow.operator);
     }
 
     @Override
     public int hashCode() {
-        int result = operator.hashCode();
-        result = 31 * result + field.hashCode();
+        int result = field.hashCode();
         result = 31 * result + value.hashCode();
+        result = 31 * result + operator.hashCode();
         return result;
     }
 }
