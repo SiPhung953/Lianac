@@ -225,17 +225,6 @@
     <string name="category_cs_sc">Symbolic Computation</string>
     <string name="category_cs_sy">Systems and Control</string>
 
-    <!-- Reading/Viewer -->
-    <string name="reading_viewer">Reading/Viewer</string>
-    <string name="default_viewer">Default Viewer</string>
-    <string name="in_app">In-app</string>
-    <string name="external_pdf_app">External PDF app</string>
-    <string name="scroll">Scroll</string>
-    <string name="horizontal">Horizontal</string>
-    <string name="vertical">Vertical</string>
-    <string name="annotations">Annotations</string>
-    <string name="annotations_desc">Highlight, notes, exportable</string>
-    <string name="auto_save_annotations">Auto-save annotations</string>
     <!-- Messages -->
     <string name="language_changed_to_english">Language changed to English</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -293,14 +282,10 @@
         <item>English (EN)</item>
         <item>Tiếng Việt (VN)</item>
     </string-array>
-    <string-array name="viewer_options">
-        <item>@string/in_app</item>
-        <item>@string/external_pdf_app</item>
-    </string-array>
+
 
     <!-- Toasts and Dialogs -->
     <string name="no_pdf_reader_found">No PDF reader app found. Please install one.</string>
-    <string name="opening_in_app_viewer">Opening with in-app viewer</string>
     <string name="open_pdf_with">Open PDF with</string>
     <string name="language_changed_to_vietnamese">Ngôn ngữ đã đổi sang Tiếng Việt</string>
     <string name="bookmark_removed">Bookmark removed</string>

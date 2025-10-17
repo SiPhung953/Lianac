@@ -4,7 +4,7 @@
 
     <!-- Display names for search fields -->
     <string-array name="search_fields">
-        <item>Tất cả các trường</item>
+        <item>Tất cả các ô</item>
         <item>Tiêu đề</item>
         <item>Tác giả</item>
         <item>Tóm tắt</item>
@@ -224,17 +224,6 @@
     <string name="category_cs_sc">Tính toán biểu tượng</string>
     <string name="category_cs_sy">Hệ thống và Điều khiển</string>
 
-    <!-- Reading/Viewer -->
-    <string name="reading_viewer">Đọc/Trình xem</string>
-    <string name="default_viewer">Trình xem mặc định</string>
-    <string name="in_app">Trong ứng dụng</string>
-    <string name="external_pdf_app">Ứng dụng PDF bên ngoài</string>
-    <string name="scroll">Cuộn</string>
-    <string name="horizontal">Ngang</string>
-    <string name="vertical">Dọc</string>
-    <string name="annotations">Chú thích</string>
-    <string name="annotations_desc">Đánh dấu, ghi chú, có thể xuất</string>
-    <string name="auto_save_annotations">Tự động lưu chú thích</string>
 
     <!-- Messages -->
     <string name="language_changed_to_english">Ngôn ngữ đã đổi sang Tiếng Anh</string>
@@ -292,10 +281,7 @@
         <item>English (EN)</item>
         <item>Tiếng Việt (VN)</item>
     </string-array>
-    <string-array name="viewer_options">
-        <item>@string/in_app</item>
-        <item>@string/external_pdf_app</item>
-    </string-array>
+
 
     <!-- Toasts and Dialogs -->
     <string name="no_pdf_reader_found">Không tìm thấy ứng dụng đọc PDF. Vui lòng cài đặt.</string>
@@ -332,8 +318,8 @@
 
     <!-- Advanced Search -->
     <string name="close">Đóng</string>
-    <string name="additional_search_fields">Trường tìm kiếm bổ sung</string>
-    <string name="add_field">+ Thêm trường</string>
+    <string name="additional_search_fields">Ô tìm kiếm bổ sung</string>
+    <string name="add_field">+ Thêm ô</string>
     <string name="categories">Chuyên mục</string>
     <string name="select_category_to_add">Chọn một chuyên mục để thêm</string>
     <string name="add">Thêm</string>
@@ -350,5 +336,5 @@
     <string name="download">Tải xuống</string>
     <string name="bookmark">Dấu trang</string>
     <string name="menu">Mục lục</string>
-    <string name="desc_about">Được làm bởi cả trái tim của sinh viên USTH!!!</string>
+    <string name="desc_about">Được làm bằng cả trái tim của sinh viên USTH!!!</string>
 </resources>
