@@ -102,12 +102,7 @@ public class SubjectDetailFragment extends Fragment {
     }
 
     private void setupBreadcrumbs() {
-        if (breadcrumbPath.isEmpty()) {
-            // No breadcrumbs for top-level categories
-            hierarchyNavigation.setVisibility(View.GONE);
-            return;
-        }
-
+        // Always show breadcrumbs at all levels
         hierarchyNavigation.setVisibility(View.VISIBLE);
         breadcrumbContainer.removeAllViews();
 
@@ -119,22 +114,33 @@ public class SubjectDetailFragment extends Fragment {
         // Add separator
         breadcrumbContainer.addView(createBreadcrumbSeparator());
 
-        // Add each breadcrumb item
+        // Add each breadcrumb item from the path
         for (int i = 0; i < breadcrumbPath.size(); i++) {
             BreadcrumbItem item = breadcrumbPath.get(i);
 
-            // All parent items are clickable (navigate back to them)
-            TextView link = createBreadcrumbLink(item.name, item);
+            // Display the ID, all items are clickable
+            TextView link = createBreadcrumbLink(item.categoryId, item);
             final int index = i;
             link.setOnClickListener(v -> navigateToBreadcrumb(index));
             breadcrumbContainer.addView(link);
 
-            // Add separator after each item (including last one for current category)
+            // Add separator
             breadcrumbContainer.addView(createBreadcrumbSeparator());
         }
 
-        // Add current category as non-clickable last item
-        TextView currentLink = createBreadcrumbCurrent(categoryName);
+        // Add current category as clickable item (displays ID)
+        TextView currentLink = createBreadcrumbLink(categoryId, null);
+        currentLink.setOnClickListener(v -> {
+            // Clicking current category reloads the same page (scrolls to top if needed)
+            SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                    categoryId,
+                    categoryName,
+                    breadcrumbPath
+            );
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadContentFragment(fragment, false);
+            }
+        });
         breadcrumbContainer.addView(currentLink);
     }
 
@@ -157,21 +163,6 @@ public class SubjectDetailFragment extends Fragment {
         if (item != null) {
             textView.setTag(item);
         }
-
-        return textView;
-    }
-
-    private TextView createBreadcrumbCurrent(String text) {
-        TextView textView = new TextView(requireContext());
-        textView.setText(text);
-        textView.setTextColor(getResources().getColor(android.R.color.black, null));
-        textView.setTextSize(14);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        textView.setLayoutParams(params);
 
         return textView;
     }

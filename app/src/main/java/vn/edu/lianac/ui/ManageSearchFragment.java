@@ -124,7 +124,7 @@ public class ManageSearchFragment extends Fragment {
         leafCategoryToggle = view.findViewById(R.id.leafCategoryToggle);
         leafCategoryLabel = view.findViewById(R.id.leafCategoryLabel);
 
-        CheckBox includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
+        //CheckBox includeCrossListCheckbox = view.findViewById(R.id.includeCrossListCheckbox);
 
         // Header click listeners
         View sfh = view.findViewById(R.id.searchFieldsHeader);

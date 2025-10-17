@@ -79,7 +79,7 @@
 
     <!-- ================= SEARCH UI LABELS ================= -->
     <string name="additional_search_fields">Additional Search Boxes</string>
-    <string name="add_field">+ Add Box</string>
+    <string name="add_field">+ Add Field</string>
     <string name="categories">Categories</string>
     <string name="selected_suffix">selected</string>
 

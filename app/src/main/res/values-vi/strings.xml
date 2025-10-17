@@ -5,14 +5,14 @@
     <!-- ================= GENERAL ACTIONS ================= -->
     <string name="search">Tìm Kiếm</string>
     <string name="advanced_search">Tìm Kiếm Nâng Cao</string>
-    <string name="basic_search">Basic Search</string>
-    <string name="apply">Apply</string>
-    <string name="reset">Reset</string>
+    <string name="basic_search">Tìm kiếm</string>
+    <string name="apply">Gán</string>
+    <string name="reset">Cài lại</string>
     <string name="close">Đóng</string>
     <string name="home">Home</string>
     <string name="next">Tiếp ▶</string>
     <string name="prev">◀ Trước</string>
-    <string name="remove_field">Remove field</string>
+    <string name="remove_field">Bỏ ô</string>
 
     <!-- ================= PLACEHOLDERS ================= -->
     <string name="placeholder_search">Tìm...</string>
