@@ -162,6 +162,7 @@
 
         <!-- Action Icons -->
         <LinearLayout
+            android:id="@+id/action_icon_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -194,7 +195,7 @@
                     android:id="@+id/download_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/download"
+                    android:src="@drawable/ic_download"
                     app:tint="@android:color/black"
                     android:contentDescription="Download" />
 
@@ -206,7 +207,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/bookmark"
                 app:tint="@android:color/black"
-                android:contentDescription="Bookmark"
+                android:contentDescription="@string/bookmark"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackgroundBorderless" />
