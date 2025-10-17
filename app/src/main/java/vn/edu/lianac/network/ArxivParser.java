@@ -72,7 +72,6 @@ public class ArxivParser {
                         entries.add(article);
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, "Error parsing entry, skipping", e);
                     skip(parser);
                 }
             } else if (OPENSEARCH_NAMESPACE.equals(namespace)) {
@@ -135,7 +134,6 @@ public class ArxivParser {
                             String doi = readText(parser);
                             if (doi != null && !doi.trim().isEmpty()) {
                                 article.setDoi(doi.trim());
-                                Log.d(TAG, "Found DOI: " + doi.trim());
                             }
                             break;
                         case "primary_category":  // NEW: Parse primary category
@@ -234,6 +232,7 @@ public class ArxivParser {
         parser.require(XmlPullParser.START_TAG, null, "category");
 
         String term = parser.getAttributeValue(null, "term");
+        String label = parser.getAttributeValue(null, "label");
 
         // Move to end tag
         while (parser.next() != XmlPullParser.END_TAG) {

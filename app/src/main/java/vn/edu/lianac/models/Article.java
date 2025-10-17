@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -149,6 +148,8 @@ public class Article implements Parcelable {
         return "Submitted: " + getFormattedDate();
     }
 
+
+
     public String getFormattedAnnouncedDate() {
         if (updatedDate == null || updatedDate.length() < 10) {
             return null;
@@ -267,16 +268,9 @@ public class Article implements Parcelable {
         }
         String term = searchTerm.toLowerCase();
 
-        if (title != null && title.toLowerCase().contains(term)) {
-            return true;
-        }
-        if (summary != null && summary.toLowerCase().contains(term)) {
-            return true;
-        }
-        if (containsAuthor(term)) {
-            return true;
-        }
-        return false;
+        return (title != null && title.toLowerCase().contains(term)) ||
+                (summary != null && summary.toLowerCase().contains(term)) ||
+                containsAuthor(term);
     }
 
     @Override

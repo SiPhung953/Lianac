@@ -31,15 +31,13 @@ import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
- * Merged ArticleListingFragment with advanced pagination and navigation support
+ * Article listing fragment with enhanced pagination controls.
  */
 public class ArticleListingFragment extends Fragment {
     private static final String TAG = "ArticleListingFragment";
-
+    private final Button[] pageButtons = new Button[7];
     private SearchViewModel viewModel;
     private ArticleAdapter adapter;
-
-    // Views
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorText;
@@ -49,11 +47,8 @@ public class ArticleListingFragment extends Fragment {
     private Spinner sortSpinner;
     private Spinner pageSizeSpinner;
     private LinearLayout bottomPaginationContainer;
-
     // Pagination buttons
     private Button prevBtn, nextBtn;
-    private final Button[] pageButtons = new Button[7];
-
     // State tracking to prevent circular updates
     private boolean isUpdatingSpinners = false;
 
@@ -68,14 +63,14 @@ public class ArticleListingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView called");
         return inflater.inflate(R.layout.fragment_article_listing, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated called");
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
 
         initViews(view);
         setupRecyclerView();
@@ -83,7 +78,6 @@ public class ArticleListingFragment extends Fragment {
         setupPaginationButtons();
         observeViewModel();
 
-        // Load initial data AFTER all observers are set up
         viewModel.loadInitialData();
     }
 
@@ -109,18 +103,12 @@ public class ArticleListingFragment extends Fragment {
         pageButtons[4] = view.findViewById(R.id.pageButton5);
         pageButtons[5] = view.findViewById(R.id.pageButton6);
         pageButtons[6] = view.findViewById(R.id.pageButton7);
-
-        Log.d(TAG, "Views initialized - RecyclerView: " + (recyclerView != null));
     }
 
     private void setupRecyclerView() {
         adapter = new ArticleAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        Log.d(TAG, "RecyclerView setup complete");
-
-        // NOTE: Article click navigation is now handled in ArticleAdapter
-        // which navigates to DetailFragment via MainActivity.loadContentFragment()
     }
 
     private void setupSpinners() {
@@ -135,14 +123,15 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUpdatingSpinners) return; // Prevent circular updates
 
-                String sortBy = getSortByValue(position);
-                String sortOrder = getSortOrderValue(position);
-                Log.d(TAG, "User changed sort to: " + sortBy);
-                viewModel.updateSort(sortBy, sortOrder);
+                String[] sortFields = {"submittedDate", "lastUpdatedDate", "relevance"};
+                if (position < sortFields.length) {
+                    viewModel.updateSort(sortFields[position], "descending");
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         // Page size spinner
@@ -156,13 +145,15 @@ public class ArticleListingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUpdatingSpinners) return; // Prevent circular updates
 
-                int pageSize = getPageSizeValue(position);
-                Log.d(TAG, "User changed page size to: " + pageSize);
-                viewModel.updatePageSize(pageSize);
+                int[] sizes = {10, 25, 50, 100, 200};
+                if (position < sizes.length) {
+                    viewModel.updatePageSize(sizes[position]);
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -182,7 +173,6 @@ public class ArticleListingFragment extends Fragment {
                         int targetPage = Integer.parseInt(pageText);
                         goToPage(targetPage);
                     } catch (NumberFormatException e) {
-                        Log.e(TAG, "Invalid page number: " + pageText);
                     }
                 }
             });
@@ -238,7 +228,6 @@ public class ArticleListingFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Show keyboard
         input.requestFocus();
         input.postDelayed(() -> {
             android.view.inputmethod.InputMethodManager imm =
@@ -265,26 +254,17 @@ public class ArticleListingFragment extends Fragment {
     private void observeViewModel() {
         // Articles
         viewModel.getArticles().observe(getViewLifecycleOwner(), articles -> {
-            Log.d(TAG, "Articles updated: " + (articles != null ? articles.size() : "null") + " articles");
-            if (articles != null && !articles.isEmpty()) {
-                Log.d(TAG, "First article: " + articles.get(0).getTitle());
-            }
-            adapter.submitList(articles, () -> {
-                Log.d(TAG, "submitList complete, item count: " + adapter.getItemCount());
-                updateVisibility();
-            });
+            adapter.submitList(articles, this::updateVisibility);
         });
 
         // Loading state
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            Log.d(TAG, "Loading state: " + loading);
             progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
             if (loading) errorText.setVisibility(View.GONE);
         });
 
         // Errors
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
-            Log.d(TAG, "Error message: " + error);
             if (error != null) {
                 errorText.setText(error);
                 errorText.setVisibility(View.VISIBLE);
@@ -295,18 +275,15 @@ public class ArticleListingFragment extends Fragment {
 
         // Pagination info
         viewModel.getTotalResults().observe(getViewLifecycleOwner(), total -> {
-            Log.d(TAG, "Total results: " + total);
             updatePaginationInfo();
         });
 
         viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
-            Log.d(TAG, "Current page: " + page);
             updatePaginationInfo();
             updatePaginationButtons();
         });
 
         viewModel.getTotalPages().observe(getViewLifecycleOwner(), pages -> {
-            Log.d(TAG, "Total pages: " + pages);
             updatePaginationInfo();
             updatePaginationButtons();
         });
@@ -314,7 +291,6 @@ public class ArticleListingFragment extends Fragment {
         // CRITICAL: Observe query changes to update spinners
         viewModel.getCurrentQuery().observe(getViewLifecycleOwner(), query -> {
             if (query != null) {
-                Log.d(TAG, "Query changed - updating spinners");
                 updateSpinnersFromQuery(query);
             }
         });
@@ -365,11 +341,9 @@ public class ArticleListingFragment extends Fragment {
         boolean hasArticles = adapter.getItemCount() > 0;
         Boolean isLoading = viewModel.getIsLoading().getValue();
 
-        Log.d(TAG, "updateVisibility - hasArticles: " + hasArticles + ", itemCount: " + adapter.getItemCount());
-
         if (!hasArticles && isLoading != null && !isLoading) {
             // No articles and not loading - show "No results"
-            errorText.setText("No results found");
+            errorText.setText(R.string.error_no_results);
             errorText.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -391,25 +365,25 @@ public class ArticleListingFragment extends Fragment {
             int firstResult = start + 1;
             int lastResult = Math.min(start + pageSize, total);
 
-            // Check if category filter is active
+            // Check if this is a category browse search (from SubjectDetail)
             String resultsInfo;
             List<String> categories = currentQuery.getCategories();
-            if (categories != null && !categories.isEmpty()) {
-                // Get category display name
+
+            if (currentQuery.isCategoryBrowse() && categories != null && categories.size() == 1) {
+                // Category browse from SubjectDetailFragment - show category info
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
-                resultsInfo = String.format(Locale.US, "Showing %,d-%,d of %,d results in %s (%s)",
-                        firstResult, lastResult, total, displayName, categoryId);
+                resultsInfo = getString(R.string.results_info, firstResult, lastResult, total, displayName, categoryId);
             } else {
-                resultsInfo = String.format(Locale.US, "Showing %,d-%,d of %,d results",
-                        firstResult, lastResult, total);
+                // Filter search from ManageSearchFragment - use simple format
+                resultsInfo = getString(R.string.results_info_simple, firstResult, lastResult, total);
             }
 
             resultsText.setText(resultsInfo);
             resultsText.setVisibility(View.VISIBLE);
 
             if (current != null && pages != null) {
-                String pageInfo = String.format(Locale.US, "Page %d of %,d", current, pages);
+                String pageInfo = getString(R.string.page_info, current, pages);
                 pageTextTop.setVisibility(View.GONE);
                 pageTextBottom.setText(pageInfo);
                 bottomPaginationContainer.setVisibility(View.VISIBLE);
@@ -468,13 +442,6 @@ public class ArticleListingFragment extends Fragment {
         }
     }
 
-    /**
-     * Smart pagination algorithm that shows relevant page numbers with ellipsis
-     * Examples:
-     * - Pages 1-7 of 100: [1] [2] [3] [4] [5] [...] [100]
-     * - Page 50 of 100: [1] [...] [49] [50] [51] [...] [100]
-     * - Pages 95-100 of 100: [1] [...] [96] [97] [98] [99] [100]
-     */
     private int[] calculatePageNumbers(int current, int total) {
         int[] pages = new int[7];
 
@@ -515,18 +482,4 @@ public class ArticleListingFragment extends Fragment {
         return pages;
     }
 
-    // Helper methods
-    private String getSortByValue(int position) {
-        String[] values = {"submittedDate", "lastUpdatedDate", "relevance"};
-        return position >= 0 && position < values.length ? values[position] : "submittedDate";
-    }
-
-    private String getSortOrderValue(int position) {
-        return "descending";
-    }
-
-    private int getPageSizeValue(int position) {
-        int[] sizes = {10, 25, 50, 100, 200};
-        return position >= 0 && position < sizes.length ? sizes[position] : 25;
-    }
 }

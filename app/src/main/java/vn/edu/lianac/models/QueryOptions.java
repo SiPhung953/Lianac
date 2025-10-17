@@ -19,6 +19,7 @@ public class QueryOptions {
     private final boolean includeCrossLists;
     private final String dateFrom;
     private final String dateTo;
+    private boolean isCategoryBrowse;
 
     private QueryOptions(Builder builder) {
         this.searchTerm = builder.searchTerm;
@@ -32,6 +33,8 @@ public class QueryOptions {
         this.includeCrossLists = builder.includeCrossLists;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
+        this.isCategoryBrowse = builder.isCategoryBrowse; // ADD THIS LINE
+
     }
 
     // ==================== GETTERS ====================
@@ -126,6 +129,10 @@ public class QueryOptions {
         return toBuilder().start(Math.max(0, start - maxResults)).build();
     }
 
+    public boolean isCategoryBrowse() {
+        return isCategoryBrowse;
+    }
+
     /**
      * Create a builder from this query
      */
@@ -141,7 +148,13 @@ public class QueryOptions {
                 .categories(categories)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
-                .includeCrossLists(includeCrossLists);
+                .includeCrossLists(includeCrossLists)
+                .categoryBrowse(isCategoryBrowse); // ADD THIS LINE
+    }
+
+    public Builder categoryBrowse(boolean isCategoryBrowse) {
+        this.isCategoryBrowse = isCategoryBrowse;
+        return this.toBuilder();
     }
 
     @Override
@@ -158,6 +171,7 @@ public class QueryOptions {
     // ==================== BUILDER ====================
 
     public static class Builder {
+        private boolean isCategoryBrowse = false;
         private String searchTerm;
         private String searchField = "all";
         private List<SearchRow> rows = new ArrayList<>();
@@ -227,6 +241,11 @@ public class QueryOptions {
 
         public QueryOptions build() {
             return new QueryOptions(this);
+        }
+
+        public Builder categoryBrowse(boolean isCategoryBrowse) {
+            this.isCategoryBrowse = isCategoryBrowse;
+            return this;
         }
     }
 }

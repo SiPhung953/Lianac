@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.models.Article;
+import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchResult;
 import vn.edu.lianac.network.ArxivAPIService;
 import vn.edu.lianac.utils.QueryBuilder;
@@ -110,18 +111,17 @@ public class SearchViewModel extends ViewModel {
     /**
      * Search articles by category with specific sort order
      */
-    public void searchByCategory(String categoryId, String sortBy) {
-        List<String> categoryList = new ArrayList<>();
-        categoryList.add(categoryId);
-
+    public void searchByCategory(String categoryId, String sortBy, boolean isCategoryBrowse) {
         QueryOptions query = new QueryOptions.Builder()
-                .categories(categoryList)
+                .categories(java.util.Collections.singletonList(categoryId))
                 .sortBy(sortBy)
                 .sortOrder("descending")
-                .maxResults(25)
                 .start(0)
+                .maxResults(10)
+                .categoryBrowse(isCategoryBrowse) // ADD THIS LINE
                 .build();
 
+        updateQueryOptions(query);
         search(query);
     }
 
@@ -250,6 +250,7 @@ public class SearchViewModel extends ViewModel {
         errorMessage.postValue(null);
     }
 
+
     // ============= LIVEDATA GETTERS =============
 
     public LiveData<List<Article>> getArticles() { return articles; }
@@ -272,7 +273,6 @@ public class SearchViewModel extends ViewModel {
 
         // Warn about empty results
         if (result.getArticles().isEmpty() && result.getTotalResults() > 0) {
-            Log.w(TAG, "Empty articles despite total results: " + result.getTotalResults());
             errorMessage.postValue("API returned no results. Query may be too broad for deep pagination.");
         }
 

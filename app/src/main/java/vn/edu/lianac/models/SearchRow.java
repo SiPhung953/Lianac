@@ -3,24 +3,25 @@ package vn.edu.lianac.models;
 /**
  * Represents a single search field row in advanced search.
  * Contains a field type, search value, and boolean operator.
- *
+ * <p>
  * Example:
  * - field: "ti" (title)
  * - value: "quantum computing"
  * - operator: "AND"
- *
+ * <p>
  * This creates: ti:"quantum computing" AND
  */
 public class SearchRow {
     private final String field;      // e.g., "all", "ti", "au", "abs"
     private final String value;      // search term
-    private final String operator;   // "AND", "OR", "ANDNOT"
+    private final String operator;   // "AND", "OR", "NOT"
 
     /**
      * Constructor for SearchRow
-     * @param field The search field (all, ti, au, abs, etc.)
-     * @param value The search term
-     * @param operator The boolean operator (AND, OR, ANDNOT)
+     *
+     * @param field    The search field (all, ti, au, abs, etc.)
+     * @param value    The search term
+     * @param operator The boolean operator (AND, OR, NOT)
      */
     public SearchRow(String field, String value, String operator) {
         this.field = field != null ? field : "all";

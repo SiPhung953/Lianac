@@ -17,6 +17,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
@@ -30,6 +34,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
@@ -38,7 +49,12 @@ import vn.edu.lianac.bookmark.BookmarkListFragment;
 import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
 import vn.edu.lianac.ui.SubjectsFragment;
+import vn.edu.lianac.ui.SubjectsFragment;
+import vn.edu.lianac.utils.CategoryProvider;
 
+/**
+ * Main activity with container-based architecture and navigation drawer.
+ */
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
@@ -147,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
         // FIXED: Handle both initial launch and rotation
         if (savedInstanceState == null) {
+            new Thread(() -> {
+                CategoryProvider.getInstance(this);
+            }).start();
             // First launch - show subjects
             replaceFragment(new SubjectsFragment());
             getSupportActionBar().setTitle(R.string.nav_subjects);
@@ -281,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.action_search) {
-            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
+//            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
             searchShowing = !searchShowing;
             return true;
         }
@@ -290,7 +309,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // First, close the drawer if it's open
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawer(navigationView);
+            return;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // If we have fragments in the back stack, pop them
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            // Otherwise, use default back behavior
+            super.onBackPressed();
+        }
     }
 
     @Override

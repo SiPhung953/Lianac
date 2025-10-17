@@ -1,8 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- ================= APP INFO ================= -->
     <string name="app_name" translatable="false">Lianac</string>
 
-    <!-- Display names for search fields -->
+    <!-- ================= GENERAL ACTIONS ================= -->
+    <string name="search">Search</string>
+    <string name="advanced_search">Advanced Search</string>
+    <string name="basic_search">Basic Search</string>
+    <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
+    <string name="close">Close</string>
+    <string name="home">Home</string>
+    <string name="next">Next ▶</string>
+    <string name="prev">◀ Prev</string>
+    <string name="menu" translatable="false">Menu</string>
+    <string name="remove_field">Remove field</string>
+
+    <!-- ================= PLACEHOLDERS ================= -->
+    <string name="placeholder_search">Search...</string>
+    <string name="placeholder_advanced_search">Search term...</string>
+    <string name="select_category_placeholder">Select a category</string>
+
+    <!-- ================= TOAST / MESSAGES ================= -->
+    <string name="select_valid_category_toast">Please select a valid category</string>
+    <string name="invalid_category_toast">Invalid category selected</string>
+    <string name="category_already_added_toast">Category already added</string>
+    <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="no_categories_selected">No categories selected</string>
+    <string name="select_main_categories">Select Main Categories</string>
+    <string name="select_specific_categories">Select Specific Categories</string>
+    <string name="category_header_with_count">%1$s (%2$d selected)</string>
+    <string name="include_cross_listed">Include cross-listed papers</string>
+    <string name="error_doi">Cannot open DOI link</string>
+    <string name="open_article">Opening article: </string>
+    <string name="results_info">Showing %1$,d-%2$,d of %3$,d results in %4$s (%5$s)</string>
+    <string name="results_info_simple">Showing %1$,d-%2$,d of %3$,d results</string>
+    <string name="page_info">Page %1$d of %2$,d</string>
+    <string name="date_format">%1$d-%2$02d-%3$02d</string>
+    <string name="validation_no_search_term">Please enter a search term or add filters</string>
+    <string name="toggle_collapsed" translatable="false">▶</string>
+    <string name="toggle_expanded" translatable="false">▼</string>
+
+
+    <!-- ================= ERROR MESSAGES ================= -->
+    <string name="error_no_query_url">Query URL cannot be null or empty</string>
+    <string name="error_no_response_body">Empty response body</string>
+    <string name="error_null_parser">Parser returned null</string>
+    <string name="error_http">HTTP error: %1$d - %2$s</string>
+    <string name="error_xml_parsing">XML parsing failed</string>
+    <string name="error_fetch_parse">Failed to fetch and parse articles</string>
+    <string name="error_network_request">Network request failed</string>
+    <string name="error_no_results">No results found</string>
+    <string name="error_failed_load_subjects">Failed to load subjects</string>
+    <string name="no_subjects_available">No subjects available</string>
+    <string name="filters_applied">Filters applied</string>
+    <string name="cleared_filter">Filters cleared</string>
+    <plurals name="selected_categories">
+        <item quantity="one">1 category selected</item>
+        <item quantity="other">%d categories selected</item>
+    </plurals>
+    <string name="validation_no_filters">Please add a search term or at least one filter</string>
+
+    <string name="category_description">
+    Comprehensive collection of research papers, preprints, and publications in %1$s.
+    Browse the latest research, explore subfields, and discover cutting-edge developments in this field.
+    </string>
+    <string name="category_short_description">Research papers and preprints in %1$s</string>
+
+
+    <!--Article sth-->
+    <string name="label_submitted">Submitted: %1$s</string>
+    <string name="label_announced">Originally announced: %1$s</string>
+    <string name="label_et_al">et al.</string>
+    <string name="label_acm_msc" translatable="false">ACM/MSC: %1$s</string>
+    <string name="date_format_mmm_d_yyyy">MMM dd, yyyy</string>
+
+
+    <!-- ================= SEARCH UI LABELS ================= -->
+    <string name="additional_search_fields">Additional Search Boxes</string>
+    <string name="add_field">+ Add Field</string>
+    <string name="categories">Categories</string>
+    <string name="selected_suffix">selected</string>
+
+    <string name="date_range">Date Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="advanced_filters">Advanced filters</string>
+    <string name="subcategories">Subcategories</string>
+    <string name="popular">Popular</string>
+    <string name="recent">Recent</string>
+    <string name="newest">New</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="per_page">Per page:</string>
+    <string name="current">Current</string>
+    <string name="selected">Selected</string>
+
+    <!-- ================= SEARCH ARRAYS ================= -->
     <string-array name="search_fields">
         <item>All Fields</item>
         <item>Title</item>
@@ -15,7 +110,6 @@
         <item>ID</item>
     </string-array>
 
-    <!-- Field codes for search fields (ADD THIS) -->
     <string-array name="search_field_values">
         <item>all</item>
         <item>ti</item>
@@ -48,20 +142,9 @@
         <item>200</item>
     </string-array>
 
-    <string name="search">Search</string>
-    <string name="advanced_search">Advanced Search</string>
-    <string name="basic_search">Basic Search</string>
-    <string name="placeholder_search">Search...</string>
-    <string name="placehold_advanced_search">Search term...</string>
-
     <!--  Download  -->
     <string name="download_title">Downloads</string>
     <string name="action_button_desc">Action button (Cancel, Retry, or Remove) for a download item</string>
-    <string name="select_category_placeholder">Select a category</string>
-    <string name="select_valid_category_toast">Please select a valid category</string>
-    <string name="invalid_category_toast">Invalid category selected</string>
-    <string name="category_already_added_toast">Category already added</string>
-    <string name="advanced_filters_cleared_toast">Advanced filters cleared</string>
 
     <string name="state_queued">Queued</string>
     <string name="state_downloading">Downloading</string>
@@ -100,10 +183,10 @@
     <string name="category_cond_mat_supr_con">Superconductivity</string>
     <string name="category_gr_qc">General Relativity and Quantum Cosmology</string>
     <string name="category_hep">High Energy Physics</string>
-    <string name="category_hep_ex">Experiment</string>
-    <string name="category_hep_lat">Lattice</string>
-    <string name="category_hep_ph">Phenomenology</string>
-    <string name="category_hep_th">Theory</string>
+    <string name="category_hep_ex">High Energy Physics - Experiment</string>
+    <string name="category_hep_lat">High Energy Physics - Lattice</string>
+    <string name="category_hep_ph">High Energy Physics - Phenomenology</string>
+    <string name="category_hep_th">High Energy Physics - Theory</string>
     <string name="category_math_ph">Mathematical Physics</string>
     <string name="category_nlin">Nonlinear Sciences</string>
     <string name="category_nlin_ao">Adaptation and Self-Organizing Systems</string>
@@ -139,7 +222,7 @@
     <string name="category_physics_space_ph">Space Physics</string>
     <string name="category_quant_ph">Quantum Physics</string>
 
-    <!-- Sub-Categories for Mathematics -->
+    <!-- ✅ Mathematics -->
     <string name="category_math_ag">Algebraic Geometry</string>
     <string name="category_math_at">Algebraic Topology</string>
     <string name="category_math_ap">Analysis of PDEs</string>
@@ -159,7 +242,7 @@
     <string name="category_math_it">Information Theory</string>
     <string name="category_math_kt">K-Theory and Homology</string>
     <string name="category_math_lo">Logic</string>
-    <!--<string name="category_math_mp">Mathematical Physics</string>--><!-- Duplicate key, handled by math-ph -->
+    <string name="category_math_mp">Mathematical Physics</string>
     <string name="category_math_mg">Metric Geometry</string>
     <string name="category_math_nt">Number Theory</string>
     <string name="category_math_na">Numerical Analysis</string>
@@ -241,7 +324,7 @@
     <string name="category_q_bio_sc">Subcellular Processes</string>
     <string name="category_q_bio_to">Tissues and Organs</string>
 
-    <!-- Sub-Categories for Quantitative Finance -->
+    <!-- ✅ Quantitative Finance -->
     <string name="category_q_fin_cp">Computational Finance</string>
     <string name="category_q_fin_ec">Economics</string>
     <string name="category_q_fin_gn">General Finance</string>
@@ -252,7 +335,7 @@
     <string name="category_q_fin_st">Statistical Finance</string>
     <string name="category_q_fin_tr">Trading and Market Microstructure</string>
 
-    <!-- Sub-Categories for Statistics -->
+    <!-- ✅ Statistics -->
     <string name="category_stat_ap">Applications</string>
     <string name="category_stat_co">Computation</string>
     <string name="category_stat_ml">Machine Learning</string>
@@ -260,13 +343,13 @@
     <string name="category_stat_ot">Other Statistics</string>
     <string name="category_stat_th">Statistics Theory</string>
 
-    <!-- Sub-Categories for EESS -->
+    <!-- ✅ EESS -->
     <string name="category_eess_as">Audio and Speech Processing</string>
     <string name="category_eess_iv">Image and Video Processing</string>
     <string name="category_eess_sp">Signal Processing</string>
-    <!-- <string name="category_eess_sy">Systems and Control</string> --> <!-- Duplicate key, handled by cs.SY -->
+    <string name="category_eess_sy">Systems and Control</string>
 
-    <!-- Sub-Categories for Economics -->
+    <!-- ✅ Economics -->
     <string name="category_econ_em">Econometrics</string>
     <string name="category_econ_gn">General Economics</string>
     <string name="category_econ_th">Theoretical Economics</string>
@@ -307,33 +390,20 @@
     <string name="nav_search">Search</string>
 
     <!-- Article Listing -->
-    <string name="sort_by">Sort by:</string>
     <string name="results_per_page">Results per page:</string>
-    <string name="error_loading_data">Error loading data</string>
     <string name="first">First</string>
     <string name="previous">Previous</string>
-    <string name="next">Next</string>
     <string name="last">Last</string>
 
     <!-- Advanced Search -->
-    <string name="close">Close</string>
-    <string name="additional_search_fields">Additional Search Fields</string>
-    <string name="add_field">+ Add Field</string>
-    <string name="categories">Categories</string>
     <string name="select_category_to_add">Select a category to add</string>
     <string name="add">Add</string>
     <string name="selected_categories">Selected Categories:</string>
-    <string name="date_range">Date Range</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
+
     <string name="date_format_hint">YYYY-MM-DD</string>
-    <string name="reset">Reset</string>
-    <string name="apply">Apply</string>
-    <string name="advanced_filters">Advanced filters</string>
 
     <!-- General Actions -->
     <string name="download">Download</string>
     <string name="bookmark">Bookmark</string>
-    <string name="menu">Menu</string>
     <string name="desc_about">Made with love by USTH students</string>
 </resources>
