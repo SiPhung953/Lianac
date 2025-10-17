@@ -110,18 +110,17 @@ public class SearchViewModel extends ViewModel {
     /**
      * Search articles by category with specific sort order
      */
-    public void searchByCategory(String categoryId, String sortBy) {
-        List<String> categoryList = new ArrayList<>();
-        categoryList.add(categoryId);
-
+    public void searchByCategory(String categoryId, String sortBy, boolean isCategoryBrowse) {
         QueryOptions query = new QueryOptions.Builder()
-                .categories(categoryList)
+                .categories(java.util.Collections.singletonList(categoryId))
                 .sortBy(sortBy)
                 .sortOrder("descending")
-                .maxResults(25)
                 .start(0)
+                .maxResults(10)
+                .categoryBrowse(isCategoryBrowse) // ADD THIS LINE
                 .build();
 
+        updateQueryOptions(query);
         search(query);
     }
 

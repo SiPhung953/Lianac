@@ -314,7 +314,9 @@ public class SubjectDetailFragment extends Fragment {
                     new androidx.lifecycle.ViewModelProvider(requireActivity());
             vn.edu.lianac.viewmodel.SearchViewModel viewModel =
                     viewModelProvider.get(vn.edu.lianac.viewmodel.SearchViewModel.class);
-            viewModel.searchByCategory(categoryId, sortBy);
+
+            // Mark as category browse search
+            viewModel.searchByCategory(categoryId, sortBy, true);
 
             // Navigate to ArticleListingFragment
             ((MainActivity) getActivity()).navigateToContent(new ArticleListingFragment());

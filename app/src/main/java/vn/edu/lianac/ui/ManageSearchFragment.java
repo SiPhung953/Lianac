@@ -508,6 +508,7 @@ public class ManageSearchFragment extends Fragment {
     }
 
     // ------------------- Apply / Reset -------------------
+
     private boolean applyFilters() {
         removeEmptyRows();
 
@@ -560,9 +561,10 @@ public class ManageSearchFragment extends Fragment {
         // Update only the advanced filter fields
         builder.rows(rows);
 
-        // Include categories
+        // Include categories with smart filtering
         updateSelectedCategoriesFromUI();
-        builder.categories(new ArrayList<>(selectedCategories));
+        List<String> filteredCategories = filterRedundantCategories(new ArrayList<>(selectedCategories));
+        builder.categories(filteredCategories);
 
         // Include dates
         String fromDate = dateFromField != null ? dateFromField.getText().toString().trim() : "";
@@ -588,7 +590,7 @@ public class ManageSearchFragment extends Fragment {
 
         boolean hasSearchTerm = actualSearchTerm != null && !actualSearchTerm.isEmpty();
         boolean hasSearchRows = !rows.isEmpty();
-        boolean hasCategories = !selectedCategories.isEmpty();
+        boolean hasCategories = !filteredCategories.isEmpty();
         boolean hasDateRange = !fromDate.isEmpty() || !toDate.isEmpty();
 
         if (!hasSearchTerm && !hasSearchRows && !hasCategories && !hasDateRange) {
@@ -606,6 +608,42 @@ public class ManageSearchFragment extends Fragment {
 
         Toast.makeText(requireContext(), R.string.filters_applied, Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    /**
+     * Filters out redundant parent categories when subcategories are selected.
+     * For example, if both "astro-ph" and "astro-ph.CO" are selected,
+     * only "astro-ph.CO" will be included in the result.
+     *
+     * @param categories List of selected category IDs
+     * @return Filtered list with redundant parent categories removed
+     */
+    private List<String> filterRedundantCategories(List<String> categories) {
+        if (categories == null || categories.isEmpty()) {
+            return categories;
+        }
+
+        List<String> filtered = new ArrayList<>();
+
+        for (String category : categories) {
+            boolean hasSubcategorySelected = false;
+
+            // Check if any other selected category is a subcategory of this one
+            for (String otherCategory : categories) {
+                if (!otherCategory.equals(category) && otherCategory.startsWith(category + ".")) {
+                    // Found a subcategory of this category
+                    hasSubcategorySelected = true;
+                    break;
+                }
+            }
+
+            // Only include this category if no subcategories are selected
+            if (!hasSubcategorySelected) {
+                filtered.add(category);
+            }
+        }
+
+        return filtered;
     }
 
     private String getFieldValue(int position) {

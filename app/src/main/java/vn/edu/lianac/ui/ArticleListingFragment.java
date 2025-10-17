@@ -358,15 +358,17 @@ public class ArticleListingFragment extends Fragment {
             int firstResult = start + 1;
             int lastResult = Math.min(start + pageSize, total);
 
-            // Check if category filter is active
+            // Check if this is a category browse search (from SubjectDetail)
             String resultsInfo;
             List<String> categories = currentQuery.getCategories();
-            if (categories != null && categories.size() == 1) {
-                // Get category display name
+
+            if (currentQuery.isCategoryBrowse() && categories != null && categories.size() == 1) {
+                // Category browse from SubjectDetailFragment - show category info
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
                 resultsInfo = getString(R.string.results_info, firstResult, lastResult, total, displayName, categoryId);
             } else {
+                // Filter search from ManageSearchFragment - use simple format
                 resultsInfo = getString(R.string.results_info_simple, firstResult, lastResult, total);
             }
 

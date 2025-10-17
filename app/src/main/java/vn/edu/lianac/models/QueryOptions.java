@@ -19,20 +19,7 @@ public class QueryOptions {
     private final boolean includeCrossLists;
     private final String dateFrom;
     private final String dateTo;
-
-    private QueryOptions(Builder builder) {
-        this.searchTerm = builder.searchTerm;
-        this.searchField = builder.searchField;
-        this.rows = builder.rows;
-        this.start = builder.start;
-        this.maxResults = builder.maxResults;
-        this.sortBy = builder.sortBy;
-        this.sortOrder = builder.sortOrder;
-        this.categories = builder.categories;
-        this.includeCrossLists = builder.includeCrossLists;
-        this.dateFrom = builder.dateFrom;
-        this.dateTo = builder.dateTo;
-    }
+    private boolean isCategoryBrowse;
 
     // ==================== GETTERS ====================
 
@@ -142,6 +129,21 @@ public class QueryOptions {
         return hasDateFilter() && term.equalsIgnoreCase("all");
     }
 
+    private QueryOptions(Builder builder) {
+        this.searchTerm = builder.searchTerm;
+        this.searchField = builder.searchField;
+        this.rows = builder.rows;
+        this.start = builder.start;
+        this.maxResults = builder.maxResults;
+        this.sortBy = builder.sortBy;
+        this.sortOrder = builder.sortOrder;
+        this.categories = builder.categories;
+        this.includeCrossLists = builder.includeCrossLists;
+        this.dateFrom = builder.dateFrom;
+        this.dateTo = builder.dateTo;
+        this.isCategoryBrowse = builder.isCategoryBrowse; // ADD THIS LINE
+    }
+
     // ==================== NAVIGATION HELPERS ====================
 
     /**
@@ -156,6 +158,10 @@ public class QueryOptions {
      */
     public QueryOptions previousPage() {
         return toBuilder().start(Math.max(0, start - maxResults)).build();
+    }
+
+    public boolean isCategoryBrowse() {
+        return isCategoryBrowse;
     }
 
     /**
@@ -173,7 +179,13 @@ public class QueryOptions {
                 .categories(categories)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
-                .includeCrossLists(includeCrossLists);
+                .includeCrossLists(includeCrossLists)
+                .categoryBrowse(isCategoryBrowse); // ADD THIS LINE
+    }
+
+    public Builder categoryBrowse(boolean isCategoryBrowse) {
+        this.isCategoryBrowse = isCategoryBrowse;
+        return this.toBuilder();
     }
 
     @Override
@@ -190,6 +202,7 @@ public class QueryOptions {
     // ==================== BUILDER ====================
 
     public static class Builder {
+        private boolean isCategoryBrowse = false;
         private String searchTerm;
         private String searchField = "all";
         private List<SearchRow> rows = new ArrayList<>();
@@ -259,6 +272,11 @@ public class QueryOptions {
 
         public QueryOptions build() {
             return new QueryOptions(this);
+        }
+
+        public Builder categoryBrowse(boolean isCategoryBrowse) {
+            this.isCategoryBrowse = isCategoryBrowse;
+            return this;
         }
     }
 }
