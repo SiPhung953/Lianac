@@ -230,16 +230,10 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
                     // Use the appropriate navigation method
                     try {
-                        // Try MainActivity_search style first
-                        ((MainActivity) activity).loadContentFragment(fragment, true);
-                    } catch (NoSuchMethodError e) {
-                        // Fallback to MainActivity_detail style
-                        try {
-                            ((MainActivity) activity).replaceFragment(fragment);
-                        } catch (Exception ex) {
-                            Log.e(TAG, "Failed to navigate to detail", ex);
-                            Toast.makeText(context, "Error opening article details", Toast.LENGTH_SHORT).show();
-                        }
+                        ((MainActivity) activity).replaceFragment(fragment);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to navigate to detail", ex);
+                        Toast.makeText(context, "Error opening article details", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

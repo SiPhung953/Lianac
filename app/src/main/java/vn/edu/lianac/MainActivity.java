@@ -37,7 +37,7 @@ import vn.edu.lianac.Download.DownloadFragment;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
 import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
-
+import vn.edu.lianac.ui.SubjectsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         // FIXED: Handle both initial launch and rotation
         if (savedInstanceState == null) {
             // First launch - show subjects
-            replaceFragment(new SubjectFragment());
+            replaceFragment(new SubjectsFragment());
             getSupportActionBar().setTitle(R.string.nav_subjects);
             navigationView.setCheckedItem(R.id.nav_subjects);
             isSearchMode = false;
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
             int id = item.getItemId();
             if (id == R.id.nav_subjects) {
-                fragment = new SubjectFragment();
+                fragment = new SubjectsFragment();
                 getSupportActionBar().setTitle(R.string.nav_subjects);
                 isSearchMode = false;
             } else if (id == R.id.nav_downloads) {

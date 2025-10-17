@@ -181,7 +181,8 @@ public class DetailFragment extends Fragment {
         setupBreadcrumb();
 
         // Setup category badges
-        setupCategoryBadges();
+        // setupCategoryBadges();
+        // TODO: Discuss whether we need the badge to display
 
         // Update bookmark icon
         updateBookmarkIcon();
@@ -322,7 +323,8 @@ public class DetailFragment extends Fragment {
             String mainCategory = article.getMainCategory();
             if (!mainCategory.isEmpty()) {
                 String displayName = categoryProvider.getCategoryDisplayName(mainCategory);
-                Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
+                // Read below
             }
         });
 
@@ -332,7 +334,9 @@ public class DetailFragment extends Fragment {
                 String mainCategory = article.getMainCategory();
                 String fullSubcategoryId = mainCategory + "." + subCategory;
                 String displayName = categoryProvider.getCategoryDisplayName(fullSubcategoryId);
-                Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
+                // The Toast here is so useless, what this does is if it can't navigate to the Main Category or Sub Category, it will show a Toast
+                // TODO: Actually add some navigation from Breadcrumb
             }
         });
 
@@ -395,8 +399,8 @@ public class DetailFragment extends Fragment {
 
                 case QUEUED:
                 case DOWNLOADING:
-                    // Show progress and cancel icon
-                    downloadIcon.setImageResource(R.drawable.ic_cancel);
+                    // For users who want to be able to cancel downloads, they have to go directly to the Download Fragment
+                    downloadIcon.setImageResource(R.drawable.ic_download);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.VISIBLE);
                     downloadProgress.setText(progress + "%");
@@ -412,11 +416,11 @@ public class DetailFragment extends Fragment {
                     break;
 
                 case FAILED:
-                    // Show retry icon
-                    downloadIcon.setImageResource(R.drawable.ic_download);
+                    // Show retry icon, as long as the state of Download Item remain in database, I suppose
+                    downloadIcon.setImageResource(R.drawable.ic_retry);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.VISIBLE);
-                    downloadProgress.setText("Failed");
+                    downloadProgress.setText(R.string.state_failed);
                     downloadIcon.setEnabled(true);
                     break;
 
@@ -462,7 +466,7 @@ public class DetailFragment extends Fragment {
 
                 case COMPLETED:
                     // Already downloaded
-                    Toast.makeText(getContext(), "Already downloaded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Already downloaded, press READ to open", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
