@@ -13,6 +13,7 @@ import java.util.List;
 
 import vn.edu.lianac.models.Article;
 import vn.edu.lianac.models.SearchResult;
+import vn.edu.lianac.utils.ArxivUrlHelper;
 
 public class ArxivParser {
     private static final String TAG = "ArxivParser";
@@ -262,6 +263,9 @@ public class ArxivParser {
         if (href == null || href.isEmpty()) {
             return;
         }
+
+        // Convert to HTTPS
+        href = ArxivUrlHelper.toHttps(href);
 
         // Determine link type
         if ("alternate".equals(rel) && article.getAbsUrl() == null) {
