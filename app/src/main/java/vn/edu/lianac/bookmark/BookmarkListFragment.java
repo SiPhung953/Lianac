@@ -1,10 +1,13 @@
 package vn.edu.lianac.bookmark;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import vn.edu.lianac.R;
+import vn.edu.lianac.models.Article;
+import vn.edu.lianac.network.ArxivAPIService;
+import vn.edu.lianac.DetailFragment;
 
 public class BookmarkListFragment extends Fragment implements BookmarkAdapter.OnBookmarkClickListener {
     private RecyclerView recyclerView;
@@ -59,8 +65,38 @@ public class BookmarkListFragment extends Fragment implements BookmarkAdapter.On
 
     @Override
     public void onBookmarkClick(BookmarkItem item) {
-       //add code to go the the chosen article here
+       ArxivAPIService apiService = ArxivAPIService.getInstance();
+        apiService.fetchArticleById(item.getId(), new ArxivAPIService.ArxivSingleArticleListener() {
+            @Override
+            public void onSuccess(Article article) {
+                if (isAdded() && getActivity() != null) {
+                    DetailFragment detailFragment = new DetailFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable("article", article);
+                    detailFragment.setArguments(args);
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, detailFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if (isAdded() && getContext() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), "Failed to load article", Toast.LENGTH_SHORT).show();
+                            Log.e("BookmarkListFragment", "Error fetching article", e);
+                        }
+                    });
+                }
+            }
+        });
     }
+
+
 
     @Override
     public void onBookmarkRemove(BookmarkItem item) {

@@ -15,9 +15,11 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import vn.edu.lianac.models.Article;
 import vn.edu.lianac.models.SearchResult;
+import vn.edu.lianac.utils.ArxivUrlHelper;
 
 public class ArxivAPIService {
     private static final String TAG = "ArxivAPIService";
+    private static final String API_BASE_URL = "http://export.arxiv.org/api/query";
     private static final int CONNECT_TIMEOUT = 30; // seconds
     private static final int READ_TIMEOUT = 30; // seconds
     private static final int WRITE_TIMEOUT = 30; // seconds
@@ -57,7 +59,7 @@ public class ArxivAPIService {
             Log.e(TAG, "Listener cannot be null");
             return;
         }
-
+        queryUrl = ArxivUrlHelper.toHttps(queryUrl);
         Log.d(TAG, "Fetching articles from: " + queryUrl);
 
         Request request = new Request.Builder()
@@ -85,6 +87,44 @@ public class ArxivAPIService {
             }
         });
     }
+
+    /**
+     * Fetches a single article by its ID.
+     * @param articleId The ID of the article to fetch.
+     * @param listener The listener for the response.
+     */
+    public void fetchArticleById(String articleId, ArxivSingleArticleListener listener) {
+        if (articleId == null || articleId.isEmpty()) {
+            if (listener != null) {
+                listener.onError(new IllegalArgumentException("Article ID cannot be null or empty."));
+            }
+            return;
+        }
+
+        if (listener == null) {
+            Log.e(TAG, "Listener cannot be null");
+            return;
+        }
+
+        String url = API_BASE_URL + "?id_list=" + articleId;
+
+        fetchArticles(url, new ArxivResponseListener() {
+            @Override
+            public void onSuccess(List<Article> articles) {
+                if (articles != null && !articles.isEmpty()) {
+                    listener.onSuccess(articles.get(0));
+                } else {
+                    listener.onError(new ParseException("Article not found or empty response."));
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                listener.onError(e);
+            }
+        });
+    }
+
 
     /**
      * Fetches articles with full metadata from arXiv API asynchronously
@@ -270,6 +310,11 @@ public class ArxivAPIService {
 
     public interface ArxivSearchResultListener {
         void onSuccess(SearchResult result);
+        void onError(Exception e);
+    }
+
+    public interface ArxivSingleArticleListener {
+        void onSuccess(Article article);
         void onError(Exception e);
     }
 
