@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import vn.edu.lianac.bookmark.BookmarkItem;
 import vn.edu.lianac.bookmark.BookmarkManager;
-import vn.edu.lianac.MathFragment;
 
 public class SubjectFragment extends Fragment {
 
@@ -64,15 +63,7 @@ public class SubjectFragment extends Fragment {
             item.setTextColor(0xFF000000);
             item.setOnClickListener(v -> {
                 String clickedSubclass = ((TextView) v).getText().toString().replace("📘 ", "");
-
-                // When "Calculus" is clicked, open the MathFragment
-                if ("Calculus".equals(clickedSubclass)) {
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).replaceFragment(new MathFragment());
-                    }
-                } else {
-                    openSubclassFragment(subjectName, clickedSubclass);
-                }
+                openSubclassFragment(subjectName, clickedSubclass);
             });
             listContainer.addView(item);
         }

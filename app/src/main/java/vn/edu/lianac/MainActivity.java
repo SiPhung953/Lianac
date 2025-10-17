@@ -213,10 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new BookmarkListFragment();
                 getSupportActionBar().setTitle(R.string.nav_bookmarks);
                 isSearchMode = false;
-            } else if (id == R.id.nav_math) {
-                fragment = new MathFragment();
-                getSupportActionBar().setTitle(R.string.nav_math);
-                isSearchMode = false;
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
                 getSupportActionBar().setTitle(R.string.nav_settings);
