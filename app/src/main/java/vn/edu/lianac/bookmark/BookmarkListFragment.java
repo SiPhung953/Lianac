@@ -66,7 +66,7 @@ public class BookmarkListFragment extends Fragment implements BookmarkAdapter.On
     @Override
     public void onBookmarkClick(BookmarkItem item) {
        ArxivAPIService apiService = ArxivAPIService.getInstance();
-        apiService.fetchArticleById(item.getId(), new ArxivAPIService.ArxivSingleArticleListener() {
+        apiService.fetchArticleById(item.getId().replaceFirst("(?i)^arxiv:", ""), new ArxivAPIService.ArxivSingleArticleListener() {
             @Override
             public void onSuccess(Article article) {
                 if (isAdded() && getActivity() != null) {
@@ -94,8 +94,8 @@ public class BookmarkListFragment extends Fragment implements BookmarkAdapter.On
                 }
             }
         });
+        Log.d("BookmarkListFragment", "Fetching article with ID: " + item.getId());
     }
-
 
 
     @Override

@@ -49,7 +49,6 @@ import vn.edu.lianac.bookmark.BookmarkListFragment;
 import vn.edu.lianac.ui.ArticleListingFragment;
 import vn.edu.lianac.ui.SearchFragment;
 import vn.edu.lianac.ui.SubjectsFragment;
-import vn.edu.lianac.ui.SubjectsFragment;
 import vn.edu.lianac.utils.CategoryProvider;
 
 /**
@@ -92,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = newBase.createConfigurationContext(config);
         super.attachBaseContext(context);
+
+        //DARK MAGIC, DO NOT TOUCH
+        new Thread(() -> {
+            CategoryProvider.getInstance(this);
+        }).start();
     }
 
 
@@ -163,9 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
         // FIXED: Handle both initial launch and rotation
         if (savedInstanceState == null) {
-            new Thread(() -> {
-                CategoryProvider.getInstance(this);
-            }).start();
             // First launch - show subjects
             replaceFragment(new SubjectsFragment());
             getSupportActionBar().setTitle(R.string.nav_subjects);

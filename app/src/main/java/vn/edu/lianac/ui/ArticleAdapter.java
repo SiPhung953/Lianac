@@ -23,6 +23,7 @@ import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import vn.edu.lianac.DetailFragment;
 import vn.edu.lianac.MainActivity;
@@ -248,10 +249,36 @@ public class ArticleAdapter extends ListAdapter<Article, ArticleAdapter.ViewHold
 
             // Make entire item clickable
             itemView.setOnClickListener(v -> {
-                Toast.makeText(context, R.string.open_article + article.getId(), Toast.LENGTH_SHORT).show();
-                // TODO: Navigate to article detail screen
+                String message = String.format(Locale.getDefault(), "%s %s",
+                        context.getString(R.string.open_article),
+                        article.getId());
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                navigateToDetail(article);
             });
 
+        }
+
+        private void navigateToDetail(Article article) {
+            if (context instanceof FragmentActivity) {
+                FragmentActivity activity = (FragmentActivity) context;
+
+                // Check which MainActivity version we're using
+                if (activity instanceof MainActivity) {
+                    android.os.Bundle args = new android.os.Bundle();
+                    args.putParcelable("article", article);
+
+                    DetailFragment fragment = new DetailFragment();
+                    fragment.setArguments(args);
+
+                    // Use the appropriate navigation method
+                    try {
+                        ((MainActivity) activity).replaceFragment(fragment);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to navigate to detail", ex);
+                        Toast.makeText(context, "Error opening article details", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
         }
 
         private TextView createCategoryBadge(String categoryId, boolean isFirst) {
