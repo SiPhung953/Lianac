@@ -97,7 +97,6 @@ public class ManageSearchFragment extends Fragment {
         restoreFiltersFromViewModel();
     }
 
-    // ------------------- View binding -------------------
     private void bindViews(View view) {
         closeDrawerButton = view.findViewById(R.id.closeDrawerButton);
         applyFiltersButton = view.findViewById(R.id.applyFiltersButton);
@@ -144,7 +143,6 @@ public class ManageSearchFragment extends Fragment {
             leafCategoryHeader.setOnClickListener(this::onCategorySubsectionToggle);
     }
 
-    // ------------------- Event wiring -------------------
     private void setupEventListeners() {
         if (closeDrawerButton != null) closeDrawerButton.setOnClickListener(v -> closeDrawer());
         if (applyFiltersButton != null) applyFiltersButton.setOnClickListener(v -> {
@@ -161,7 +159,6 @@ public class ManageSearchFragment extends Fragment {
         if (addFieldButton != null) addFieldButton.setOnClickListener(v -> addSearchFieldRow(null));
     }
 
-    // ------------------- Category system -------------------
     private void setupCategoryChipSystem() {
         populateMainCategoryChips();
         updateSelectedCategoriesSummary();
@@ -350,9 +347,6 @@ public class ManageSearchFragment extends Fragment {
         }
     }
 
-    // --- End REWORKED Category Logic ---
-
-    // ------------------- Search rows -------------------
     private void addSearchFieldRow(@Nullable SearchRow row) {
         if (searchFieldsContainer == null) return;
 
@@ -453,7 +447,6 @@ public class ManageSearchFragment extends Fragment {
         updateRemoveButtonsVisibility();
     }
 
-    // ------------------- Date picker -------------------
     private void setupDatePicker() {
         if (dateFromField != null)
             dateFromField.setOnClickListener(v -> showDatePicker(dateFromField));
@@ -616,14 +609,6 @@ public class ManageSearchFragment extends Fragment {
         return true;
     }
 
-    /**
-     * Filters out redundant parent categories when subcategories are selected.
-     * For example, if both "astro-ph" and "astro-ph.CO" are selected,
-     * only "astro-ph.CO" will be included in the result.
-     *
-     * @param categories List of selected category IDs
-     * @return Filtered list with redundant parent categories removed
-     */
     private List<String> filterRedundantCategories(List<String> categories) {
         if (categories == null || categories.isEmpty()) {
             return categories;
@@ -761,7 +746,6 @@ public class ManageSearchFragment extends Fragment {
     }
 
 
-    // ------------------- Restore -------------------
     private void restoreFiltersFromViewModel() {
         QueryOptions current = searchViewModel.getCurrentQuery().getValue();
 

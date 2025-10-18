@@ -20,9 +20,6 @@ public class ArxivParser {
     private static final String OPENSEARCH_NAMESPACE = "http://a9.com/-/spec/opensearch/1.1/";
     private static final String ARXIV_NAMESPACE = "http://arxiv.org/schemas/atom";
 
-    /**
-     * Parse arXiv Atom feed XML into a SearchResult object containing articles and metadata
-     */
     public static SearchResult parseWithMetadata(InputStream in) throws XmlPullParserException, IOException {
         if (in == null) {
             throw new IllegalArgumentException("InputStream cannot be null");
@@ -39,9 +36,6 @@ public class ArxivParser {
         }
     }
 
-    /**
-     * Legacy method for backward compatibility - returns only articles
-     */
     public static List<Article> parse(InputStream in) throws XmlPullParserException, IOException {
         SearchResult result = parseWithMetadata(in);
         return result.getArticles();

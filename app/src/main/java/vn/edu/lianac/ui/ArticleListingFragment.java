@@ -296,10 +296,6 @@ public class ArticleListingFragment extends Fragment {
         });
     }
 
-    /**
-     * Update spinner selections based on the current query state
-     * This ensures spinners always reflect the actual state
-     */
     private void updateSpinnersFromQuery(QueryOptions query) {
         isUpdatingSpinners = true;
 

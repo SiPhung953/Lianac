@@ -13,9 +13,6 @@ import java.util.List;
 import vn.edu.lianac.R;
 import vn.edu.lianac.utils.CategoryProvider;
 
-/**
- * Adapter for displaying subject categories in a RecyclerView
- */
 public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.SubjectViewHolder> {
 
     private final List<String> subjects;

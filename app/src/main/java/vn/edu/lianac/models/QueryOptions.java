@@ -3,10 +3,6 @@ package vn.edu.lianac.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Query options for arXiv API searches.
- * Supports both basic and advanced search modes.
- */
 public class QueryOptions {
     private final String searchTerm;
     private final String searchField;
@@ -37,8 +33,6 @@ public class QueryOptions {
 
     }
 
-    // ==================== GETTERS ====================
-
     public String getSearchTerm() { return searchTerm; }
     public String getSearchField() { return searchField; }
     public List<SearchRow> getRows() { return rows; }
@@ -51,40 +45,23 @@ public class QueryOptions {
     public String getDateFrom() { return dateFrom; }
     public String getDateTo() { return dateTo; }
 
-    // ==================== QUERY HELPERS ====================
-
-    /**
-     * Check if this query has a basic search term
-     */
     public boolean hasSearchTerm() {
         return searchTerm != null && !searchTerm.trim().isEmpty();
     }
 
-    /**
-     * Check if this query has advanced search rows
-     */
     public boolean hasRows() {
         return rows != null && !rows.isEmpty();
     }
 
-    /**
-     * Check if date filter is applied
-     */
     public boolean hasDateFilter() {
         return (dateFrom != null && !dateFrom.isEmpty()) ||
                 (dateTo != null && !dateTo.isEmpty());
     }
 
-    /**
-     * Check if category filter is applied
-     */
     public boolean hasCategoryFilter() {
         return categories != null && !categories.isEmpty();
     }
 
-    /**
-     * Check if this is a broad search (wildcards, very short terms, etc.)
-     */
     public boolean isBroadSearch() {
         // Has advanced rows - check if any are specific
         if (hasRows()) {
@@ -113,18 +90,10 @@ public class QueryOptions {
         return hasDateFilter() && term.equalsIgnoreCase("all");
     }
 
-    // ==================== NAVIGATION HELPERS ====================
-
-    /**
-     * Create query for next page
-     */
     public QueryOptions nextPage() {
         return toBuilder().start(start + maxResults).build();
     }
 
-    /**
-     * Create query for previous page
-     */
     public QueryOptions previousPage() {
         return toBuilder().start(Math.max(0, start - maxResults)).build();
     }
@@ -133,9 +102,6 @@ public class QueryOptions {
         return isCategoryBrowse;
     }
 
-    /**
-     * Create a builder from this query
-     */
     public Builder toBuilder() {
         return new Builder()
                 .searchTerm(searchTerm)
@@ -167,8 +133,6 @@ public class QueryOptions {
                     searchTerm, searchField, start, maxResults);
         }
     }
-
-    // ==================== BUILDER ====================
 
     public static class Builder {
         private boolean isCategoryBrowse = false;

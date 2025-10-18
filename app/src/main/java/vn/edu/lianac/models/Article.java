@@ -148,8 +148,6 @@ public class Article implements Parcelable {
         return "Submitted: " + getFormattedDate();
     }
 
-
-
     public String getFormattedAnnouncedDate() {
         if (updatedDate == null || updatedDate.length() < 10) {
             return null;
@@ -185,9 +183,6 @@ public class Article implements Parcelable {
         return (categories != null && !categories.isEmpty()) ? categories.get(0) : "";
     }
 
-    /**
-     * Get the main category (e.g., "cond-mat" from "cond-mat.str-el")
-     */
     public String getMainCategory() {
         if (primaryCategory == null || primaryCategory.isEmpty()) {
             return "";
@@ -200,9 +195,6 @@ public class Article implements Parcelable {
         return primaryCategory;
     }
 
-    /**
-     * Get the subcategory (e.g., "str-el" from "cond-mat.str-el")
-     */
     public String getSubCategory() {
         if (primaryCategory == null || primaryCategory.isEmpty()) {
             return "";

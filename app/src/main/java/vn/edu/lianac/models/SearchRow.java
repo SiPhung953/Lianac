@@ -16,13 +16,6 @@ public class SearchRow {
     private final String value;      // search term
     private final String operator;   // "AND", "OR", "NOT"
 
-    /**
-     * Constructor for SearchRow
-     *
-     * @param field    The search field (all, ti, au, abs, etc.)
-     * @param value    The search term
-     * @param operator The boolean operator (AND, OR, NOT)
-     */
     public SearchRow(String field, String value, String operator) {
         this.field = field != null ? field : "all";
         this.value = value != null ? value : "";
@@ -42,9 +35,6 @@ public class SearchRow {
         return operator;
     }
 
-    /**
-     * Check if this row has a valid value
-     */
     public boolean hasValue() {
         return value != null && !value.trim().isEmpty();
     }

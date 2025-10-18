@@ -40,9 +40,6 @@ public class SubjectDetailFragment extends Fragment {
     private Button btnNew, btnRecent, btnPopular;
     private LinearLayout subcategoriesContainer;
 
-    /**
-     * Create new instance with breadcrumb tracking
-     */
     public static SubjectDetailFragment newInstance(String categoryId, String categoryName) {
         return newInstance(categoryId, categoryName, new ArrayList<>());
     }
@@ -323,9 +320,6 @@ public class SubjectDetailFragment extends Fragment {
         }
     }
 
-    /**
-     * Parcelable class to store breadcrumb information
-     */
     public static class BreadcrumbItem implements android.os.Parcelable {
         public static final Creator<BreadcrumbItem> CREATOR = new Creator<BreadcrumbItem>() {
             @Override

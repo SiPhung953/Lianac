@@ -45,12 +45,6 @@ public class ArxivAPIService {
         return instance;
     }
 
-    /**
-     * Fetches articles from arXiv API asynchronously
-     *
-     * @param queryUrl Complete arXiv API URL with query parameters
-     * @param listener Callback for success/failure
-     */
     public void fetchArticles(String queryUrl, ArxivResponseListener listener) {
         if (queryUrl == null || queryUrl.isEmpty()) {
             listener.onError(new IllegalArgumentException(String.valueOf(R.string.error_no_query_url)));
@@ -89,11 +83,6 @@ public class ArxivAPIService {
         });
     }
 
-    /**
-     * Fetches a single article by its ID.
-     * @param articleId The ID of the article to fetch.
-     * @param listener The listener for the response.
-     */
     public void fetchArticleById(String articleId, ArxivSingleArticleListener listener) {
         if (articleId == null || articleId.isEmpty()) {
             if (listener != null) {
@@ -126,13 +115,6 @@ public class ArxivAPIService {
         });
     }
 
-
-    /**
-     * Fetches articles with full metadata from arXiv API asynchronously
-     *
-     * @param queryUrl Complete arXiv API URL with query parameters
-     * @param listener Callback for success/failure with SearchResult
-     */
     public void fetchArticlesWithMetadata(String queryUrl, ArxivSearchResultListener listener) {
         if (queryUrl == null || queryUrl.isEmpty()) {
             listener.onError(new IllegalArgumentException(String.valueOf(R.string.error_no_query_url)));
@@ -170,9 +152,6 @@ public class ArxivAPIService {
         });
     }
 
-    /**
-     * Synchronous fetch (for use in coroutines or background threads)
-     */
     public List<Article> fetchArticlesSync(String queryUrl) throws IOException {
         if (queryUrl == null || queryUrl.isEmpty()) {
             throw new IllegalArgumentException(String.valueOf(R.string.error_no_query_url));
@@ -267,29 +246,18 @@ public class ArxivAPIService {
         }
     }
 
-    /**
-     * Cancel all pending requests
-     */
     public void cancelAll() {
         client.dispatcher().cancelAll();
         Log.d(TAG, "All requests cancelled");
     }
 
-    /**
-     * Get the number of queued calls
-     */
     public int getQueuedCallsCount() {
         return client.dispatcher().queuedCallsCount();
     }
 
-    /**
-     * Get the number of running calls
-     */
     public int getRunningCallsCount() {
         return client.dispatcher().runningCallsCount();
     }
-
-    // --- Callback Interfaces ---
 
     public interface ArxivResponseListener {
         void onSuccess(List<Article> articles);

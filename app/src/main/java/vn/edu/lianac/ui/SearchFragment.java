@@ -90,9 +90,6 @@ public class SearchFragment extends Fragment {
         scrimOverlay.setOnClickListener(v -> closeDrawer());
     }
 
-    /**
-     * Load ManageSearchFragment into the drawer container
-     */
     private void loadManageSearchFragment() {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.advancedSearchDrawer, new ManageSearchFragment())
@@ -172,10 +169,6 @@ public class SearchFragment extends Fragment {
         isDrawerOpen = true;
     }
 
-    /**
-     * Close the advanced search drawer
-     * Called by ManageSearchFragment when user applies filters or closes drawer
-     */
     public void closeDrawer() {
         if (!isDrawerOpen) return;
 
@@ -201,15 +194,12 @@ public class SearchFragment extends Fragment {
         isDrawerOpen = false;
     }
 
-    // NEW METHOD: Call ManageSearchFragment's cleanup
     private void notifyDrawerClosed() {
         Fragment childFragment = getChildFragmentManager().findFragmentById(R.id.advancedSearchDrawer);
         if (childFragment instanceof ManageSearchFragment) {
             ((ManageSearchFragment) childFragment).onDrawerClosed();
         }
     }
-
-    // ==================== HELPERS ====================
 
     public boolean isDrawerOpen() {
         return isDrawerOpen;
