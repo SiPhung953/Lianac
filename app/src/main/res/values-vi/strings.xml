@@ -220,10 +220,6 @@
     <string name="light">Sáng</string>
     <string name="dark">Tối</string>
     <string name="system">Hệ thống</string>
-    <string name="compact_list_view">Chế độ xem danh sách thu gọn</string>
-    <string name="text_density">Mật độ văn bản</string>
-    <string name="comfortable">Thoải mái</string>
-    <string name="compact">Thu gọn</string>
     <string name="language">Ngôn ngữ</string>
     <!-- ✅ Mathematics -->
     <string name="category_math_ag">Hình học đại số</string>
@@ -355,10 +351,6 @@
     <string name="hello_blank_fragment">Xin chào</string>
 
     <!-- Settings Screen Options -->
-    <string-array name="text_density_options">
-        <item>@string/comfortable</item>
-        <item>@string/compact</item>
-    </string-array>
     <string-array name="language_options">
         <item>English (EN)</item>
         <item>Tiếng Việt (VN)</item>
