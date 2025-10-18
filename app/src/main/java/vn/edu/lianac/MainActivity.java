@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +45,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import vn.edu.lianac.Download.DownloadFragment;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
@@ -91,11 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = newBase.createConfigurationContext(config);
         super.attachBaseContext(context);
-
-        //DARK MAGIC, DO NOT TOUCH
-        new Thread(() -> {
-            CategoryProvider.getInstance(this);
-        }).start();
     }
 
 
@@ -114,6 +113,34 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            CategoryProvider.getInstance(this);
+            handler.post(() -> {
+                // ONLY check savedInstanceState here, after CategoryProvider is ready
+                if (savedInstanceState == null) {
+                    replaceFragment(new SubjectsFragment());
+                    getSupportActionBar().setTitle(R.string.nav_subjects);
+                    navigationView.setCheckedItem(R.id.nav_subjects);
+                    isSearchMode = false;
+                } else {
+                    // Rotation - restore state
+                    CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+                    getSupportActionBar().setTitle(title);
+                    isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
+
+                    if (isSearchMode) {
+                        searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
+                        boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
+                        prepareContainers();
+                        toggleSearchAction(searchIconShowing);
+                        navigationView.setCheckedItem(R.id.nav_search);
+                    }
+                }
+            });
+        });
 
         //Window setup
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -166,35 +193,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // FIXED: Handle both initial launch and rotation
-        if (savedInstanceState == null) {
-            // First launch - show subjects
-            replaceFragment(new SubjectsFragment());
-            getSupportActionBar().setTitle(R.string.nav_subjects);
-            navigationView.setCheckedItem(R.id.nav_subjects);
-            isSearchMode = false;
-        } else {
-            // Rotation - restore state
-            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
-            getSupportActionBar().setTitle(title);
-
-            // ADDED: Check if we were in search mode
-            isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
-
-            if (isSearchMode) {
-                // Restore search mode
-                searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
-                boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
-
-                // Recreate search UI
-                prepareContainers();
-
-                // FragmentManager will automatically restore fragments
-                // but we need to ensure the containers are ready
-                toggleSearchAction(searchIconShowing);
-                navigationView.setCheckedItem(R.id.nav_search);
-            }
-            // For other fragments, FragmentManager will restore them automatically
-        }
+//        if (savedInstanceState == null) {
+//            // First launch - show subjects
+//            replaceFragment(new SubjectsFragment());
+//            getSupportActionBar().setTitle(R.string.nav_subjects);
+//            navigationView.setCheckedItem(R.id.nav_subjects);
+//            isSearchMode = false;
+//        } else {
+//            // Rotation - restore state
+//            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+//            getSupportActionBar().setTitle(title);
+//
+//            // ADDED: Check if we were in search mode
+//            isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
+//
+//            if (isSearchMode) {
+//                // Restore search mode
+//                searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
+//                boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
+//
+//                // Recreate search UI
+//                prepareContainers();
+//
+//                // FragmentManager will automatically restore fragments
+//                // but we need to ensure the containers are ready
+//                toggleSearchAction(searchIconShowing);
+//                navigationView.setCheckedItem(R.id.nav_search);
+//            }
+//            // For other fragments, FragmentManager will restore them automatically
+//        }
 
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(item -> {

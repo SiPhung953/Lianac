@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
@@ -29,6 +30,7 @@ import vn.edu.lianac.Download.DownloadViewModel.DownloadViewModel;
 import vn.edu.lianac.bookmark.BookmarkItem;
 import vn.edu.lianac.bookmark.BookmarkManager;
 import vn.edu.lianac.models.Article;
+import vn.edu.lianac.ui.SubjectDetailFragment;
 import vn.edu.lianac.utils.CategoryProvider;
 
 public class DetailFragment extends Fragment {
@@ -323,8 +325,15 @@ public class DetailFragment extends Fragment {
             String mainCategory = article.getMainCategory();
             if (!mainCategory.isEmpty()) {
                 String displayName = categoryProvider.getCategoryDisplayName(mainCategory);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // Read below
+                SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                        mainCategory,
+                        displayName,
+                        new ArrayList<>()
+                );
+
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).replaceFragment(fragment);
+                }
             }
         });
 
@@ -334,9 +343,24 @@ public class DetailFragment extends Fragment {
                 String mainCategory = article.getMainCategory();
                 String fullSubcategoryId = mainCategory + "." + subCategory;
                 String displayName = categoryProvider.getCategoryDisplayName(fullSubcategoryId);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // The Toast here is so useless, what this does is if it can't navigate to the Main Category or Sub Category, it will show a Toast
-                // TODO: Actually add some navigation from Breadcrumb
+
+                // Build breadcrumb path containing the parent (main category)
+                ArrayList<SubjectDetailFragment.BreadcrumbItem> breadcrumbPath = new ArrayList<>();
+                breadcrumbPath.add(new SubjectDetailFragment.BreadcrumbItem(
+                        mainCategory,
+                        categoryProvider.getCategoryDisplayName(mainCategory)
+                ));
+
+                // Navigate to subcategory with parent in breadcrumb path
+                SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                        fullSubcategoryId,
+                        displayName,
+                        breadcrumbPath
+                );
+
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).replaceFragment(fragment);
+                }
             }
         });
 

@@ -144,11 +144,9 @@ public class SubjectDetailFragment extends Fragment {
     private TextView createBreadcrumbLink(String text, BreadcrumbItem item) {
         TextView textView = new TextView(requireContext());
         textView.setText(text);
-        textView.setTextColor(getResources().getColor(R.color.cornell_red, null));
         textView.setTextSize(14);
         textView.setClickable(true);
         textView.setFocusable(true);
-        textView.setBackgroundResource(android.R.drawable.list_selector_background);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

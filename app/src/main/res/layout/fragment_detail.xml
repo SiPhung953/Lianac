@@ -219,7 +219,7 @@
             android:layout_height="wrap_content"
             android:text="READ"
             android:textStyle="bold"
-            android:textColor="?android:attr/colorBackground"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="18sp"
             android:paddingHorizontal="32dp"
             android:paddingVertical="12dp"
