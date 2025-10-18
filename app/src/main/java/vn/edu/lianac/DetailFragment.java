@@ -1,6 +1,7 @@
 package vn.edu.lianac;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,7 +44,8 @@ public class DetailFragment extends Fragment {
     private TextView downloadProgress;
     private TextView readButton, textSubject, textSubclass;
     private TextView paperTitle, paperAuthor, articleIdText;
-    private TextView paperSubmitted, paperSummaryText, paperDoi;
+    private TextView paperSubmitted, paperDoi;
+    private WebView paperSummaryText;
     private LinearLayout breadcrumbBar, categoriesContainer;
     private LinearLayout downloadContainer;
 
@@ -96,12 +100,49 @@ public class DetailFragment extends Fragment {
         progressReceiver = new DownloadResultReceiver(new Handler(Looper.getMainLooper()));
     }
 
+    private void setupMathView(String text) {
+        WebSettings settings = paperSummaryText.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+        boolean isDark = (getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+
+        String bgColor = !isDark ? "#121212" : "#ffffff";
+        String textColor = !isDark ? "#ffffff" : "#000000";
+
+        String html = "<!DOCTYPE html><html><head>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css'>" +
+                "<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js'></script>" +
+                "<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js'" +
+                " onload='renderMathInElement(document.body, {" +
+                "delimiters: [" +
+                "{left: \"$$\", right: \"$$\", display: true}," +
+                "{left: \"$\", right: \"$\", display: false}" +
+                "]" +
+                "});'></script>" +
+                "<style>" +
+                "body { background-color:" + bgColor + "; color:" + textColor + "; " +
+                "margin:0; padding:16px; font-size:18px; line-height:1.5; }" +
+                ".katex { color:" + textColor + "; }" +
+                "</style>" +
+                "</head><body>" +
+                text +   // your paragraph with math inside
+                "</body></html>";
+
+        paperSummaryText.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        paperSummaryText = view.findViewById(R.id.math_webview);
+        return view;
     }
 
     @Override
@@ -142,7 +183,7 @@ public class DetailFragment extends Fragment {
         paperTitle = view.findViewById(R.id.paper_title);
         paperAuthor = view.findViewById(R.id.paper_author);
         paperSubmitted = view.findViewById(R.id.paper_submitted);
-        paperSummaryText = view.findViewById(R.id.paper_summary_text);
+        paperSummaryText = view.findViewById(R.id.math_webview);
         paperDoi = view.findViewById(R.id.paper_doi);
 
         // Categories container
@@ -171,9 +212,9 @@ public class DetailFragment extends Fragment {
 
         // Set summary/abstract
         if (article.getSummary() != null && !article.getSummary().isEmpty()) {
-            paperSummaryText.setText(article.getSummary());
+            setupMathView(article.getSummary());
         } else {
-            paperSummaryText.setText("No abstract available");
+            setupMathView("No abstract available");
         }
 
         // Set DOI if available

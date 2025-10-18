@@ -135,15 +135,20 @@
             android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp" />
 
-        <TextView
-            android:id="@+id/paper_summary_text"
+<!--        <TextView-->
+<!--            android:id="@+id/paper_summary_text"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Summary text goes here..."-->
+<!--            android:textColor="?android:attr/textColorPrimary"-->
+<!--            android:textSize="14sp"-->
+<!--            android:lineSpacingExtra="4dp"-->
+<!--            android:layout_marginTop="8dp" />-->
+
+        <WebView
+            android:id="@+id/math_webview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Summary text goes here..."
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="14sp"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginTop="8dp" />
+            android:layout_height="wrap_content" />
 
         <!-- DOI (if available) -->
         <TextView
