@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,6 @@ import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
  * Basic search fragment with drawer for advanced filters.
- *
  * Responsibilities:
  * - Basic search bar (search term + field selector)
  * - Drawer management (open/close animations)
@@ -66,6 +67,7 @@ public class SearchFragment extends Fragment {
         setupBasicSearch();
         loadManageSearchFragment();
     }
+
     private void initViews(View view) {
         searchBox = view.findViewById(R.id.searchBox);
         fieldSpinner = view.findViewById(R.id.fieldSpinner);
@@ -114,12 +116,6 @@ public class SearchFragment extends Fragment {
         return getFieldCode(fieldSpinner.getSelectedItemPosition());
     }
 
-    /**
-     * Perform basic search (only search term + field, no advanced filters)
-     */
-    /**
-     * Perform basic search while preserving any existing advanced filters
-     */
     /**
      * Perform basic search while preserving any existing advanced filters
      */
@@ -214,7 +210,7 @@ public class SearchFragment extends Fragment {
                     scrimOverlay.setVisibility(View.GONE);
                     advancedDrawer.setVisibility(View.GONE);
 
-                    // NEW: Notify ManageSearchFragment that drawer has closed
+                    // Notify ManageSearchFragment that drawer has closed
                     notifyDrawerClosed();
                 })
                 .start();
@@ -222,7 +218,6 @@ public class SearchFragment extends Fragment {
         isDrawerOpen = false;
     }
 
-    // NEW METHOD: Call ManageSearchFragment's cleanup
     private void notifyDrawerClosed() {
         Fragment childFragment = getChildFragmentManager().findFragmentById(R.id.advancedSearchDrawer);
         if (childFragment instanceof ManageSearchFragment) {

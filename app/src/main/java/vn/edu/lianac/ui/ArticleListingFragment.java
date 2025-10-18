@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,13 +116,11 @@ public class ArticleListingFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
+        // Create adapter without NavController parameter
         adapter = new ArticleAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         Log.d(TAG, "RecyclerView setup complete");
-
-        // NOTE: Article click navigation is now handled in ArticleAdapter
-        // which navigates to DetailFragment via MainActivity.loadContentFragment()
     }
 
     private void setupSpinners() {
@@ -133,7 +133,7 @@ public class ArticleListingFragment extends Fragment {
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isUpdatingSpinners) return; // Prevent circular updates
+                if (isUpdatingSpinners) return;
 
                 String sortBy = getSortByValue(position);
                 String sortOrder = getSortOrderValue(position);
@@ -154,7 +154,7 @@ public class ArticleListingFragment extends Fragment {
         pageSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isUpdatingSpinners) return; // Prevent circular updates
+                if (isUpdatingSpinners) return;
 
                 int pageSize = getPageSizeValue(position);
                 Log.d(TAG, "User changed page size to: " + pageSize);
@@ -311,7 +311,7 @@ public class ArticleListingFragment extends Fragment {
             updatePaginationButtons();
         });
 
-        // CRITICAL: Observe query changes to update spinners
+        // Observe query changes to update spinners
         viewModel.getCurrentQuery().observe(getViewLifecycleOwner(), query -> {
             if (query != null) {
                 Log.d(TAG, "Query changed - updating spinners");
@@ -320,10 +320,6 @@ public class ArticleListingFragment extends Fragment {
         });
     }
 
-    /**
-     * Update spinner selections based on the current query state
-     * This ensures spinners always reflect the actual state
-     */
     private void updateSpinnersFromQuery(QueryOptions query) {
         isUpdatingSpinners = true;
 
@@ -356,7 +352,6 @@ public class ArticleListingFragment extends Fragment {
                 }
             }
         } finally {
-            // Always reset the flag, even if an exception occurs
             isUpdatingSpinners = false;
         }
     }
@@ -368,13 +363,11 @@ public class ArticleListingFragment extends Fragment {
         Log.d(TAG, "updateVisibility - hasArticles: " + hasArticles + ", itemCount: " + adapter.getItemCount());
 
         if (!hasArticles && isLoading != null && !isLoading) {
-            // No articles and not loading - show "No results"
             errorText.setText("No results found");
             errorText.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            // Error text visibility is already handled by error observer
         }
     }
 
@@ -385,17 +378,14 @@ public class ArticleListingFragment extends Fragment {
         QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
 
         if (total != null && total > 0 && currentQuery != null) {
-            // Calculate the range of results being shown
             int pageSize = currentQuery.getMaxResults();
             int start = currentQuery.getStart();
             int firstResult = start + 1;
             int lastResult = Math.min(start + pageSize, total);
 
-            // Check if category filter is active
             String resultsInfo;
             List<String> categories = currentQuery.getCategories();
             if (categories != null && !categories.isEmpty()) {
-                // Get category display name
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
                 resultsInfo = String.format(Locale.US, "Showing %,d-%,d of %,d results in %s (%s)",
@@ -432,23 +422,19 @@ public class ArticleListingFragment extends Fragment {
 
         bottomPaginationContainer.setVisibility(View.VISIBLE);
 
-        // Enable/disable navigation buttons
         boolean hasPrev = currentPage > 1;
         boolean hasNext = currentPage < totalPages;
 
         prevBtn.setEnabled(hasPrev);
         nextBtn.setEnabled(hasNext);
 
-        // Calculate which page numbers to show
         int[] pageNumbers = calculatePageNumbers(currentPage, totalPages);
 
-        // Update page buttons
         for (int i = 0; i < pageButtons.length; i++) {
             if (pageNumbers[i] > 0) {
                 pageButtons[i].setText(String.valueOf(pageNumbers[i]));
                 pageButtons[i].setVisibility(View.VISIBLE);
 
-                // Highlight current page
                 if (pageNumbers[i] == currentPage) {
                     pageButtons[i].setEnabled(false);
                     pageButtons[i].setAlpha(0.5f);
@@ -457,7 +443,6 @@ public class ArticleListingFragment extends Fragment {
                     pageButtons[i].setAlpha(1.0f);
                 }
             } else if (pageNumbers[i] == -1) {
-                // Ellipsis button
                 pageButtons[i].setText("...");
                 pageButtons[i].setVisibility(View.VISIBLE);
                 pageButtons[i].setEnabled(true);
@@ -468,54 +453,41 @@ public class ArticleListingFragment extends Fragment {
         }
     }
 
-    /**
-     * Smart pagination algorithm that shows relevant page numbers with ellipsis
-     * Examples:
-     * - Pages 1-7 of 100: [1] [2] [3] [4] [5] [...] [100]
-     * - Page 50 of 100: [1] [...] [49] [50] [51] [...] [100]
-     * - Pages 95-100 of 100: [1] [...] [96] [97] [98] [99] [100]
-     */
     private int[] calculatePageNumbers(int current, int total) {
         int[] pages = new int[7];
 
         if (total <= 7) {
-            // Show all pages if 7 or fewer
             for (int i = 0; i < total; i++) {
                 pages[i] = i + 1;
             }
         } else {
-            // Smart pagination with ellipsis
-            pages[0] = 1;  // Always show first page
-            pages[6] = total;  // Always show last page
+            pages[0] = 1;
+            pages[6] = total;
 
             if (current <= 4) {
-                // Near the beginning: 1, 2, 3, 4, 5, ..., total
                 pages[1] = 2;
                 pages[2] = 3;
                 pages[3] = 4;
                 pages[4] = 5;
-                pages[5] = -1;  // Ellipsis
+                pages[5] = -1;
             } else if (current >= total - 3) {
-                // Near the end: 1, ..., total-4, total-3, total-2, total-1, total
-                pages[1] = -1;  // Ellipsis
+                pages[1] = -1;
                 pages[2] = total - 4;
                 pages[3] = total - 3;
                 pages[4] = total - 2;
                 pages[5] = total - 1;
             } else {
-                // In the middle: 1, ..., current-1, current, current+1, ..., total
-                pages[1] = -1;  // Ellipsis
+                pages[1] = -1;
                 pages[2] = current - 1;
                 pages[3] = current;
                 pages[4] = current + 1;
-                pages[5] = -1;  // Ellipsis
+                pages[5] = -1;
             }
         }
 
         return pages;
     }
 
-    // Helper methods
     private String getSortByValue(int position) {
         String[] values = {"submittedDate", "lastUpdatedDate", "relevance"};
         return position >= 0 && position < values.length ? values[position] : "submittedDate";

@@ -336,4 +336,6 @@
     <string name="bookmark">Bookmark</string>
     <string name="menu">Menu</string>
     <string name="desc_about">Made with love by USTH students</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer"</string>
 </resources>

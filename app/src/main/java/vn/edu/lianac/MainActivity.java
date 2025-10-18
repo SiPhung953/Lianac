@@ -27,6 +27,11 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     private boolean showSearch = false;
     private boolean searchShowing = true;
+
+    // ADDED: AppBarConfiguration for NavController
+    private AppBarConfiguration appBarConfiguration;
 
     // ADDED: Track if we're in search mode
     private boolean isSearchMode = false;
@@ -133,6 +141,22 @@ public class MainActivity extends AppCompatActivity {
         // Set toolbar as ActionBar
         setSupportActionBar(topAppBar);
 
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
+        // Which destinations are top-level
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.subjectsFragment,
+                R.id.downloadFragment,
+                R.id.bookmarkListFragment,
+                R.id.settingsFragment,
+                R.id.searchFragment
+        ).setOpenableLayout(drawerLayout).build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
         // Setup drawer toggle (hamburger icon)
         toggle = new ActionBarDrawerToggle(this, drawerLayout, topAppBar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -210,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 return true; // Early return for search
             }
 
+            // Check if fragment object has been initialized (AKA not null)
             if (fragment != null) {
                 toggleSearchAction(false);
                 replaceFragment(fragment);

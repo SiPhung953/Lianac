@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,13 +82,19 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
 
     @Override
     public void onSubjectClick(String categoryId, String displayName) {
+        // Navigate to SubjectDetailFragment using NavController
+        NavController navController = Navigation.findNavController(requireView());
+
+        // Create arguments bundle
+        Bundle args = new Bundle();
+        args.putString("categoryId", categoryId);
+        args.putString("displayName", displayName);
+
         // Navigate to SubjectDetailFragment
-        SubjectDetailFragment detailFragment = SubjectDetailFragment.newInstance(categoryId, displayName);
-        ((MainActivity) requireActivity()).replaceFragment(detailFragment);
+        navController.navigate(R.id.action_subjectsFragment_to_subjectDetailFragment, args);
     }
 
     private void showEmptyState() {
-        // You can add an empty state view here if needed
         Toast.makeText(requireContext(), "No subjects available", Toast.LENGTH_SHORT).show();
     }
 

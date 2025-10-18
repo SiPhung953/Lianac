@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import java.util.List;
 
@@ -180,10 +182,6 @@ public class DetailFragment extends Fragment {
         // Setup breadcrumb (Subject > Subclass)
         setupBreadcrumb();
 
-        // Setup category badges
-        // setupCategoryBadges();
-        // TODO: Discuss whether we need the badge to display
-
         // Update bookmark icon
         updateBookmarkIcon();
     }
@@ -247,84 +245,13 @@ public class DetailFragment extends Fragment {
         }
     }
 
-    private void setupCategoryBadges() {
-        categoriesContainer.removeAllViews();
-
-        List<String> categories = article.getCategories();
-        if (categories == null || categories.isEmpty()) {
-            return;
-        }
-
-        boolean isFirst = true;
-        java.util.Set<String> seenCategories = new java.util.LinkedHashSet<>();
-
-        for (String categoryId : categories) {
-            String normalizedCategoryId = normalizeCategoryId(categoryId);
-            String displayName = categoryProvider.getCategoryDisplayName(normalizedCategoryId);
-
-            if (displayName.equals(normalizedCategoryId) || !seenCategories.add(normalizedCategoryId)) {
-                continue;
-            }
-
-            TextView badge = createCategoryBadge(normalizedCategoryId, displayName, isFirst);
-            if (badge != null) {
-                categoriesContainer.addView(badge);
-                isFirst = false;
-            }
-        }
-    }
-
-    private String normalizeCategoryId(String categoryId) {
-        if (categoryId == null) return null;
-        if ("math.MP".equals(categoryId)) {
-            return "math-ph";
-        }
-        return categoryId;
-    }
-
-    private TextView createCategoryBadge(String categoryId, String displayName, boolean isFirst) {
-        TextView badge = new TextView(requireContext());
-        badge.setText(categoryId);
-        badge.setTextSize(11f);
-
-        if (isFirst) {
-            badge.setTextColor(getResources().getColor(android.R.color.white));
-            badge.setBackgroundResource(R.drawable.category_first_badge_background);
-        } else {
-            badge.setTextColor(getResources().getColor(android.R.color.black));
-            badge.setBackgroundResource(R.drawable.category_normal_badge_background);
-        }
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        int marginPx = dpToPx(4);
-        params.setMargins(0, 0, marginPx, 0);
-        badge.setLayoutParams(params);
-
-        badge.setClickable(true);
-        badge.setFocusable(true);
-        badge.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), displayName, Toast.LENGTH_SHORT).show();
-        });
-
-        return badge;
-    }
-
-    private int dpToPx(int dp) {
-        float density = getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
-    }
-
     private void setupClickListeners() {
-        // Breadcrumb clicks
+        // Breadcrumb clicks - can be implemented to navigate to category pages
         textSubject.setOnClickListener(v -> {
             String mainCategory = article.getMainCategory();
             if (!mainCategory.isEmpty()) {
-                String displayName = categoryProvider.getCategoryDisplayName(mainCategory);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // Read below
+                // Could navigate to category page here
+                Toast.makeText(getContext(), "Category: " + mainCategory, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -333,10 +260,7 @@ public class DetailFragment extends Fragment {
             if (!subCategory.isEmpty()) {
                 String mainCategory = article.getMainCategory();
                 String fullSubcategoryId = mainCategory + "." + subCategory;
-                String displayName = categoryProvider.getCategoryDisplayName(fullSubcategoryId);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // The Toast here is so useless, what this does is if it can't navigate to the Main Category or Sub Category, it will show a Toast
-                // TODO: Actually add some navigation from Breadcrumb
+                Toast.makeText(getContext(), "Subcategory: " + fullSubcategoryId, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -353,7 +277,7 @@ public class DetailFragment extends Fragment {
             downloadContainer.setOnClickListener(v -> handleDownloadClick());
         }
 
-        // Read button
+        // Read button - Navigate to WebViewerFragment
         if (readButton != null) {
             readButton.setOnClickListener(v -> openPdfInWebView());
         }
@@ -399,7 +323,6 @@ public class DetailFragment extends Fragment {
 
                 case QUEUED:
                 case DOWNLOADING:
-                    // For users who want to be able to cancel downloads, they have to go directly to the Download Fragment
                     downloadIcon.setImageResource(R.drawable.ic_download);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.VISIBLE);
@@ -408,7 +331,6 @@ public class DetailFragment extends Fragment {
                     break;
 
                 case COMPLETED:
-                    // Show check mark icon
                     downloadIcon.setImageResource(R.drawable.ic_downloaddone);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.GONE);
@@ -416,7 +338,6 @@ public class DetailFragment extends Fragment {
                     break;
 
                 case FAILED:
-                    // Show retry icon, as long as the state of Download Item remain in database, I suppose
                     downloadIcon.setImageResource(R.drawable.ic_retry);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.VISIBLE);
@@ -425,7 +346,6 @@ public class DetailFragment extends Fragment {
                     break;
 
                 case REMOVED:
-                    // Treat as not downloaded
                     downloadIcon.setImageResource(R.drawable.ic_download);
                     downloadIcon.setVisibility(View.VISIBLE);
                     downloadProgress.setVisibility(View.GONE);
@@ -444,7 +364,6 @@ public class DetailFragment extends Fragment {
         }
 
         if (currentDownloadItem == null) {
-            // Start new download immediately
             startNewDownload(pdfUrl);
         } else {
             DownloadState state = currentDownloadItem.getState();
@@ -453,19 +372,16 @@ public class DetailFragment extends Fragment {
                 case NOT_DOWNLOADED:
                 case FAILED:
                 case REMOVED:
-                    // Start/retry download
                     startDownload(currentDownloadItem);
                     break;
 
                 case DOWNLOADING:
                 case QUEUED:
-                    // Cancel download
                     downloadViewModel.handleDownloadAction(currentDownloadItem);
                     Toast.makeText(getContext(), "Download cancelled", Toast.LENGTH_SHORT).show();
                     break;
 
                 case COMPLETED:
-                    // Already downloaded
                     Toast.makeText(getContext(), "Already downloaded, press READ to open", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -473,14 +389,11 @@ public class DetailFragment extends Fragment {
     }
 
     private void startNewDownload(String pdfUrl) {
-        // Create new download item with article title
         DownloadItem newItem = new DownloadItem(pdfUrl, article.getTitle(), DownloadState.QUEUED);
         newItem.setProgressPercentage(0);
 
-        // Insert into database
         downloadViewModel.mRepository.insert(newItem);
 
-        // Start download immediately after a short delay to let database insert complete
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (currentDownloadItem != null) {
                 startDownload(currentDownloadItem);
@@ -501,7 +414,6 @@ public class DetailFragment extends Fragment {
             getActivity().startService(intent);
         }
 
-        // Update state to DOWNLOADING
         item.setState(DownloadState.DOWNLOADING);
         downloadViewModel.mRepository.update(item);
     }
@@ -539,24 +451,18 @@ public class DetailFragment extends Fragment {
             return;
         }
 
-        // Navigate to PdfViewerFragment
-        WebViewerFragment pdfFragment = new WebViewerFragment();
-        Bundle args = new Bundle();
-        args.putString("pdf_url", pdfUrl);
-        args.putString("article_title", article.getTitle());
-        pdfFragment.setArguments(args);
+        // Navigate to WebViewerFragment using NavController
+        try {
+            NavController navController = Navigation.findNavController(requireView());
+            Bundle args = new Bundle();
+            args.putString("pdf_url", pdfUrl);
+            args.putString("article_title", article.getTitle());
 
-        if (getActivity() instanceof MainActivity) {
-            try {
-                ((MainActivity) getActivity()).replaceFragment(pdfFragment);
-            } catch (NoSuchMethodError e) {
-                try {
-                    ((MainActivity) getActivity()).replaceFragment(pdfFragment);
-                } catch (Exception ex) {
-                    Log.e(TAG, "Failed to navigate to PDF viewer", ex);
-                    openPdfExternal(pdfUrl);
-                }
-            }
+            navController.navigate(R.id.action_detailFragment_to_webViewerFragment, args);
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Failed to navigate to PDF viewer", ex);
+            openPdfExternal(pdfUrl);
         }
     }
 

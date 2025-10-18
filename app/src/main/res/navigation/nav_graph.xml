@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/subjectsFragment">
+
+    <fragment
+        android:id="@+id/subjectsFragment"
+        android:name="vn.edu.lianac.ui.SubjectsFragment"
+        android:label="SubjectsFragment" >
+        <action
+            android:id="@+id/action_subjectsFragment_to_subjectDetailFragment"
+            app:destination="@id/subjectDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="vn.edu.lianac.Download.DownloadFragment"
+        android:label="fragment_download"
+        tools:layout="@layout/fragment_download" />
+    <fragment
+        android:id="@+id/bookmarkListFragment"
+        android:name="vn.edu.lianac.bookmark.BookmarkListFragment"
+        android:label="BookmarkListFragment" >
+        <action
+            android:id="@+id/action_bookmarkListFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="vn.edu.lianac.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="vn.edu.lianac.DetailFragment"
+        android:label="DetailFragment" >
+        <action
+            android:id="@+id/action_detailFragment_to_webViewerFragment"
+            app:destination="@id/webViewerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subjectDetailFragment"
+        android:name="vn.edu.lianac.ui.SubjectDetailFragment"
+        android:label="SubjectDetailFragment" >
+        <action
+            android:id="@+id/action_subjectDetailFragment_to_articleListingFragment"
+            app:destination="@id/articleListingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="vn.edu.lianac.ui.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_manageSearchFragment"
+            app:destination="@id/manageSearchFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_articleListingFragment"
+            app:destination="@id/articleListingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewerFragment"
+        android:name="vn.edu.lianac.WebViewerFragment"
+        android:label="WebViewerFragment" />
+    <fragment
+        android:id="@+id/manageSearchFragment"
+        android:name="vn.edu.lianac.ui.ManageSearchFragment"
+        android:label="ManageSearchFragment" />
+    <fragment
+        android:id="@+id/articleListingFragment"
+        android:name="vn.edu.lianac.ui.ArticleListingFragment"
+        android:label="ArticleListingFragment" >
+        <action
+            android:id="@+id/action_articleListingFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+</navigation>

@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +79,13 @@ public class SubjectDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_subject_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_subject_detail, container, false);
+
+        if (getArguments() != null) {
+            String categoryId = getArguments().getString("categoryId");
+            String categoryName = getArguments().getString("displayName");
+        }
+        return view;
     }
 
     @Override
@@ -329,7 +337,17 @@ public class SubjectDetailFragment extends Fragment {
             viewModel.searchByCategory(categoryId, sortBy);
 
             // Navigate to ArticleListingFragment
-            ((MainActivity) getActivity()).replaceFragment(new ArticleListingFragment());
+            NavController navController = Navigation.findNavController(requireView());
+
+            Bundle bundle = new Bundle();
+            bundle.putString("categoryId", categoryId);
+            bundle.putString("sortBy", sortBy);
+
+            // Nav to ArticleListingFragment
+            navController.navigate(R.id.action_subjectDetailFragment_to_articleListingFragment, bundle);
+
+            // Old method
+            //((MainActivity) getActivity()).replaceFragment(new ArticleListingFragment());
         }
     }
     /**
