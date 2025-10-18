@@ -48,7 +48,6 @@ public class ArxivParser {
         int startIndex = 0;
         int itemsPerPage = 0;
 
-        // Verify we're at a feed element
         parser.require(XmlPullParser.START_TAG, null, "feed");
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -69,7 +68,6 @@ public class ArxivParser {
                     skip(parser);
                 }
             } else if (OPENSEARCH_NAMESPACE.equals(namespace)) {
-                // Parse OpenSearch metadata
                 switch (tagName) {
                     case "totalResults":
                         totalResults = readIntText(parser);
@@ -121,7 +119,6 @@ public class ArxivParser {
             String namespace = parser.getNamespace();
 
             try {
-                // Check for arxiv namespace elements
                 if (ARXIV_NAMESPACE.equals(namespace)) {
                     switch (tagName) {
                         case "doi":
@@ -130,7 +127,7 @@ public class ArxivParser {
                                 article.setDoi(doi.trim());
                             }
                             break;
-                        case "primary_category":  // NEW: Parse primary category
+                        case "primary_category":
                             String primaryCat = parser.getAttributeValue(null, "term");
                             if (primaryCat != null && !primaryCat.trim().isEmpty()) {
                                 article.setPrimaryCategory(primaryCat.trim());
@@ -146,7 +143,6 @@ public class ArxivParser {
                             break;
                     }
                 } else {
-                    // Handle standard Atom elements
                     switch (tagName) {
                         case "id":
                             article.setId(extractArxivId(readText(parser)));
@@ -192,7 +188,6 @@ public class ArxivParser {
         article.setAuthors(authors);
         article.setCategories(categories);
 
-        // Validate essential fields
         if (article.getId() == null || article.getTitle() == null) {
             Log.w(TAG, "Article missing essential fields, skipping");
             return null;
@@ -228,9 +223,7 @@ public class ArxivParser {
         String term = parser.getAttributeValue(null, "term");
         String label = parser.getAttributeValue(null, "label");
 
-        // Move to end tag
         while (parser.next() != XmlPullParser.END_TAG) {
-            // Skip any content (categories are usually empty)
         }
 
         parser.require(XmlPullParser.END_TAG, null, "category");
@@ -246,9 +239,7 @@ public class ArxivParser {
         String href = parser.getAttributeValue(null, "href");
         String title = parser.getAttributeValue(null, "title");
 
-        // Move to end tag
         while (parser.next() != XmlPullParser.END_TAG) {
-            // Links are usually empty
         }
 
         parser.require(XmlPullParser.END_TAG, null, "link");
@@ -257,10 +248,8 @@ public class ArxivParser {
             return;
         }
 
-        // Convert to HTTPS
         href = ArxivUrlHelper.toHttps(href);
 
-        // Determine link type
         if ("alternate".equals(rel) && article.getAbsUrl() == null) {
             article.setAbsUrl(href);
         } else if ("related".equals(rel) && "pdf".equals(title) && article.getPdfUrl() == null) {

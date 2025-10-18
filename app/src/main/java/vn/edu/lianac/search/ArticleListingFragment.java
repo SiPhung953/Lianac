@@ -45,9 +45,7 @@ public class ArticleListingFragment extends Fragment {
     private Spinner sortSpinner;
     private Spinner pageSizeSpinner;
     private LinearLayout bottomPaginationContainer;
-    // Pagination buttons
     private Button prevBtn, nextBtn;
-    // State tracking to prevent circular updates
     private boolean isUpdatingSpinners = false;
 
     @Override
@@ -93,7 +91,6 @@ public class ArticleListingFragment extends Fragment {
         prevBtn = view.findViewById(R.id.prevPageButton);
         nextBtn = view.findViewById(R.id.nextPageButton);
 
-        // Initialize all 7 page buttons
         pageButtons[0] = view.findViewById(R.id.pageButton1);
         pageButtons[1] = view.findViewById(R.id.pageButton2);
         pageButtons[2] = view.findViewById(R.id.pageButton3);
@@ -110,7 +107,6 @@ public class ArticleListingFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        // Sort spinner
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
                 requireContext(), R.array.sort_options, android.R.layout.simple_spinner_item);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,7 +128,6 @@ public class ArticleListingFragment extends Fragment {
             }
         });
 
-        // Page size spinner
         ArrayAdapter<CharSequence> sizeAdapter = ArrayAdapter.createFromResource(
                 requireContext(), R.array.page_sizes, android.R.layout.simple_spinner_item);
         sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -141,7 +136,7 @@ public class ArticleListingFragment extends Fragment {
         pageSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isUpdatingSpinners) return; // Prevent circular updates
+                if (isUpdatingSpinners) return;
 
                 int[] sizes = {10, 25, 50, 100, 200};
                 if (position < sizes.length) {
@@ -159,7 +154,6 @@ public class ArticleListingFragment extends Fragment {
         prevBtn.setOnClickListener(v -> viewModel.previousPage());
         nextBtn.setOnClickListener(v -> viewModel.nextPage());
 
-        // Setup page number buttons
         for (int i = 0; i < pageButtons.length; i++) {
             final int index = i;
             pageButtons[i].setOnClickListener(v -> {
@@ -250,18 +244,15 @@ public class ArticleListingFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        // Articles
         viewModel.getArticles().observe(getViewLifecycleOwner(), articles -> {
             adapter.submitList(articles, this::updateVisibility);
         });
 
-        // Loading state
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
             if (loading) errorText.setVisibility(View.GONE);
         });
 
-        // Errors
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 errorText.setText(error);
@@ -271,7 +262,6 @@ public class ArticleListingFragment extends Fragment {
             }
         });
 
-        // Pagination info
         viewModel.getTotalResults().observe(getViewLifecycleOwner(), total -> {
             updatePaginationInfo();
         });
@@ -298,7 +288,6 @@ public class ArticleListingFragment extends Fragment {
         isUpdatingSpinners = true;
 
         try {
-            // Update page size spinner
             int pageSize = query.getMaxResults();
             int[] sizes = {10, 25, 50, 100, 200};
 
@@ -312,7 +301,6 @@ public class ArticleListingFragment extends Fragment {
                 }
             }
 
-            // Update sort spinner
             String sortBy = query.getSortBy();
             String[] sortFields = {"submittedDate", "lastUpdatedDate", "relevance"};
 
@@ -326,7 +314,6 @@ public class ArticleListingFragment extends Fragment {
                 }
             }
         } finally {
-            // Always reset the flag, even if an exception occurs
             isUpdatingSpinners = false;
         }
     }
@@ -336,13 +323,11 @@ public class ArticleListingFragment extends Fragment {
         Boolean isLoading = viewModel.getIsLoading().getValue();
 
         if (!hasArticles && isLoading != null && !isLoading) {
-            // No articles and not loading - show "No results"
             errorText.setText(R.string.error_no_results);
             errorText.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            // Error text visibility is already handled by error observer
         }
     }
 
@@ -353,23 +338,19 @@ public class ArticleListingFragment extends Fragment {
         QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
 
         if (total != null && total > 0 && currentQuery != null) {
-            // Calculate the range of results being shown
             int pageSize = currentQuery.getMaxResults();
             int start = currentQuery.getStart();
             int firstResult = start + 1;
             int lastResult = Math.min(start + pageSize, total);
 
-            // Check if this is a category browse search (from SubjectDetail)
             String resultsInfo;
             List<String> categories = currentQuery.getCategories();
 
             if (currentQuery.isCategoryBrowse() && categories != null && categories.size() == 1) {
-                // Category browse from SubjectDetailFragment - show category info
                 String categoryId = categories.get(0);
                 String displayName = vn.edu.lianac.utils.CategoryProvider.getCategoryName(categoryId);
                 resultsInfo = getString(R.string.results_info, firstResult, lastResult, total, displayName, categoryId);
             } else {
-                // Filter search from ManageSearchFragment - use simple format
                 resultsInfo = getString(R.string.results_info_simple, firstResult, lastResult, total);
             }
 
@@ -400,23 +381,19 @@ public class ArticleListingFragment extends Fragment {
 
         bottomPaginationContainer.setVisibility(View.VISIBLE);
 
-        // Enable/disable navigation buttons
         boolean hasPrev = currentPage > 1;
         boolean hasNext = currentPage < totalPages;
 
         prevBtn.setEnabled(hasPrev);
         nextBtn.setEnabled(hasNext);
 
-        // Calculate which page numbers to show
         int[] pageNumbers = calculatePageNumbers(currentPage, totalPages);
 
-        // Update page buttons
         for (int i = 0; i < pageButtons.length; i++) {
             if (pageNumbers[i] > 0) {
                 pageButtons[i].setText(String.valueOf(pageNumbers[i]));
                 pageButtons[i].setVisibility(View.VISIBLE);
 
-                // Highlight current page
                 if (pageNumbers[i] == currentPage) {
                     pageButtons[i].setEnabled(false);
                     pageButtons[i].setAlpha(0.5f);
@@ -425,7 +402,6 @@ public class ArticleListingFragment extends Fragment {
                     pageButtons[i].setAlpha(1.0f);
                 }
             } else if (pageNumbers[i] == -1) {
-                // Ellipsis button
                 pageButtons[i].setText("...");
                 pageButtons[i].setVisibility(View.VISIBLE);
                 pageButtons[i].setEnabled(true);
@@ -440,36 +416,30 @@ public class ArticleListingFragment extends Fragment {
         int[] pages = new int[7];
 
         if (total <= 7) {
-            // Show all pages if 7 or fewer
             for (int i = 0; i < total; i++) {
                 pages[i] = i + 1;
             }
         } else {
-            // Smart pagination with ellipsis
-            pages[0] = 1;  // Always show first page
-            pages[6] = total;  // Always show last page
+            pages[0] = 1;
+            pages[6] = total;
 
             if (current <= 4) {
-                // Near the beginning: 1, 2, 3, 4, 5, ..., total
                 pages[1] = 2;
                 pages[2] = 3;
                 pages[3] = 4;
                 pages[4] = 5;
-                pages[5] = -1;  // Ellipsis
+                pages[5] = -1;
             } else if (current >= total - 3) {
-                // Near the end: 1, ..., total-4, total-3, total-2, total-1, total
-                pages[1] = -1;  // Ellipsis
+                pages[1] = -1;
                 pages[2] = total - 4;
                 pages[3] = total - 3;
                 pages[4] = total - 2;
                 pages[5] = total - 1;
             } else {
-                // In the middle: 1, ..., current-1, current, current+1, ..., total
-                pages[1] = -1;  // Ellipsis
+                pages[1] = -1;
                 pages[2] = current - 1;
                 pages[3] = current;
                 pages[4] = current + 1;
-                pages[5] = -1;  // Ellipsis
             }
         }
 

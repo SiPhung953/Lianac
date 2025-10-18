@@ -12,18 +12,6 @@ import java.util.Objects;
 import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchRow;
 
-/**
- * Query builder for arXiv API supporting both basic and advanced searches.
- * <p>
- * Basic search: single search term + field
- * Example: all:quantum or ti:"machine learning"
- * <p>
- * Advanced search: multiple search rows with boolean operators
- * Example: ti:quantum AND au:einstein OR abs:relativity
- * <p>
- * Filter-only search: categories and/or date ranges without search terms
- * Example: cat:cs.AI AND submittedDate:[20200101 TO 20231231]
- */
 public class QueryBuilder {
     private static final String TAG = "QueryBuilder";
     private static final String BASE_URL = "https://export.arxiv.org/api/query";
@@ -34,9 +22,6 @@ public class QueryBuilder {
         this.options = options;
     }
 
-    /**
-     * Static convenience method
-     */
     public static String buildUrl(QueryOptions options) {
         return new QueryBuilder(options).build();
     }
@@ -56,13 +41,11 @@ public class QueryBuilder {
     private String buildSearchQuery() {
         List<String> queryParts = new ArrayList<>();
 
-        // Build the main search query (basic term + advanced rows combined)
         String mainSearchQuery = buildCombinedSearchQuery();
         if (mainSearchQuery != null && !mainSearchQuery.trim().isEmpty()) {
             queryParts.add(mainSearchQuery);
         }
 
-        // Add category filter
         if (options.hasCategoryFilter()) {
             String categoryQuery = buildCategoryQuery();
             if (categoryQuery != null && !categoryQuery.trim().isEmpty()) {
@@ -70,7 +53,6 @@ public class QueryBuilder {
             }
         }
 
-        // Add date filter
         if (options.hasDateFilter()) {
             String dateQuery = buildDateQuery();
             if (dateQuery != null && !dateQuery.trim().isEmpty()) {
@@ -78,22 +60,16 @@ public class QueryBuilder {
             }
         }
 
-        // If nothing was built, return wildcard
         if (queryParts.isEmpty()) {
             return "all:*";
         }
 
-        // Join all parts with AND
         return String.join(" AND ", queryParts);
     }
 
-    /**
-     * Combine basic search term with advanced search rows
-     */
     private String buildCombinedSearchQuery() {
         List<String> parts = new ArrayList<>();
 
-        // Add basic search term first (if exists)
         if (options.hasSearchTerm()) {
             String basicQuery = buildBasicSearchQuery();
             if (basicQuery != null && !basicQuery.trim().isEmpty()) {
@@ -101,11 +77,9 @@ public class QueryBuilder {
             }
         }
 
-        // Add advanced search rows
         if (options.hasRows() && options.getRows() != null && !options.getRows().isEmpty()) {
             String advancedQuery = buildAdvancedSearchQuery();
             if (advancedQuery != null && !advancedQuery.trim().isEmpty()) {
-                // If we have a basic term, connect with appropriate operator
                 if (!parts.isEmpty()) {
                     List<SearchRow> rows = options.getRows();
                     if (rows != null && !rows.isEmpty()) {
@@ -125,7 +99,6 @@ public class QueryBuilder {
             }
         }
 
-        // Return null if nothing was built (let buildSearchQuery handle it)
         if (parts.isEmpty()) {
             return null;
         }
@@ -134,10 +107,6 @@ public class QueryBuilder {
     }
 
 
-    /**
-     * Build basic search query: single search term + field
-     * Example: all:quantum or ti:"machine learning"
-     */
     private String buildBasicSearchQuery() {
         String term = options.getSearchTerm();
         String field = options.getSearchField();
@@ -148,7 +117,6 @@ public class QueryBuilder {
 
         term = term.trim();
 
-        // Quote multi-word searches
         if (term.contains(" ") && !term.startsWith("\"")) {
             term = "\"" + term + "\"";
         }
@@ -156,16 +124,12 @@ public class QueryBuilder {
         String fieldCode = mapFieldCode(field);
 
         if ("all".equals(fieldCode)) {
-            return "all:" + term;  // Explicitly add "all:" prefix for consistency
+            return "all:" + term;
         }
 
         return fieldCode + ":" + term;
     }
 
-    /**
-     * Build advanced search query from multiple rows with boolean operators
-     * Example: ti:quantum AND au:einstein OR abs:relativity
-     */
     private String buildAdvancedSearchQuery() {
         List<SearchRow> rows = options.getRows();
         if (rows == null || rows.isEmpty()) {
@@ -178,12 +142,11 @@ public class QueryBuilder {
         for (SearchRow row : rows) {
             String value = row.getValue();
             if (value == null || value.trim().isEmpty()) {
-                continue; // Skip empty rows
+                continue;
             }
 
             value = value.trim();
 
-            // Quote multi-word searches
             if (value.contains(" ") && !value.startsWith("\"")) {
                 value = "\"" + value + "\"";
             }
@@ -191,7 +154,6 @@ public class QueryBuilder {
             String fieldCode = mapFieldCode(row.getField());
             String fieldQuery = fieldCode + ":" + value;
 
-            // Add boolean operator BEFORE this term (except for the first non-empty term)
             if (addedCount > 0) {
                 String operator = row.getOperator();
                 if (operator != null && !operator.trim().isEmpty()) {
@@ -203,7 +165,7 @@ public class QueryBuilder {
                         rowQueries.add(operator.toUpperCase());
                     }
                 } else {
-                    rowQueries.add("AND"); // Default operator
+                    rowQueries.add("AND");
                 }
             }
 
@@ -229,19 +191,13 @@ public class QueryBuilder {
                 return "cat:" + cats.get(0);
             }
 
-            // Multiple categories with OR
             return "cat:(" + String.join(" OR ", cats) + ")";
         }
 
-        /**
-         * Build date range filter query
-         * Example: submittedDate:[20200101 TO 20231231]
-         */
         private String buildDateQuery() {
             String from = formatDate(options.getDateFrom());
             String to = formatDate(options.getDateTo());
 
-            // Validate that at least one date was successfully formatted
             if ((from == null || from.isEmpty()) && (to == null || to.isEmpty())) {
                 return null;
             }
@@ -264,12 +220,10 @@ public class QueryBuilder {
                 return null;
             }
 
-            // Remove all non-digits
             String cleaned = date.replaceAll("[^0-9]", "");
 
-            // Validate we have at least 8 digits (YYYYMMDD)
             if (cleaned.length() < 8) {
-                return null; // Invalid date format
+                return null;
             }
 
             return cleaned.substring(0, 8);
@@ -303,7 +257,6 @@ public class QueryBuilder {
         private String urlEncode(String str) {
             try {
                 String encoded = URLEncoder.encode(str, StandardCharsets.UTF_8.name());
-                // Preserve special characters that arXiv accepts
                 return encoded
                         .replace("%28", "(")
                         .replace("%29", ")")
@@ -311,7 +264,7 @@ public class QueryBuilder {
                         .replace("%5D", "]")
                         .replace("%2A", "*")
                         .replace("%3A", ":")
-                        .replace("%22", "\"");  // Preserve quotes
+                        .replace("%22", "\"");
             } catch (Exception e) {
                 return str;
             }

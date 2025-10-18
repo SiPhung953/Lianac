@@ -22,18 +22,15 @@ import vn.edu.lianac.models.QueryOptions;
 
 public class SearchFragment extends Fragment {
 
-    // Basic search views
     private String[] fieldCodes;
     private EditText searchBox;
     private Spinner fieldSpinner;
     private ImageButton filterButton;
 
-    // Drawer container
     private FrameLayout advancedDrawer;
     private View scrimOverlay;
     private boolean isDrawerOpen = false;
 
-    // ViewModel
     private SearchViewModel viewModel;
 
     @Override
@@ -64,13 +61,11 @@ public class SearchFragment extends Fragment {
     }
 
     private void setupBasicSearch() {
-        // Field spinner
         ArrayAdapter<CharSequence> fieldAdapter = ArrayAdapter.createFromResource(
                 requireContext(), R.array.search_fields, android.R.layout.simple_spinner_item);
         fieldAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fieldSpinner.setAdapter(fieldAdapter);
 
-        // Search on Enter key
         searchBox.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performBasicSearch();
@@ -79,10 +74,8 @@ public class SearchFragment extends Fragment {
             return false;
         });
 
-        // Filter button opens drawer
         filterButton.setOnClickListener(v -> openDrawer());
 
-        // Scrim closes drawer
         scrimOverlay.setOnClickListener(v -> closeDrawer());
     }
 
@@ -104,17 +97,14 @@ public class SearchFragment extends Fragment {
         String searchTerm = searchBox.getText().toString().trim();
         String field = getFieldCode(fieldSpinner.getSelectedItemPosition());
 
-        // Get existing query to preserve advanced filters
         QueryOptions currentQuery = viewModel.getCurrentQuery().getValue();
 
-        // Check if we have any advanced filters
         boolean hasAdvancedFilters = currentQuery != null && (
                 (currentQuery.getRows() != null && !currentQuery.getRows().isEmpty()) ||
                         (currentQuery.getCategories() != null && !currentQuery.getCategories().isEmpty()) ||
                         currentQuery.hasDateFilter()
         );
 
-        // If no search term AND no advanced filters, show error
         if (searchTerm.isEmpty() && !hasAdvancedFilters) {
             Toast.makeText(getContext(), R.string.validation_no_search_term, Toast.LENGTH_SHORT).show();
             return;
@@ -122,24 +112,21 @@ public class SearchFragment extends Fragment {
 
         QueryOptions.Builder builder;
         if (currentQuery != null) {
-            // GOOD: Start with existing query to preserve ALL advanced filters
             builder = currentQuery.toBuilder();
         } else {
             builder = new QueryOptions.Builder();
         }
 
-        // Update basic search term and field
         if (!searchTerm.isEmpty()) {
             builder.searchTerm(searchTerm).searchField(field);
         } else {
-            // Clear search term if empty, let advanced filters drive the query
             builder.searchTerm(null).searchField(null);
         }
 
-        builder.start(0);  // Reset to first page for new search
+        builder.start(0);
 
         QueryOptions query = builder.build();
-        viewModel.updateQueryOptions(query); // Update ViewModel first
+        viewModel.updateQueryOptions(query);
         viewModel.search(query);
     }
 
@@ -149,13 +136,11 @@ public class SearchFragment extends Fragment {
         advancedDrawer.setVisibility(View.VISIBLE);
         scrimOverlay.setVisibility(View.VISIBLE);
 
-        // Slide in from right
         advancedDrawer.animate()
                 .translationX(0)
                 .setDuration(300)
                 .start();
 
-        // Fade in scrim
         scrimOverlay.setAlpha(0f);
         scrimOverlay.animate()
                 .alpha(1f)
@@ -167,14 +152,11 @@ public class SearchFragment extends Fragment {
 
     public void closeDrawer() {
         if (!isDrawerOpen) return;
-
-        // Slide out to right
         advancedDrawer.animate()
                 .translationX(advancedDrawer.getWidth())
                 .setDuration(300)
                 .start();
 
-        // Fade out scrim
         scrimOverlay.animate()
                 .alpha(0f)
                 .setDuration(300)
@@ -182,7 +164,6 @@ public class SearchFragment extends Fragment {
                     scrimOverlay.setVisibility(View.GONE);
                     advancedDrawer.setVisibility(View.GONE);
 
-                    // NEW: Notify ManageSearchFragment that drawer has closed
                     notifyDrawerClosed();
                 })
                 .start();
@@ -226,7 +207,7 @@ public class SearchFragment extends Fragment {
                     return;
                 }
             }
-            fieldSpinner.setSelection(0); // default fallback
+            fieldSpinner.setSelection(0);
         }
     }
 

@@ -21,9 +21,9 @@ import vn.edu.lianac.utils.ArxivUrlHelper;
 public class ArxivAPIService {
     private static final String TAG = "ArxivAPIService";
     private static final String API_BASE_URL = "http://export.arxiv.org/api/query";
-    private static final int CONNECT_TIMEOUT = 30; // seconds
-    private static final int READ_TIMEOUT = 30; // seconds
-    private static final int WRITE_TIMEOUT = 30; // seconds
+    private static final int CONNECT_TIMEOUT = 30;
+    private static final int READ_TIMEOUT = 30;
+    private static final int WRITE_TIMEOUT = 30;
 
     private final OkHttpClient client;
     private static ArxivAPIService instance;
@@ -37,7 +37,6 @@ public class ArxivAPIService {
                 .build();
     }
 
-    // Singleton pattern for shared client
     public static synchronized ArxivAPIService getInstance() {
         if (instance == null) {
             instance = new ArxivAPIService();
@@ -182,21 +181,18 @@ public class ArxivAPIService {
     }
 
     private void handleResponse(Response response, ArxivResponseListener listener) {
-        // Check HTTP status
         if (!response.isSuccessful()) {
             String errorMsg = String.format(String.valueOf(R.string.error_http), response.code(), response.message());
             listener.onError(new HttpException(response.code(), errorMsg));
             return;
         }
 
-        // Check response body
         ResponseBody body = response.body();
         if (body == null) {
             listener.onError(new IOException(String.valueOf(R.string.error_no_response_body)));
             return;
         }
 
-        // Parse XML
         try (InputStream stream = body.byteStream()) {
             List<Article> articles = ArxivParser.parse(stream);
 
@@ -214,7 +210,6 @@ public class ArxivAPIService {
     }
 
     private void handleResponseWithMetadata(Response response, ArxivSearchResultListener listener) {
-        // Check HTTP status
         if (!response.isSuccessful()) {
             String errorMsg = String.format(String.valueOf(R.string.error_http), response.code(), response.message());
 
@@ -222,14 +217,12 @@ public class ArxivAPIService {
             return;
         }
 
-        // Check response body
         ResponseBody body = response.body();
         if (body == null) {
             listener.onError(new IOException(String.valueOf(R.string.error_no_response_body)));
             return;
         }
 
-        // Parse XML with metadata
         try (InputStream stream = body.byteStream()) {
             SearchResult result = ArxivParser.parseWithMetadata(stream);
 
@@ -274,7 +267,7 @@ public class ArxivAPIService {
         void onError(Exception e);
     }
 
-    // --- Custom Exceptions ---
+
 
     public static class NetworkException extends IOException {
         public NetworkException(String message, Throwable cause) {
