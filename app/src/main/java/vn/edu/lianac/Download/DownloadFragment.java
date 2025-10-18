@@ -37,10 +37,10 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
     private DownloadAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
-    // For testing purposes, remove later
-    private EditText etPdfUrl;
-    private Button btnDownload;
-    // End of testing section
+//    // For testing purposes, remove later
+//    private EditText etPdfUrl;
+//    private Button btnDownload;
+//    // End of testing section
 
     private DownloadResultReceiver progressReceiver;
 
@@ -105,17 +105,17 @@ public class DownloadFragment extends Fragment implements DownloadAdapter.Downlo
             }
         });
 
-        // For testing purposes, remove later
-        etPdfUrl = view.findViewById(R.id.et_pdf_url);
-        btnDownload = view.findViewById(R.id.btn_download);
-
-        btnDownload.setOnClickListener(v -> {
-            String url = etPdfUrl.getText().toString();
-            if (!url.isEmpty()) {
-                mViewModel.fetchTitleAndAddDownload(url);
-                etPdfUrl.setText("");
-            }
-        });
+//        // For testing purposes, remove later
+//        etPdfUrl = view.findViewById(R.id.et_pdf_url);
+//        btnDownload = view.findViewById(R.id.btn_download);
+//
+//        btnDownload.setOnClickListener(v -> {
+//            String url = etPdfUrl.getText().toString();
+//            if (!url.isEmpty()) {
+//                mViewModel.fetchTitleAndAddDownload(url);
+//                etPdfUrl.setText("");
+//            }
+//        });
         // End of testing section
     }
 

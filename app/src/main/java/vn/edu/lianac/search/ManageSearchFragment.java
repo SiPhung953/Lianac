@@ -1,8 +1,7 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.search;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +33,6 @@ import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchRow;
 import vn.edu.lianac.utils.CategoryProvider;
-
-import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
  * Advanced search filters fragment - cleaned & refactored.

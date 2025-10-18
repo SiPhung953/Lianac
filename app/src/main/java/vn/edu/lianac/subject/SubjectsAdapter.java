@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.subject;
 
 import android.view.LayoutInflater;
 import android.view.View;

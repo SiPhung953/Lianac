@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.search;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -24,11 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Locale;
 
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
-import vn.edu.lianac.viewmodel.SearchViewModel;
 
 /**
  * Article listing fragment with enhanced pagination controls.

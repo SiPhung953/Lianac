@@ -15,15 +15,15 @@
         android:background="#F5F5F5"
         android:elevation="4dp">
 
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_menu"
-            android:contentDescription="Back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackgroundBorderless" />
+<!--        <ImageView-->
+<!--            android:id="@+id/backButton"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:src="@drawable/ic_menu"-->
+<!--            android:contentDescription="Back"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:background="?android:attr/selectableItemBackgroundBorderless" />-->
 
         <TextView
             android:id="@+id/pdfTitle"

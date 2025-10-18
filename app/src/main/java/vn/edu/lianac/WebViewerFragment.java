@@ -63,11 +63,11 @@ public class WebViewerFragment extends Fragment {
         }
 
         // Setup back button
-        view.findViewById(R.id.backButton).setOnClickListener(v -> {
-            if (getActivity() != null) {
-                getActivity().onBackPressed();
-            }
-        });
+//        view.findViewById(R.id.backButton).setOnClickListener(v -> {
+//            if (getActivity() != null) {
+//                getActivity().onBackPressed();
+//            }
+//        });
 
         // Setup WebView
         setupWebView();

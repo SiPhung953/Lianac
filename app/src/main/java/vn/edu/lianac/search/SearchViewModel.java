@@ -1,4 +1,4 @@
-package vn.edu.lianac.viewmodel;
+package vn.edu.lianac.search;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -13,7 +13,6 @@ import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchResult;
 import vn.edu.lianac.network.ArxivAPIService;
 import vn.edu.lianac.utils.QueryBuilder;
-import vn.edu.lianac.models.QueryOptions;
 
 /**
  * ViewModel for arXiv article search with integrated repository logic.

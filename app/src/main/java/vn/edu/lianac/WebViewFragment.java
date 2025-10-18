@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -16,8 +16,6 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import vn.edu.lianac.R;
 
 public class WebViewFragment extends Fragment {
 

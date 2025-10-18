@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.subject;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import vn.edu.lianac.utils.CategoryProvider;
 /**
  * Simple fragment to display all main subject categories using RecyclerView
  */
-public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubjectClickListener {
+public class SubjectListingFragment extends Fragment implements SubjectsAdapter.OnSubjectClickListener {
 
     private RecyclerView subjectsRecyclerView;
     private SubjectsAdapter adapter;
@@ -33,7 +33,7 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_subjects, container, false);
+        return inflater.inflate(R.layout.fragment_subject_listing, container, false);
     }
 
     @Override

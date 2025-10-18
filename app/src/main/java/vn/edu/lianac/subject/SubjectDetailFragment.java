@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.subject;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +17,8 @@ import java.util.List;
 
 import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
+import vn.edu.lianac.search.ArticleListingFragment;
+import vn.edu.lianac.search.SearchViewModel;
 import vn.edu.lianac.utils.CategoryProvider;
 
 /**
@@ -181,7 +183,7 @@ public class SubjectDetailFragment extends Fragment {
     private void navigateToHome() {
         // Navigate back to SubjectsFragment (main categories list)
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).replaceFragment(new SubjectsFragment());
+            ((MainActivity) getActivity()).replaceFragment(new SubjectListingFragment());
         }
     }
 
@@ -307,8 +309,8 @@ public class SubjectDetailFragment extends Fragment {
             // Get ViewModel and execute category search
             androidx.lifecycle.ViewModelProvider viewModelProvider =
                     new androidx.lifecycle.ViewModelProvider(requireActivity());
-            vn.edu.lianac.viewmodel.SearchViewModel viewModel =
-                    viewModelProvider.get(vn.edu.lianac.viewmodel.SearchViewModel.class);
+            SearchViewModel viewModel =
+                    viewModelProvider.get(SearchViewModel.class);
 
             // Mark as category browse search
             viewModel.searchByCategory(categoryId, sortBy, true);

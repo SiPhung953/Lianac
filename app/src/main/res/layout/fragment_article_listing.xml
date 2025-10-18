@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
         android:paddingBottom="8dp">
 
         <TextView
@@ -54,7 +55,8 @@
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:paddingHorizontal="12dp"/>
 
     <!-- Page Info Text (Top) -->
     <TextView

@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.search;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,12 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
-
-import vn.edu.lianac.MainActivity;
 import vn.edu.lianac.R;
 import vn.edu.lianac.models.QueryOptions;
-import vn.edu.lianac.viewmodel.SearchViewModel;
 
 public class SearchFragment extends Fragment {
 

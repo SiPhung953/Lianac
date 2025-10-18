@@ -33,7 +33,7 @@ import vn.edu.lianac.Download.DownloadViewModel.DownloadViewModel;
 import vn.edu.lianac.bookmark.BookmarkItem;
 import vn.edu.lianac.bookmark.BookmarkManager;
 import vn.edu.lianac.models.Article;
-import vn.edu.lianac.ui.SubjectDetailFragment;
+import vn.edu.lianac.subject.SubjectDetailFragment;
 import vn.edu.lianac.utils.CategoryProvider;
 
 public class DetailFragment extends Fragment {
@@ -531,7 +531,7 @@ public class DetailFragment extends Fragment {
 
                 case COMPLETED:
                     // Already downloaded
-                    Toast.makeText(getContext(), "Already downloaded, press READ to open", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Already downloaded", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

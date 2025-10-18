@@ -19,9 +19,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -36,13 +33,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -50,9 +42,9 @@ import java.util.concurrent.Executors;
 
 import vn.edu.lianac.Download.DownloadFragment;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
-import vn.edu.lianac.ui.ArticleListingFragment;
-import vn.edu.lianac.ui.SearchFragment;
-import vn.edu.lianac.ui.SubjectsFragment;
+import vn.edu.lianac.search.ArticleListingFragment;
+import vn.edu.lianac.search.SearchFragment;
+import vn.edu.lianac.subject.SubjectListingFragment;
 import vn.edu.lianac.utils.CategoryProvider;
 
 /**
@@ -121,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             handler.post(() -> {
                 // ONLY check savedInstanceState here, after CategoryProvider is ready
                 if (savedInstanceState == null) {
-                    replaceFragment(new SubjectsFragment());
+                    replaceFragment(new SubjectListingFragment());
                     getSupportActionBar().setTitle(R.string.nav_subjects);
                     navigationView.setCheckedItem(R.id.nav_subjects);
                     isSearchMode = false;
@@ -229,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
             int id = item.getItemId();
             if (id == R.id.nav_subjects) {
-                fragment = new SubjectsFragment();
+                fragment = new SubjectListingFragment();
                 getSupportActionBar().setTitle(R.string.nav_subjects);
                 isSearchMode = false;
             } else if (id == R.id.nav_downloads) {
@@ -306,12 +298,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem action = menu.findItem(R.id.action_search);
-        action.setVisible(showSearch);
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        MenuItem action = menu.findItem(R.id.action_search);
+//        action.setVisible(showSearch);
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     private void toggleSearchAction(boolean visible) {
         showSearch = visible;
@@ -323,11 +315,11 @@ public class MainActivity extends AppCompatActivity {
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.action_search) {
+//        if (item.getItemId() == R.id.action_search) {
 //            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
-            searchShowing = !searchShowing;
-            return true;
-        }
+//            searchShowing = !searchShowing;
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
