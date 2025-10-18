@@ -262,6 +262,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean isDarkMode() {
+        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
+
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         ((ViewGroup) findViewById(R.id.content_frame)).removeAllViews();

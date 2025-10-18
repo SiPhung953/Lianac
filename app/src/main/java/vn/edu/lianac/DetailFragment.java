@@ -2,12 +2,14 @@ package vn.edu.lianac;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,8 +111,15 @@ public class DetailFragment extends Fragment {
                 & Configuration.UI_MODE_NIGHT_MASK)
                 == Configuration.UI_MODE_NIGHT_YES;
 
-        String bgColor = !isDark ? "#121212" : "#ffffff";
-        String textColor = !isDark ? "#ffffff" : "#000000";
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getContext().getTheme();
+        theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+
+        int colorInt = typedValue.data;
+
+        String bgColor = String.format("#%06X", (0xFFFFFF & colorInt));
+        String textColor = isDark ? "#ffffff" : "#000000";
 
         String html = "<!DOCTYPE html><html><head>" +
                 "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
