@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="12dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:padding="12dp">
 
-    <!-- Filter/Sort Controls (inline style from search) -->
+    <!-- Filter/Sort Controls -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
         android:paddingBottom="8dp">
 
         <TextView
@@ -26,22 +27,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minWidth="120dp"/>
+            android:minWidth="120dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="asd"
-            android:textSize="13sp"
-            android:textStyle="bold"
             android:paddingStart="16dp"
-            android:paddingEnd="8dp"/>
+            android:paddingEnd="8dp"
+            android:text="@string/per_page"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/pageSizeSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="80dp"/>
+            android:minWidth="80dp" />
 
     </LinearLayout>
 
@@ -50,11 +51,12 @@
         android:id="@+id/resultsCountText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
-        android:paddingBottom="6dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:paddingHorizontal="12dp"/>
 
     <!-- Page Info Text (Top) -->
     <TextView
@@ -62,38 +64,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="13sp"
-        android:textColor="?android:attr/textColorPrimary"
         android:paddingBottom="6dp"
-        android:visibility="gone"/>
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="13sp"
+        android:visibility="gone" />
 
-    <!-- Loading indicator -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:visibility="gone" />
 
-    <!-- Error text -->
     <TextView
         android:id="@+id/errorText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
         android:gravity="center"
-        android:visibility="gone"
-        android:text="@string/error_loading_data" />
+        android:text="@string/error_loading_data"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone" />
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom Pagination Controls (advanced from search) -->
+    <!-- Bottom Pagination Controls -->
     <LinearLayout
         android:id="@+id/bottomPaginationContainer"
         android:layout_width="match_parent"
@@ -103,24 +102,23 @@
         android:paddingBottom="8dp"
         android:visibility="gone">
 
-        <!-- Prev/Next with Page Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingBottom="12dp">
 
             <!-- Previous Button -->
             <Button
                 android:id="@+id/prevPageButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
-                android:text="asd"
-                android:textSize="14sp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:text="@string/prev"
+                android:textSize="14sp" />
 
             <!-- Page Info Text (Bottom) -->
             <TextView
@@ -131,99 +129,101 @@
                 android:gravity="center"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"/>
+                android:textStyle="bold" />
 
             <!-- Next Button -->
             <Button
                 android:id="@+id/nextPageButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
-                android:text="@string/next"
-                android:textSize="14sp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:text="@string/next"
+                android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Page Number Buttons (7 buttons with ellipsis support) -->
+
+        <!-- Main Navigation Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingBottom="8dp">
 
+            <!-- Page Number Buttons (7 buttons) -->
             <Button
                 android:id="@+id/pageButton1"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="1"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="1"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton2"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="2"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="2"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton3"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="3"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="3"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton4"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="4"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="4"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton5"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="5"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="5"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton6"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="6"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="4dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="6"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/pageButton7"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:text="7"
-                android:textSize="14sp"
-                android:padding="0dp"
                 android:layout_marginEnd="8dp"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:padding="0dp"
+                android:text="7"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

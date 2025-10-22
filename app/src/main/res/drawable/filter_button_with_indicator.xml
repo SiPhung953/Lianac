@@ -9,12 +9,7 @@
                 </shape>
             </item>
             <!-- Red dot indicator in top-right -->
-            <item
-                android:right="8dp"
-                android:top="8dp"
-                android:width="6dp"
-                android:height="6dp"
-                android:gravity="top|right">
+            <item android:width="6dp" android:height="6dp" android:gravity="top|right" android:right="8dp" android:top="8dp">
                 <shape android:shape="oval">
                     <solid android:color="@color/archival_blue" />
                 </shape>

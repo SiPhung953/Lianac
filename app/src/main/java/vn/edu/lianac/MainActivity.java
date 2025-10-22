@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
@@ -31,14 +34,22 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.fragment.app.FragmentManager;
+
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import vn.edu.lianac.Download.DownloadFragment;
 import vn.edu.lianac.bookmark.BookmarkListFragment;
-import vn.edu.lianac.ui.ArticleListingFragment;
-import vn.edu.lianac.ui.SearchFragment;
-import vn.edu.lianac.ui.SubjectsFragment;
+import vn.edu.lianac.search.ArticleListingFragment;
+import vn.edu.lianac.search.SearchFragment;
+import vn.edu.lianac.subject.SubjectListingFragment;
+import vn.edu.lianac.utils.CategoryProvider;
 
+/**
+ * Main activity with container-based architecture and navigation drawer.
+ */
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
@@ -95,6 +106,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            CategoryProvider.getInstance(this);
+            handler.post(() -> {
+                // ONLY check savedInstanceState here, after CategoryProvider is ready
+                if (savedInstanceState == null) {
+                    replaceFragment(new SubjectListingFragment());
+                    getSupportActionBar().setTitle(R.string.nav_subjects);
+                    navigationView.setCheckedItem(R.id.nav_subjects);
+                    isSearchMode = false;
+                } else {
+                    // Rotation - restore state
+                    CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+                    getSupportActionBar().setTitle(title);
+                    isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
+
+                    if (isSearchMode) {
+                        searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
+                        boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
+                        prepareContainers();
+                        toggleSearchAction(searchIconShowing);
+                        navigationView.setCheckedItem(R.id.nav_search);
+                    }
+                }
+            });
+        });
+
         //Window setup
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -146,35 +185,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // FIXED: Handle both initial launch and rotation
-        if (savedInstanceState == null) {
-            // First launch - show subjects
-            replaceFragment(new SubjectsFragment());
-            getSupportActionBar().setTitle(R.string.nav_subjects);
-            navigationView.setCheckedItem(R.id.nav_subjects);
-            isSearchMode = false;
-        } else {
-            // Rotation - restore state
-            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
-            getSupportActionBar().setTitle(title);
-
-            // ADDED: Check if we were in search mode
-            isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
-
-            if (isSearchMode) {
-                // Restore search mode
-                searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
-                boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
-
-                // Recreate search UI
-                prepareContainers();
-
-                // FragmentManager will automatically restore fragments
-                // but we need to ensure the containers are ready
-                toggleSearchAction(searchIconShowing);
-                navigationView.setCheckedItem(R.id.nav_search);
-            }
-            // For other fragments, FragmentManager will restore them automatically
-        }
+//        if (savedInstanceState == null) {
+//            // First launch - show subjects
+//            replaceFragment(new SubjectsFragment());
+//            getSupportActionBar().setTitle(R.string.nav_subjects);
+//            navigationView.setCheckedItem(R.id.nav_subjects);
+//            isSearchMode = false;
+//        } else {
+//            // Rotation - restore state
+//            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+//            getSupportActionBar().setTitle(title);
+//
+//            // ADDED: Check if we were in search mode
+//            isSearchMode = savedInstanceState.getBoolean(KEY_SEARCH_MODE, false);
+//
+//            if (isSearchMode) {
+//                // Restore search mode
+//                searchShowing = savedInstanceState.getBoolean(KEY_SEARCH_VISIBILITY, true);
+//                boolean searchIconShowing = savedInstanceState.getBoolean(KEY_SEARCH_ICON_SHOWING, true);
+//
+//                // Recreate search UI
+//                prepareContainers();
+//
+//                // FragmentManager will automatically restore fragments
+//                // but we need to ensure the containers are ready
+//                toggleSearchAction(searchIconShowing);
+//                navigationView.setCheckedItem(R.id.nav_search);
+//            }
+//            // For other fragments, FragmentManager will restore them automatically
+//        }
 
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(item -> {
@@ -182,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
             int id = item.getItemId();
             if (id == R.id.nav_subjects) {
-                fragment = new SubjectsFragment();
+                fragment = new SubjectListingFragment();
                 getSupportActionBar().setTitle(R.string.nav_subjects);
                 isSearchMode = false;
             } else if (id == R.id.nav_downloads) {
@@ -192,10 +231,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_bookmarks) {
                 fragment = new BookmarkListFragment();
                 getSupportActionBar().setTitle(R.string.nav_bookmarks);
-                isSearchMode = false;
-            } else if (id == R.id.nav_math) {
-                fragment = new MathFragment();
-                getSupportActionBar().setTitle(R.string.nav_math);
                 isSearchMode = false;
             } else if (id == R.id.nav_settings) {
                 fragment = new SettingsFragment();
@@ -225,6 +260,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         return true;
+    }
+
+    public boolean isDarkMode() {
+        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public void replaceFragment(Fragment fragment) {
@@ -263,12 +303,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem action = menu.findItem(R.id.action_search);
-        action.setVisible(showSearch);
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        MenuItem action = menu.findItem(R.id.action_search);
+//        action.setVisible(showSearch);
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     private void toggleSearchAction(boolean visible) {
         showSearch = visible;
@@ -280,17 +320,31 @@ public class MainActivity extends AppCompatActivity {
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.action_search) {
-            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
-            searchShowing = !searchShowing;
-            return true;
-        }
+//        if (item.getItemId() == R.id.action_search) {
+//            findViewById(R.id.searchContainer).setVisibility(searchShowing ? View.GONE : View.VISIBLE);
+//            searchShowing = !searchShowing;
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // First, close the drawer if it's open
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawer(navigationView);
+            return;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // If we have fragments in the back stack, pop them
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            // Otherwise, use default back behavior
+            super.onBackPressed();
+        }
     }
 
     @Override

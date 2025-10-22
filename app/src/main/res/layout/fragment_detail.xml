@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:orientation="horizontal"
             android:paddingVertical="8dp"
             android:paddingHorizontal="8dp"
-            android:background="#F8F8F8"
+            android:background="?android:attr/colorBackground"
             android:layout_marginTop="12dp"
             android:gravity="center_vertical">
 
@@ -30,7 +30,7 @@
                 android:text="Subject Name"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
@@ -44,7 +44,7 @@
                 android:text="  ►  "
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="?android:attr/textColorPrimary"/>
 
             <TextView
                 android:id="@+id/text_subclass"
@@ -53,7 +53,7 @@
                 android:text="Subclass"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
@@ -101,7 +101,7 @@
             android:text="Paper Title"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="8dp" />
 
         <!-- Authors -->
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Author(s): "
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
 
@@ -132,18 +132,23 @@
             android:text="Abstract"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp" />
 
-        <TextView
-            android:id="@+id/paper_summary_text"
+<!--        <TextView-->
+<!--            android:id="@+id/paper_summary_text"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Summary text goes here..."-->
+<!--            android:textColor="?android:attr/textColorPrimary"-->
+<!--            android:textSize="14sp"-->
+<!--            android:lineSpacingExtra="4dp"-->
+<!--            android:layout_marginTop="8dp" />-->
+
+        <WebView
+            android:id="@+id/math_webview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Summary text goes here..."
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="14sp"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginTop="8dp" />
+            android:layout_height="wrap_content" />
 
         <!-- DOI (if available) -->
         <TextView
@@ -195,8 +200,8 @@
                     android:id="@+id/download_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_download"
-                    app:tint="@android:color/black"
+                    android:src="@drawable/download"
+                    app:tint="?android:attr/textColorPrimary"
                     android:contentDescription="Download" />
 
             </LinearLayout>
@@ -206,8 +211,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/bookmark"
-                app:tint="@android:color/black"
-                android:contentDescription="@string/bookmark"
+                app:tint="?android:attr/textColorPrimary"
+                android:contentDescription="Bookmark"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackgroundBorderless" />
@@ -220,7 +225,7 @@
             android:layout_height="wrap_content"
             android:text="READ"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:paddingHorizontal="32dp"
             android:paddingVertical="12dp"

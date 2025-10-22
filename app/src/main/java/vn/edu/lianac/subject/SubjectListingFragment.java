@@ -1,4 +1,4 @@
-package vn.edu.lianac.ui;
+package vn.edu.lianac.subject;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import vn.edu.lianac.utils.CategoryProvider;
 /**
  * Simple fragment to display all main subject categories using RecyclerView
  */
-public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubjectClickListener {
+public class SubjectListingFragment extends Fragment implements SubjectsAdapter.OnSubjectClickListener {
 
     private RecyclerView subjectsRecyclerView;
     private SubjectsAdapter adapter;
@@ -33,7 +33,7 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_subjects, container, false);
+        return inflater.inflate(R.layout.fragment_subject_listing, container, false);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {
-            showError("Failed to load subjects");
+            showError(getString(R.string.error_failed_load_subjects));
         }
     }
 
@@ -87,7 +87,8 @@ public class SubjectsFragment extends Fragment implements SubjectsAdapter.OnSubj
 
     private void showEmptyState() {
         // You can add an empty state view here if needed
-        Toast.makeText(requireContext(), "No subjects available", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.no_subjects_available), Toast.LENGTH_SHORT).show();
+
     }
 
     private void showError(String message) {

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?android:attr/colorBackground">
 
     <!-- RecyclerView for bookmarks -->
     <androidx.recyclerview.widget.RecyclerView
@@ -20,7 +20,7 @@
         android:layout_centerInParent="true"
         android:text="No bookmarks yet"
         android:textSize="18sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone" />
 
 </RelativeLayout>

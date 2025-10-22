@@ -1,4 +1,4 @@
-package vn.edu.lianac.viewmodel;
+package vn.edu.lianac.search;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.models.Article;
+import vn.edu.lianac.models.QueryOptions;
 import vn.edu.lianac.models.SearchResult;
 import vn.edu.lianac.network.ArxivAPIService;
 import vn.edu.lianac.utils.QueryBuilder;
-import vn.edu.lianac.models.QueryOptions;
 
-/**
- * ViewModel for arXiv article search with integrated repository logic.
- * Simplified architecture: combines ViewModel and Repository responsibilities.
- */
+
 public class SearchViewModel extends ViewModel {
     private static final String TAG = "SearchViewModel";
     private static final int MAX_BROAD_SEARCH_PAGE = 8;
@@ -25,12 +22,10 @@ public class SearchViewModel extends ViewModel {
 
     private final ArxivAPIService apiService;
 
-    // UI State
     private final MutableLiveData<List<Article>> articles = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    // Pagination State
     private final MutableLiveData<Integer> totalResults = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(0);
@@ -38,7 +33,6 @@ public class SearchViewModel extends ViewModel {
     private final MutableLiveData<Boolean> hasNextPage = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> hasPreviousPage = new MutableLiveData<>(false);
 
-    // Current query tracking - NOW OBSERVABLE!
     private final MutableLiveData<QueryOptions> currentQuery = new MutableLiveData<>();
     private SearchResult lastSearchResult;
     private boolean hasLoadedInitialData = false;
@@ -47,7 +41,6 @@ public class SearchViewModel extends ViewModel {
         this.apiService = ArxivAPIService.getInstance();
     }
 
-    // ============= PUBLIC API =============
 
     public void search(QueryOptions options) {
         if (options == null) {
@@ -55,7 +48,6 @@ public class SearchViewModel extends ViewModel {
             return;
         }
 
-        // Validate wildcard searches (only if search term exists)
         String searchTerm = options.getSearchTerm();
         if (searchTerm != null && !searchTerm.trim().isEmpty() && searchTerm.trim().startsWith("*")) {
             errorMessage.postValue("Searches cannot start with a wildcard (*)");
@@ -107,27 +99,21 @@ public class SearchViewModel extends ViewModel {
         search(defaultQuery);
     }
 
-    /**
-     * Search articles by category with specific sort order
-     */
-    public void searchByCategory(String categoryId, String sortBy) {
-        List<String> categoryList = new ArrayList<>();
-        categoryList.add(categoryId);
-
+    public void searchByCategory(String categoryId, String sortBy, boolean isCategoryBrowse) {
         QueryOptions query = new QueryOptions.Builder()
-                .categories(categoryList)
+                .categories(java.util.Collections.singletonList(categoryId))
                 .sortBy(sortBy)
                 .sortOrder("descending")
-                .maxResults(25)
                 .start(0)
+                .maxResults(10)
+                .categoryBrowse(isCategoryBrowse)
                 .build();
 
+        updateQueryOptions(query);
         search(query);
     }
 
-    /**
-     * Reset to default all:all query
-     */
+
     public void resetToDefault() {
         QueryOptions defaultQuery = new QueryOptions.Builder()
                 .searchTerm("all")
@@ -147,7 +133,6 @@ public class SearchViewModel extends ViewModel {
             return;
         }
 
-        // Check page limit for broad searches
         Integer page = currentPage.getValue();
         if (page != null && page >= getMaxReliablePage()) {
             errorMessage.postValue("Cannot navigate beyond page " + getMaxReliablePage() +
@@ -155,7 +140,6 @@ public class SearchViewModel extends ViewModel {
             return;
         }
 
-        // Check if last result was empty
         if (lastSearchResult != null && lastSearchResult.getArticles().isEmpty()) {
             errorMessage.postValue("No more results available");
             return;
@@ -250,7 +234,7 @@ public class SearchViewModel extends ViewModel {
         errorMessage.postValue(null);
     }
 
-    // ============= LIVEDATA GETTERS =============
+
 
     public LiveData<List<Article>> getArticles() { return articles; }
     public LiveData<Boolean> getIsLoading() { return isLoading; }
@@ -262,7 +246,6 @@ public class SearchViewModel extends ViewModel {
     public LiveData<Boolean> getHasNextPage() { return hasNextPage; }
     public LiveData<Boolean> getHasPreviousPage() { return hasPreviousPage; }
 
-    // ============= HELPER METHODS =============
 
     private void updateUIState(SearchResult result) {
         if (result == null) {
@@ -270,9 +253,8 @@ public class SearchViewModel extends ViewModel {
             return;
         }
 
-        // Warn about empty results
+
         if (result.getArticles().isEmpty() && result.getTotalResults() > 0) {
-            Log.w(TAG, "Empty articles despite total results: " + result.getTotalResults());
             errorMessage.postValue("API returned no results. Query may be too broad for deep pagination.");
         }
 
@@ -327,21 +309,16 @@ public class SearchViewModel extends ViewModel {
 
         String term = current.getSearchTerm();
 
-        // Filter-only searches (no term) are considered specific if they have category/date filters
         if (term == null || term.trim().isEmpty()) {
             return !current.hasCategoryFilter() && !current.hasDateFilter();
         }
 
-        // Wildcard searches
         if (term.contains("all:*") || term.equals("*")) return true;
 
-        // Very short searches
         if (term.replaceAll("\\s+", "").length() <= 2) return true;
 
-        // Generic terms
         if (term.matches("(?i).*(\\ball\\b|\\ba\\b).*")) return true;
 
-        // Date-only searches (deprecated now that we support filter-only)
         if (current.hasDateFilter() && term.equalsIgnoreCase("all")) {
             return true;
         }

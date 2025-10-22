@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:paddingStart="12dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="10dp">
 
     <!-- arXiv ID and Categories in horizontal layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/articleId"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"/>
+            android:layout_marginEnd="6dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <HorizontalScrollView
             android:layout_width="0dp"
@@ -37,69 +37,69 @@
                 android:id="@+id/categoriesContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal" />
         </HorizontalScrollView>
     </LinearLayout>
 
     <!-- Title -->
     <TextView
         android:id="@+id/articleTitle"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:layout_marginTop="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <!-- Authors -->
     <TextView
         android:id="@+id/articleAuthors"
-        android:textSize="13sp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:layout_marginTop="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="13sp" />
 
     <!-- Submitted Date -->
     <TextView
         android:id="@+id/articleSubmitted"
-        android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp" />
 
     <!-- Originally Announced Date -->
     <TextView
         android:id="@+id/articleAnnounced"
-        android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_marginTop="2dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <!-- ACM/MSC Classes -->
     <TextView
         android:id="@+id/articleClasses"
-        android:textSize="11sp"
-        android:textColor="?android:attr/textColorTertiary"
-        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_marginTop="3dp"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="11sp"
+        android:visibility="gone" />
 
     <!-- DOI (clickable) -->
     <TextView
         android:id="@+id/articleDoi"
-        android:textSize="12sp"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_marginTop="3dp"
         android:clickable="true"
         android:focusable="true"
-        android:textStyle="italic"/>
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:visibility="gone" />
 
 </LinearLayout>

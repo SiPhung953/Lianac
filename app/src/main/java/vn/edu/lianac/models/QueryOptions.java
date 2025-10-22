@@ -3,10 +3,6 @@ package vn.edu.lianac.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Query options for arXiv API searches.
- * Supports both basic and advanced search modes.
- */
 public class QueryOptions {
     private final String searchTerm;
     private final String searchField;
@@ -19,6 +15,7 @@ public class QueryOptions {
     private final boolean includeCrossLists;
     private final String dateFrom;
     private final String dateTo;
+    private boolean isCategoryBrowse;
 
     private QueryOptions(Builder builder) {
         this.searchTerm = builder.searchTerm;
@@ -32,9 +29,9 @@ public class QueryOptions {
         this.includeCrossLists = builder.includeCrossLists;
         this.dateFrom = builder.dateFrom;
         this.dateTo = builder.dateTo;
-    }
+        this.isCategoryBrowse = builder.isCategoryBrowse; // ADD THIS LINE
 
-    // ==================== GETTERS ====================
+    }
 
     public String getSearchTerm() { return searchTerm; }
     public String getSearchField() { return searchField; }
@@ -48,40 +45,23 @@ public class QueryOptions {
     public String getDateFrom() { return dateFrom; }
     public String getDateTo() { return dateTo; }
 
-    // ==================== QUERY HELPERS ====================
-
-    /**
-     * Check if this query has a basic search term
-     */
     public boolean hasSearchTerm() {
         return searchTerm != null && !searchTerm.trim().isEmpty();
     }
 
-    /**
-     * Check if this query has advanced search rows
-     */
     public boolean hasRows() {
         return rows != null && !rows.isEmpty();
     }
 
-    /**
-     * Check if date filter is applied
-     */
     public boolean hasDateFilter() {
         return (dateFrom != null && !dateFrom.isEmpty()) ||
                 (dateTo != null && !dateTo.isEmpty());
     }
 
-    /**
-     * Check if category filter is applied
-     */
     public boolean hasCategoryFilter() {
         return categories != null && !categories.isEmpty();
     }
 
-    /**
-     * Check if this is a broad search (wildcards, very short terms, etc.)
-     */
     public boolean isBroadSearch() {
         // Has advanced rows - check if any are specific
         if (hasRows()) {
@@ -110,25 +90,18 @@ public class QueryOptions {
         return hasDateFilter() && term.equalsIgnoreCase("all");
     }
 
-    // ==================== NAVIGATION HELPERS ====================
-
-    /**
-     * Create query for next page
-     */
     public QueryOptions nextPage() {
         return toBuilder().start(start + maxResults).build();
     }
 
-    /**
-     * Create query for previous page
-     */
     public QueryOptions previousPage() {
         return toBuilder().start(Math.max(0, start - maxResults)).build();
     }
 
-    /**
-     * Create a builder from this query
-     */
+    public boolean isCategoryBrowse() {
+        return isCategoryBrowse;
+    }
+
     public Builder toBuilder() {
         return new Builder()
                 .searchTerm(searchTerm)
@@ -141,7 +114,13 @@ public class QueryOptions {
                 .categories(categories)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
-                .includeCrossLists(includeCrossLists);
+                .includeCrossLists(includeCrossLists)
+                .categoryBrowse(isCategoryBrowse); // ADD THIS LINE
+    }
+
+    public Builder categoryBrowse(boolean isCategoryBrowse) {
+        this.isCategoryBrowse = isCategoryBrowse;
+        return this.toBuilder();
     }
 
     @Override
@@ -155,9 +134,8 @@ public class QueryOptions {
         }
     }
 
-    // ==================== BUILDER ====================
-
     public static class Builder {
+        private boolean isCategoryBrowse = false;
         private String searchTerm;
         private String searchField = "all";
         private List<SearchRow> rows = new ArrayList<>();
@@ -227,6 +205,11 @@ public class QueryOptions {
 
         public QueryOptions build() {
             return new QueryOptions(this);
+        }
+
+        public Builder categoryBrowse(boolean isCategoryBrowse) {
+            this.isCategoryBrowse = isCategoryBrowse;
+            return this;
         }
     }
 }

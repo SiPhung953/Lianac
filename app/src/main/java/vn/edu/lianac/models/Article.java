@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -184,9 +183,6 @@ public class Article implements Parcelable {
         return (categories != null && !categories.isEmpty()) ? categories.get(0) : "";
     }
 
-    /**
-     * Get the main category (e.g., "cond-mat" from "cond-mat.str-el")
-     */
     public String getMainCategory() {
         if (primaryCategory == null || primaryCategory.isEmpty()) {
             return "";
@@ -199,9 +195,6 @@ public class Article implements Parcelable {
         return primaryCategory;
     }
 
-    /**
-     * Get the subcategory (e.g., "str-el" from "cond-mat.str-el")
-     */
     public String getSubCategory() {
         if (primaryCategory == null || primaryCategory.isEmpty()) {
             return "";
@@ -267,16 +260,9 @@ public class Article implements Parcelable {
         }
         String term = searchTerm.toLowerCase();
 
-        if (title != null && title.toLowerCase().contains(term)) {
-            return true;
-        }
-        if (summary != null && summary.toLowerCase().contains(term)) {
-            return true;
-        }
-        if (containsAuthor(term)) {
-            return true;
-        }
-        return false;
+        return (title != null && title.toLowerCase().contains(term)) ||
+                (summary != null && summary.toLowerCase().contains(term)) ||
+                containsAuthor(term);
     }
 
     @Override

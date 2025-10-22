@@ -1,15 +1,20 @@
 package vn.edu.lianac;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.lianac.Download.DownloadItem.DownloadItem;
@@ -29,6 +35,7 @@ import vn.edu.lianac.Download.DownloadViewModel.DownloadViewModel;
 import vn.edu.lianac.bookmark.BookmarkItem;
 import vn.edu.lianac.bookmark.BookmarkManager;
 import vn.edu.lianac.models.Article;
+import vn.edu.lianac.subject.SubjectDetailFragment;
 import vn.edu.lianac.utils.CategoryProvider;
 
 public class DetailFragment extends Fragment {
@@ -39,7 +46,8 @@ public class DetailFragment extends Fragment {
     private TextView downloadProgress;
     private TextView readButton, textSubject, textSubclass;
     private TextView paperTitle, paperAuthor, articleIdText;
-    private TextView paperSubmitted, paperSummaryText, paperDoi;
+    private TextView paperSubmitted, paperDoi;
+    private WebView paperSummaryText;
     private LinearLayout breadcrumbBar, categoriesContainer;
     private LinearLayout downloadContainer;
 
@@ -94,12 +102,56 @@ public class DetailFragment extends Fragment {
         progressReceiver = new DownloadResultReceiver(new Handler(Looper.getMainLooper()));
     }
 
+    private void setupMathView(String text) {
+        WebSettings settings = paperSummaryText.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+        boolean isDark = (getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getContext().getTheme();
+        theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+
+        int colorInt = typedValue.data;
+
+        String bgColor = String.format("#%06X", (0xFFFFFF & colorInt));
+        String textColor = isDark ? "#ffffff" : "#000000";
+
+        String html = "<!DOCTYPE html><html><head>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css'>" +
+                "<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js'></script>" +
+                "<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js'" +
+                " onload='renderMathInElement(document.body, {" +
+                "delimiters: [" +
+                "{left: \"$$\", right: \"$$\", display: true}," +
+                "{left: \"$\", right: \"$\", display: false}" +
+                "]" +
+                "});'></script>" +
+                "<style>" +
+                "body { background-color:" + bgColor + "; color:" + textColor + "; " +
+                "margin:0; padding:16px; font-size:18px; line-height:1.5; }" +
+                ".katex { color:" + textColor + "; }" +
+                "</style>" +
+                "</head><body>" +
+                text +   // your paragraph with math inside
+                "</body></html>";
+
+        paperSummaryText.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        paperSummaryText = view.findViewById(R.id.math_webview);
+        return view;
     }
 
     @Override
@@ -140,7 +192,7 @@ public class DetailFragment extends Fragment {
         paperTitle = view.findViewById(R.id.paper_title);
         paperAuthor = view.findViewById(R.id.paper_author);
         paperSubmitted = view.findViewById(R.id.paper_submitted);
-        paperSummaryText = view.findViewById(R.id.paper_summary_text);
+        paperSummaryText = view.findViewById(R.id.math_webview);
         paperDoi = view.findViewById(R.id.paper_doi);
 
         // Categories container
@@ -169,9 +221,9 @@ public class DetailFragment extends Fragment {
 
         // Set summary/abstract
         if (article.getSummary() != null && !article.getSummary().isEmpty()) {
-            paperSummaryText.setText(article.getSummary());
+            setupMathView(article.getSummary());
         } else {
-            paperSummaryText.setText("No abstract available");
+            setupMathView("No abstract available");
         }
 
         // Set DOI if available
@@ -323,8 +375,15 @@ public class DetailFragment extends Fragment {
             String mainCategory = article.getMainCategory();
             if (!mainCategory.isEmpty()) {
                 String displayName = categoryProvider.getCategoryDisplayName(mainCategory);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // Read below
+                SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                        mainCategory,
+                        displayName,
+                        new ArrayList<>()
+                );
+
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).replaceFragment(fragment);
+                }
             }
         });
 
@@ -334,9 +393,24 @@ public class DetailFragment extends Fragment {
                 String mainCategory = article.getMainCategory();
                 String fullSubcategoryId = mainCategory + "." + subCategory;
                 String displayName = categoryProvider.getCategoryDisplayName(fullSubcategoryId);
-                // Toast.makeText(getContext(), displayName, Toast.LENGTH_SHORT).show();
-                // The Toast here is so useless, what this does is if it can't navigate to the Main Category or Sub Category, it will show a Toast
-                // TODO: Actually add some navigation from Breadcrumb
+
+                // Build breadcrumb path containing the parent (main category)
+                ArrayList<SubjectDetailFragment.BreadcrumbItem> breadcrumbPath = new ArrayList<>();
+                breadcrumbPath.add(new SubjectDetailFragment.BreadcrumbItem(
+                        mainCategory,
+                        categoryProvider.getCategoryDisplayName(mainCategory)
+                ));
+
+                // Navigate to subcategory with parent in breadcrumb path
+                SubjectDetailFragment fragment = SubjectDetailFragment.newInstance(
+                        fullSubcategoryId,
+                        displayName,
+                        breadcrumbPath
+                );
+
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).replaceFragment(fragment);
+                }
             }
         });
 
@@ -466,7 +540,7 @@ public class DetailFragment extends Fragment {
 
                 case COMPLETED:
                     // Already downloaded
-                    Toast.makeText(getContext(), "Already downloaded, press READ to open", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Already downloaded", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

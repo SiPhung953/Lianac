@@ -15,27 +15,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
             android:background="@color/archival_blue"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/advanced_search"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white" />
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/closeDrawerButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/close"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
                 app:tint="@android:color/white" />
         </LinearLayout>
 
@@ -44,18 +44,18 @@
             android:id="@+id/searchFieldsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:background="?android:attr/selectableItemBackground">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/searchFieldsToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="▼"
-                android:textSize="14sp"
-                android:layout_marginEnd="8dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -85,32 +85,32 @@
                 android:id="@+id/addFieldButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_field"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:text="@string/add_field" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="#CCCCCC" />
 
         <!-- Categories Header (was missing) -->
         <LinearLayout
             android:id="@+id/categoriesHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:background="?android:attr/selectableItemBackground">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/categoriesToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="▶"
-                android:textSize="14sp"
-                android:layout_marginEnd="8dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -135,25 +135,25 @@
                 android:id="@+id/mainCategoryHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:gravity="center_vertical"
-                android:background="?android:attr/selectableItemBackground">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <TextView
                     android:id="@+id/mainCategoryToggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="▼"
-                    android:textSize="12sp"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/mainCategoryLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="asd"
+                    android:text="@string/select_main_categories"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -163,36 +163,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginBottom="8dp"
+                android:visibility="visible"
                 app:chipSpacingVertical="8dp"
-                app:singleLine="false"
                 app:selectionRequired="false"
-                android:visibility="visible"/>
+                app:singleLine="false" />
 
             <!-- Leaf Category subsection -->
             <LinearLayout
                 android:id="@+id/leafCategoryHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="8dp"
-                android:gravity="center_vertical"
-                android:background="?android:attr/selectableItemBackground"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/leafCategoryToggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="▼"
-                    android:textSize="12sp"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/leafCategoryLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="asd"
+                    android:text="@string/select_specific_categories"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -202,51 +202,50 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginBottom="8dp"
+                android:visibility="gone"
                 app:chipSpacingVertical="8dp"
-                app:singleLine="false"
-                android:visibility="gone"/>
+                app:singleLine="false" />
 
-            <CheckBox
-                android:id="@+id/includeCrossListCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="asd"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
+<!--            <CheckBox-->
+<!--                android:id="@+id/includeCrossListCheckbox"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:text="@string/include_cross_listed" />-->
 
             <TextView
                 android:id="@+id/selectedCategoriesSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="asd"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginTop="4dp"
-                android:visibility="visible"/>
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:visibility="visible" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="#CCCCCC" />
 
         <!-- Date Range Header -->
         <LinearLayout
             android:id="@+id/dateRangeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:background="?android:attr/selectableItemBackground">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/dateRangeToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="▶"
-                android:textSize="14sp"
-                android:layout_marginEnd="8dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -268,57 +267,57 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="@string/from"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/dateFromField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="YYYY-MM-DD"
-                android:focusable="false"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
-                android:inputType="none"
-                android:layout_marginBottom="16dp" />
+                android:focusable="false"
+                android:hint="YYYY-MM-DD"
+                android:inputType="none" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="@string/to"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/dateToField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="YYYY-MM-DD"
-                android:focusable="false"
                 android:clickable="true"
+                android:focusable="false"
+                android:hint="YYYY-MM-DD"
                 android:inputType="none" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="#CCCCCC" />
 
         <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="end">
+            android:padding="16dp">
 
             <Button
                 android:id="@+id/resetButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/reset"
                 android:layout_marginEnd="8dp"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/reset" />
 
             <Button
                 android:id="@+id/applyFiltersButton"
@@ -330,8 +329,8 @@
                 android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/search"
-                android:layout_marginStart="4dp" />
+                android:layout_marginStart="4dp"
+                android:text="@string/search" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

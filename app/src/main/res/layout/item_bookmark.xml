@@ -13,8 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/white">
+        android:padding="16dp">
 
         <!-- Title -->
         <TextView
@@ -25,7 +24,7 @@
             android:text="Bookmark Title"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:maxLines="2"
             android:ellipsize="end" />
 
@@ -38,7 +37,7 @@
             android:layout_marginTop="8dp"
             android:text="Jan 01, 2025"
             android:textSize="12sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="?android:attr/textColorSecondary" />
 
         <!-- Remove button -->
         <ImageButton
@@ -50,7 +49,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="Remove bookmark"
-            app:tint="@android:color/holo_red_dark" />
+            app:tint="?attr/colorError" />
 
     </RelativeLayout>
 

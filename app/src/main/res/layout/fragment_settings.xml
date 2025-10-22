@@ -11,9 +11,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header -->
-
-        <!-- Appearance Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +19,6 @@
             android:textStyle="bold"
             android:layout_marginTop="8dp"/>
 
-        <!-- Light/Dark Mode -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,43 +56,6 @@
                 android:checked="true"/>
         </RadioGroup>
 
-        <!-- Compact List View Toggle -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/compact_list_view"
-                android:textSize="16sp"/>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchCompactList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <!-- Text Density -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_density"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerTextDensity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:minHeight="48dp"/>
-
-        <!-- Language -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

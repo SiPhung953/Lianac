@@ -3,11 +3,11 @@
     android:id="@+id/hierarchyNavigation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="?android:attr/colorBackground"
+    android:orientation="horizontal"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:paddingTop="8dp"
+    android:paddingEnd="16dp"
     android:paddingBottom="8dp"
     android:visibility="gone">
 
@@ -15,27 +15,27 @@
         android:id="@+id/navHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="asdasd"
-        android:textColor="?android:attr/colorAccent"
-        android:textSize="14sp"
+        android:background="?android:attr/colorBackground"
         android:clickable="true"
         android:focusable="true"
-        android:background="?android:attr/selectableItemBackground" />
+        android:text="@string/home"
+        android:textColor="?android:attr/colorAccent"
+        android:textSize="14sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:text=" > "
         android:textColor="?android:attr/textColorSecondary"
-        android:textSize="14sp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/navCurrent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="asdasd"
+        android:text="@string/current"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="14sp" />
 
